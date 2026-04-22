@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ tag: string }>;
 }) {
   const { tag } = await params;
-  return { title: `#${decodeURIComponent(tag)} — seojun.blog` };
+  return { title: `#${decodeURIComponent(tag)} — codydev.blog` };
 }
 
 export default async function TagPage({
@@ -26,7 +26,14 @@ export default async function TagPage({
   if (posts.length === 0) notFound();
   return (
     <section>
-      <h1 className="ui-sans text-xl font-medium mb-8">#{tag}</h1>
+      <header className="mb-12">
+        <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)] mb-2">
+          Tag
+        </p>
+        <h1 className="text-[22px] leading-[1.4] tracking-[-0.01em]">
+          #{tag}
+        </h1>
+      </header>
       <PostList posts={posts} />
     </section>
   );

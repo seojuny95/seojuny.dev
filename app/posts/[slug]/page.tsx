@@ -16,7 +16,7 @@ export async function generateMetadata({
   try {
     const post = getPostBySlug(slug);
     return {
-      title: `${post.title} — seojun.blog`,
+      title: `${post.title} — codydev.blog`,
       description: post.summary,
     };
   } catch {
@@ -42,27 +42,32 @@ export default async function PostPage({
     <article>
       <Link
         href="/posts"
-        className="ui-sans text-sm text-[var(--muted)] no-underline"
+        className="inline-block text-[13px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
       >
-        ← 목록으로
+        ← Posts
       </Link>
 
-      <header className="mt-8 mb-10">
-        <h1 className="text-3xl font-bold leading-tight">{post.title}</h1>
-        <div className="ui-sans text-sm text-[var(--muted)] mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+      <header className="mt-8 mb-10 sm:mt-10 sm:mb-12">
+        <h1 className="text-[24px] sm:text-[28px] font-semibold leading-[1.25] tracking-[-0.015em]">
+          {post.title}
+        </h1>
+        <div className="text-[12px] sm:text-[12.5px] text-[var(--muted)] mt-3 sm:mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums tracking-wide">
           <time>{post.date}</time>
           {post.tags.length > 0 ? (
-            <span className="flex gap-2">
-              {post.tags.map((t) => (
-                <Link
-                  key={t}
-                  href={`/tags/${encodeURIComponent(t)}`}
-                  className="no-underline"
-                >
-                  #{t}
-                </Link>
-              ))}
-            </span>
+            <>
+              <span aria-hidden className="opacity-60">·</span>
+              <span className="flex gap-2.5">
+                {post.tags.map((t) => (
+                  <Link
+                    key={t}
+                    href={`/tags/${encodeURIComponent(t)}`}
+                    className="link hover:text-[var(--fg)] transition-colors duration-300"
+                  >
+                    #{t}
+                  </Link>
+                ))}
+              </span>
+            </>
           ) : null}
         </div>
       </header>
@@ -71,25 +76,39 @@ export default async function PostPage({
         <MDXRemote source={post.content} />
       </div>
 
-      <hr className="my-12" />
+      <hr className="mt-16 mb-8 sm:mt-20 sm:mb-10" />
 
-      <nav className="ui-sans text-sm flex justify-between gap-4">
-        <div className="min-w-0">
-          {next ? (
-            <Link href={`/posts/${next.slug}`} className="no-underline">
-              <span className="block text-[var(--muted)]">← 이전 글</span>
-              <span className="truncate block">{next.title}</span>
-            </Link>
-          ) : null}
-        </div>
-        <div className="min-w-0 text-right">
-          {prev ? (
-            <Link href={`/posts/${prev.slug}`} className="no-underline">
-              <span className="block text-[var(--muted)]">다음 글 →</span>
-              <span className="truncate block">{prev.title}</span>
-            </Link>
-          ) : null}
-        </div>
+      <nav className="text-[13px] flex flex-col gap-6 sm:flex-row sm:justify-between">
+        {next ? (
+          <Link
+            href={`/posts/${next.slug}`}
+            className="group block min-w-0 sm:flex-1"
+          >
+            <span className="block text-[var(--muted)] text-[11.5px] uppercase tracking-[0.15em] mb-1">
+              ← 이전 글
+            </span>
+            <span className="truncate block group-hover:text-[var(--muted)] transition-colors duration-300">
+              {next.title}
+            </span>
+          </Link>
+        ) : (
+          <div className="hidden sm:block sm:flex-1" />
+        )}
+        {prev ? (
+          <Link
+            href={`/posts/${prev.slug}`}
+            className="group block min-w-0 sm:flex-1 sm:text-right"
+          >
+            <span className="block text-[var(--muted)] text-[11.5px] uppercase tracking-[0.15em] mb-1">
+              다음 글 →
+            </span>
+            <span className="truncate block group-hover:text-[var(--muted)] transition-colors duration-300">
+              {prev.title}
+            </span>
+          </Link>
+        ) : (
+          <div className="hidden sm:block sm:flex-1" />
+        )}
       </nav>
     </article>
   );
