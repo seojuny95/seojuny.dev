@@ -7,6 +7,7 @@
   --muted: #8a8a85;
   --rule: #ececea;
   --accent: #171717;
+  --yc: #f26522;
 }
 
 :root.dark {
@@ -15,6 +16,7 @@
   --muted: #7a7a75;
   --rule: #232321;
   --accent: #ededeb;
+  --yc: #ff7733;
 }
 
 @theme inline {
@@ -130,19 +132,93 @@ hr {
   transition: opacity 320ms ease, transform 420ms cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
+/* Keyboard hint. */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 10.5px;
+  line-height: 1;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
+}
+
+/* Mobile menu drawer. */
+@keyframes mobile-menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+.mobile-menu-in {
+  animation: mobile-menu-in 240ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+.mobile-menu-stagger > * {
+  animation: mobile-menu-in 320ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 60ms);
+}
+
+/* Hamburger bars. */
+.hamburger-bar {
+  position: absolute;
+  left: 50%;
+  width: 16px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: transform 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
+              top 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
+              opacity 180ms ease;
+}
+
+/* Search modal. */
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+.search-backdrop {
+  animation: backdrop-in 200ms ease-out both;
+}
+.search-panel {
+  animation: panel-in 260ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 12px 36px -8px rgba(0, 0, 0, 0.18);
+}
+:root.dark .search-panel {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 20px 48px -8px rgba(0, 0, 0, 0.6);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-delay-1,
   .reveal-delay-2,
   .reveal-delay-3,
   .page-enter,
-  .stagger > * {
+  .stagger > *,
+  .search-backdrop,
+  .search-panel,
+  .mobile-menu-in,
+  .mobile-menu-stagger > * {
     animation: none;
   }
   .link,
   .focus-underline::after,
   .row-nudge,
-  .toggle-icon {
+  .toggle-icon,
+  .hamburger-bar {
     transition: none;
   }
   * {

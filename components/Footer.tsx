@@ -1,13 +1,50 @@
+import Link from 'next/link';
+
 export function Footer() {
+  const year = new Date().getFullYear();
   return (
-    <footer className="flex justify-between items-center border-t border-[var(--rule)] mt-16 pt-5 pb-8 text-[12px] sm:mt-24 sm:pt-6 sm:pb-10 sm:text-[13px] text-[var(--muted)]">
-      <span>© {new Date().getFullYear()} codydev</span>
-      <a
-        href="/feed.xml"
-        className="link hover:text-[var(--fg)] transition-colors duration-300"
-      >
-        RSS
-      </a>
+    <footer className="border-t border-[var(--rule)] mt-20 sm:mt-28">
+      <div className="mx-auto w-full max-w-[720px] px-4 sm:px-5 py-7 sm:py-9 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-[12.5px] text-[var(--muted)]">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <Link
+            href="/"
+            className="font-semibold text-[13px] tracking-[-0.012em] text-[var(--fg)]"
+          >
+            codydev
+            <span className="font-normal text-[var(--muted)]">.blog</span>
+          </Link>
+          <span>© {year}</span>
+        </div>
+        <nav
+          aria-label="Footer"
+          className="flex items-center gap-5 text-[13px]"
+        >
+          <Link
+            href="/posts"
+            className="hover:text-[var(--fg)] transition-colors duration-200"
+          >
+            Posts
+          </Link>
+          <Link
+            href="/tags"
+            className="hover:text-[var(--fg)] transition-colors duration-200"
+          >
+            Tags
+          </Link>
+          <Link
+            href="/about"
+            className="hover:text-[var(--fg)] transition-colors duration-200"
+          >
+            About
+          </Link>
+          <a
+            href="/feed.xml"
+            className="hover:text-[var(--fg)] transition-colors duration-200"
+          >
+            RSS
+          </a>
+        </nav>
+      </div>
     </footer>
   );
 }

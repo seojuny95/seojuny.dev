@@ -1,24 +1,45 @@
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
+import { SearchTrigger } from './SearchTrigger';
+import { MobileMenu } from './MobileMenu';
 
 export function Header() {
   return (
-    <header className="reveal reveal-delay-1 pt-8 pb-5 mb-10 flex flex-wrap items-center gap-x-5 gap-y-4 text-[13px] tracking-[0.01em] sm:pt-9 sm:pb-6 sm:mb-12">
-      <Link
-        href="/"
-        className="font-medium tracking-[-0.01em] text-[15px]"
-      >
-        codydev
-        <span className="text-[var(--muted)] font-normal">.blog</span>
-      </Link>
-      <nav className="order-3 w-full flex items-center gap-4 text-[var(--muted)] sm:order-2 sm:w-auto sm:ml-auto sm:gap-5">
-        <Link href="/posts" className="link hover:text-[var(--fg)] transition-colors duration-300">Posts</Link>
-        <Link href="/tags" className="link hover:text-[var(--fg)] transition-colors duration-300">Tags</Link>
-        <Link href="/about" className="link hover:text-[var(--fg)] transition-colors duration-300">About</Link>
-        <Link href="/search" className="link hover:text-[var(--fg)] transition-colors duration-300" aria-label="Search">Search</Link>
-      </nav>
-      <div className="order-2 ml-auto sm:order-3 sm:ml-0">
-        <ThemeToggle />
+    <header className="sticky top-0 z-40 border-b border-[var(--rule)] bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur-md">
+      <div className="mx-auto w-full max-w-[720px] px-4 sm:px-5 h-[57px] flex items-center">
+        <Link
+          href="/"
+          aria-label="codydev.blog"
+          className="shrink-0 font-semibold text-[15px] tracking-[-0.012em]"
+        >
+          codydev
+          <span className="text-[var(--muted)] font-normal">.blog</span>
+        </Link>
+
+        <nav
+          aria-label="Primary"
+          className="hidden md:flex items-center gap-6 ml-8 text-[13.5px] font-medium text-[var(--muted)]"
+        >
+          <Link href="/posts" className="hover:text-[var(--fg)] transition-colors duration-200">
+            Posts
+          </Link>
+          <Link href="/tags" className="hover:text-[var(--fg)] transition-colors duration-200">
+            Tags
+          </Link>
+          <Link href="/about" className="hover:text-[var(--fg)] transition-colors duration-200">
+            About
+          </Link>
+        </nav>
+
+        <div className="hidden md:flex items-center gap-4 ml-auto pl-4 border-l border-[var(--rule)]">
+          <SearchTrigger />
+          <ThemeToggle />
+        </div>
+
+        <div className="md:hidden ml-auto flex items-center gap-3">
+          <SearchTrigger />
+          <MobileMenu />
+        </div>
       </div>
     </header>
   );
