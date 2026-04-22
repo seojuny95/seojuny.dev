@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# seojun.blog
 
-## Getting Started
+Minimal personal blog built with Next.js App Router + MDX.
 
-First, run the development server:
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Write a post
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `content/posts/YYYY-MM-DD-slug.mdx` with frontmatter:
 
-## Learn More
+```mdx
+---
+title: "제목"
+date: "2026-04-22"
+summary: "요약 (선택)"
+tags: ["태그"]
+draft: false
+---
 
-To learn more about Next.js, take a look at the following resources:
+본문을 여기에 Markdown으로 작성합니다.
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Filename prefix `YYYY-MM-DD-` is stripped — slug becomes everything after.
+- `draft: true` excludes the post from the build.
+- Images go in `public/` and are referenced as `/filename.jpg`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Test
 
-## Deploy on Vercel
+```bash
+pnpm test
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm build
+pnpm start   # production preview
+```
+
+## Deploy
+
+Push to `main` on a GitHub repo linked to a Vercel project. Vercel auto-deploys.
+
+After the first deploy, set `NEXT_PUBLIC_SITE_URL` to the deployed URL (e.g., `https://seojun-blog.vercel.app`) so the RSS feed links are absolute. Redeploy once.
+
+## Structure
+
+```
+app/           # App Router pages and route handlers
+components/    # Reusable UI components
+content/       # Posts and About content (source of truth)
+lib/           # Server-side helpers (posts.ts)
+public/        # Static assets
+```
