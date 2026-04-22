@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js (App Router), TypeScript, Tailwind CSS v4, `next-mdx-remote/rsc`, `gray-matter`, `next-themes`, `fuse.js`, `feed`, Vitest.
 
-**Working directory:** `/Users/seojun/Desktop/my-blog` (already git-inited; spec committed).
+**Working directory:** the repo root (already git-inited; spec committed).
 
 ---
 
@@ -19,7 +19,7 @@
 
 - [ ] **Step 1: Scaffold with create-next-app**
 
-Run from `/Users/seojun/Desktop/my-blog`:
+Run from the repo root:
 
 ```bash
 pnpm create next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*" --use-pnpm --no-turbopack --yes
@@ -451,7 +451,7 @@ import { ThemeToggle } from './ThemeToggle';
 export function Header() {
   return (
     <header className="ui-sans text-sm flex items-center justify-between py-6 border-b border-rule mb-10">
-      <Link href="/" className="no-underline font-medium">seojun.blog</Link>
+      <Link href="/" className="no-underline font-medium">codydev.blog</Link>
       <nav className="flex items-center gap-4">
         <Link href="/posts" className="no-underline">Posts</Link>
         <Link href="/tags" className="no-underline">Tags</Link>
@@ -472,7 +472,7 @@ export function Header() {
 export function Footer() {
   return (
     <footer className="ui-sans text-sm text-muted border-t border-rule mt-16 py-6 flex justify-between">
-      <span>© {new Date().getFullYear()} seojun</span>
+      <span>© {new Date().getFullYear()} codydev</span>
       <a href="/feed.xml" className="no-underline">RSS</a>
     </footer>
   );
@@ -499,7 +499,7 @@ const notoSerifKr = Noto_Serif_KR({
 });
 
 export const metadata: Metadata = {
-  title: 'seojun.blog',
+  title: 'codydev.blog',
   description: '개인 블로그',
   alternates: {
     types: { 'application/atom+xml': '/feed.xml' },
@@ -626,7 +626,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   try {
     const post = getPostBySlug(slug);
-    return { title: `${post.title} — seojun.blog`, description: post.summary };
+    return { title: `${post.title} — codydev.blog`, description: post.summary };
   } catch {
     return {};
   }
@@ -751,7 +751,7 @@ git add -A && git commit -m "feat: post page with MDX rendering and adjacent pos
 import Link from 'next/link';
 import { getAllPosts } from '@/lib/posts';
 
-export const metadata = { title: 'Posts — seojun.blog' };
+export const metadata = { title: 'Posts — codydev.blog' };
 
 export default function PostsPage() {
   const posts = getAllPosts();
@@ -808,7 +808,7 @@ git add -A && git commit -m "feat: archive page grouped by year"
 import Link from 'next/link';
 import { getAllTags } from '@/lib/posts';
 
-export const metadata = { title: 'Tags — seojun.blog' };
+export const metadata = { title: 'Tags — codydev.blog' };
 
 export default function TagsPage() {
   const tags = getAllTags();
@@ -844,7 +844,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ tag: string }> }) {
   const { tag } = await params;
-  return { title: `#${decodeURIComponent(tag)} — seojun.blog` };
+  return { title: `#${decodeURIComponent(tag)} — codydev.blog` };
 }
 
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
@@ -885,12 +885,7 @@ git add -A && git commit -m "feat: tags index and tag detail pages"
 ```mdx
 # About
 
-안녕하세요. 프론트엔드 개발자 유서준입니다.
-
 이 블로그는 개발과 일상에 대한 생각을 기록하는 공간입니다.
-
-- GitHub: [github.com/seojun](https://github.com/seojun)
-- Email: sytwoyou@gmail.com
 ```
 
 - [ ] **Step 2: About page**
@@ -902,7 +897,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
-export const metadata = { title: 'About — seojun.blog' };
+export const metadata = { title: 'About — codydev.blog' };
 
 export default function AboutPage() {
   const source = fs.readFileSync(
@@ -995,7 +990,7 @@ export function SearchBox({ index }: { index: SearchEntry[] }) {
 import { getSearchIndex } from '@/lib/posts';
 import { SearchBox } from '@/components/SearchBox';
 
-export const metadata = { title: 'Search — seojun.blog' };
+export const metadata = { title: 'Search — codydev.blog' };
 
 export default function SearchPage() {
   const index = getSearchIndex();
@@ -1033,16 +1028,16 @@ git add -A && git commit -m "feat: client-side fuzzy search with fuse.js"
 import { Feed } from 'feed';
 import { getAllPosts } from '@/lib/posts';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://seojun-blog.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://codydev.vercel.app';
 
 export function GET() {
   const feed = new Feed({
-    title: 'seojun.blog',
+    title: 'codydev.blog',
     description: '개인 블로그',
     id: SITE_URL,
     link: SITE_URL,
     language: 'ko',
-    copyright: `© ${new Date().getFullYear()} seojun`,
+    copyright: `© ${new Date().getFullYear()} codydev`,
     feedLinks: { atom: `${SITE_URL}/feed.xml` },
   });
 
@@ -1257,7 +1252,7 @@ git add -A && git commit -m "chore: seed initial post and isolate tests from rea
 Overwrite `README.md`:
 
 ```markdown
-# seojun.blog
+# codydev.blog
 
 Personal blog built with Next.js App Router + MDX.
 

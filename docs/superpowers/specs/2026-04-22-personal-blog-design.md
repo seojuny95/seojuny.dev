@@ -1,7 +1,7 @@
 # Personal Blog — Design Spec
 
 **Date:** 2026-04-22
-**Owner:** seojun
+**Owner:** codydev
 
 ## Goal
 

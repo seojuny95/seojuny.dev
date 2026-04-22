@@ -1,4 +1,4 @@
-# seojun.blog
+# codydev.blog
 
 Minimal personal blog built with Next.js App Router + MDX.
 
@@ -48,7 +48,7 @@ pnpm start   # production preview
 
 Push to `main` on a GitHub repo linked to a Vercel project. Vercel auto-deploys.
 
-After the first deploy, set `NEXT_PUBLIC_SITE_URL` to the deployed URL (e.g., `https://seojun-blog.vercel.app`) so the RSS feed links are absolute. Redeploy once.
+After the first deploy, set `NEXT_PUBLIC_SITE_URL` to the deployed URL (e.g., `https://codydev.vercel.app`) so the RSS feed links are absolute. Redeploy once.
 
 ## Structure
 
