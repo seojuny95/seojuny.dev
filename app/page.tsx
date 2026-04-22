@@ -5,13 +5,10 @@ export default function HomePage() {
   const posts = getAllPosts().slice(0, 20);
   return (
     <section>
-      <div className="mb-14">
-        <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)] mb-3">
-          Journal
+      <div className="mb-10">
+        <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)]">
+          Posts
         </p>
-        <h1 className="text-[22px] leading-[1.45] tracking-[-0.01em] max-w-[28ch]">
-          생각을 기록합니다.
-        </h1>
       </div>
       <PostList posts={posts} />
     </section>

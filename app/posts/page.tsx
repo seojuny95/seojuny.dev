@@ -20,14 +20,14 @@ export default function PostsPage() {
         <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)] mb-2">
           Archive
         </p>
-        <h1 className="text-[22px] leading-[1.4] tracking-[-0.01em]">Posts</h1>
+        <h1 className="text-[28px] font-semibold leading-[1.25] tracking-[-0.015em]">Posts</h1>
       </header>
       {years.length === 0 ? (
         <p className="text-sm text-[var(--muted)]">글이 아직 없습니다.</p>
       ) : (
         years.map((year, yi) => (
           <div key={year} className="mb-12">
-            <h2 className="text-[12px] text-[var(--muted)] mb-2 tabular-nums tracking-[0.14em]">
+            <h2 className="text-[13px] text-[var(--muted)] mb-2 tabular-nums tracking-[0.14em]">
               {year}
             </h2>
             <ul className="stagger list-none p-0 m-0">
@@ -41,10 +41,10 @@ export default function PostsPage() {
                     href={`/posts/${p.slug}`}
                     className="flex flex-col gap-0.5 py-3 sm:flex-row sm:items-baseline sm:gap-5"
                   >
-                    <time className="text-[11px] sm:text-[12px] text-[var(--muted)] sm:w-[72px] shrink-0 tabular-nums tracking-wide transition-colors duration-300 group-hover:text-[var(--fg)]">
+                    <time className="text-[13px] text-[var(--muted)] sm:w-[76px] shrink-0 tabular-nums tracking-wide transition-colors duration-300 group-hover:text-[var(--fg)]">
                       {p.date}
                     </time>
-                    <span className="flex-1 leading-snug row-nudge inline-block">
+                    <span className="flex-1 font-medium leading-snug row-nudge inline-block">
                       <span className="link">{p.title}</span>
                     </span>
                   </Link>

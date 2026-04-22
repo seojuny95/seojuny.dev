@@ -30,7 +30,7 @@ export default async function TagPage({
         <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)] mb-2">
           Tag
         </p>
-        <h1 className="text-[22px] leading-[1.4] tracking-[-0.01em]">
+        <h1 className="text-[28px] font-semibold leading-[1.25] tracking-[-0.015em]">
           #{tag}
         </h1>
       </header>

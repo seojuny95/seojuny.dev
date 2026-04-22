@@ -71,7 +71,7 @@ export function MobileMenu() {
           className="mobile-menu-in fixed inset-0 z-50 bg-[var(--bg)] md:hidden flex flex-col"
         >
           <div className="shrink-0 border-b border-[var(--rule)]">
-            <div className="mx-auto w-full max-w-[720px] px-4 sm:px-5 h-[57px] flex items-center">
+            <div className="mx-auto w-full max-w-[680px] px-4 sm:px-5 h-[57px] flex items-center">
               <Link
                 href="/"
                 onClick={() => setOpen(false)}
@@ -103,7 +103,7 @@ export function MobileMenu() {
               </button>
             </div>
           </div>
-          <nav className="mobile-menu-stagger flex flex-col px-5 pt-4 pb-6 text-[22px] font-semibold tracking-[-0.01em]">
+          <nav className="mobile-menu-stagger flex flex-col px-5 pt-4 pb-6 text-[24px] font-semibold tracking-[-0.012em]">
             {NAV.map((item, i) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
@@ -145,7 +145,7 @@ export function MobileMenu() {
             })}
           </nav>
 
-          <div className="mt-auto px-5 py-5 border-t border-[var(--rule)] flex items-center justify-between text-[13px] text-[var(--muted)]">
+          <div className="mt-auto px-5 py-5 border-t border-[var(--rule)] flex items-center justify-between text-[14px] text-[var(--muted)]">
             <span>Theme</span>
             <ThemeToggle />
           </div>

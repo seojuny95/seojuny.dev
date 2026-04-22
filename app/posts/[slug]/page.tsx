@@ -42,16 +42,16 @@ export default async function PostPage({
     <article>
       <Link
         href="/posts"
-        className="inline-block text-[13px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
+        className="inline-block text-[14px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
       >
         ← Posts
       </Link>
 
       <header className="mt-8 mb-10 sm:mt-10 sm:mb-12">
-        <h1 className="text-[24px] sm:text-[28px] font-semibold leading-[1.25] tracking-[-0.015em]">
+        <h1 className="text-[30px] sm:text-[36px] font-semibold leading-[1.2] tracking-[-0.018em]">
           {post.title}
         </h1>
-        <div className="text-[12px] sm:text-[12.5px] text-[var(--muted)] mt-3 sm:mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums tracking-wide">
+        <div className="text-[13px] text-[var(--muted)] mt-3 sm:mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums tracking-wide">
           <time>{post.date}</time>
           {post.tags.length > 0 ? (
             <>
@@ -78,13 +78,13 @@ export default async function PostPage({
 
       <hr className="mt-16 mb-8 sm:mt-20 sm:mb-10" />
 
-      <nav className="text-[13px] flex flex-col gap-6 sm:flex-row sm:justify-between">
+      <nav className="text-[14px] flex flex-col gap-6 sm:flex-row sm:justify-between">
         {next ? (
           <Link
             href={`/posts/${next.slug}`}
             className="group block min-w-0 sm:flex-1"
           >
-            <span className="block text-[var(--muted)] text-[11.5px] uppercase tracking-[0.15em] mb-1">
+            <span className="block text-[var(--muted)] text-[13px] uppercase tracking-[0.15em] mb-1">
               ← 이전 글
             </span>
             <span className="truncate block group-hover:text-[var(--muted)] transition-colors duration-300">
@@ -99,7 +99,7 @@ export default async function PostPage({
             href={`/posts/${prev.slug}`}
             className="group block min-w-0 sm:flex-1 sm:text-right"
           >
-            <span className="block text-[var(--muted)] text-[11.5px] uppercase tracking-[0.15em] mb-1">
+            <span className="block text-[var(--muted)] text-[13px] uppercase tracking-[0.15em] mb-1">
               다음 글 →
             </span>
             <span className="truncate block group-hover:text-[var(--muted)] transition-colors duration-300">

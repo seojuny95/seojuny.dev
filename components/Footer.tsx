@@ -4,11 +4,11 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="border-t border-[var(--rule)] mt-20 sm:mt-28">
-      <div className="mx-auto w-full max-w-[720px] px-4 sm:px-5 py-7 sm:py-9 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-[12.5px] text-[var(--muted)]">
+      <div className="mx-auto w-full max-w-[680px] px-4 sm:px-5 py-7 sm:py-9 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-[13px] text-[var(--muted)]">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <Link
             href="/"
-            className="font-semibold text-[13px] tracking-[-0.012em] text-[var(--fg)]"
+            className="font-semibold text-[15px] tracking-[-0.012em] text-[var(--fg)]"
           >
             codydev
             <span className="font-normal text-[var(--muted)]">.blog</span>
@@ -17,7 +17,7 @@ export function Footer() {
         </div>
         <nav
           aria-label="Footer"
-          className="flex items-center gap-5 text-[13px]"
+          className="flex items-center gap-5 text-[14px]"
         >
           <Link
             href="/posts"

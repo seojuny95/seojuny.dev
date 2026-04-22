@@ -13,7 +13,7 @@
 :root.dark {
   --bg: #0c0c0b;
   --fg: #ededeb;
-  --muted: #7a7a75;
+  --muted: #8e8e88;
   --rule: #232321;
   --accent: #ededeb;
   --yc: #ff7733;
@@ -34,9 +34,8 @@ body {
 
 body {
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, sans-serif;
-  font-size: 17px;
-  line-height: 1.7;
-  font-feature-settings: "ss03", "cv11";
+  font-size: 18px;
+  line-height: 1.72;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -56,8 +55,8 @@ hr {
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+  background: color-mix(in srgb, var(--fg) 16%, transparent);
+  color: inherit;
 }
 
 /* Underline-slide link. */
@@ -228,7 +227,6 @@ hr {
 
 /* Post body */
 .prose-blog {
-  font-size: 17px;
   line-height: 1.75;
 }
 .prose-blog h1,
@@ -240,8 +238,8 @@ hr {
   margin-top: 2em;
   margin-bottom: 0.6em;
 }
-.prose-blog h2 { font-size: 1.35rem; }
-.prose-blog h3 { font-size: 1.1rem; }
+.prose-blog h2 { font-size: 1.4rem; }
+.prose-blog h3 { font-size: 1.15rem; }
 .prose-blog p { margin: 1em 0; }
 .prose-blog a {
   background-image: linear-gradient(currentColor, currentColor);

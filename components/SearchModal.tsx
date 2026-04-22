@@ -128,7 +128,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
             onKeyDown={onInputKey}
             autoComplete="off"
             spellCheck={false}
-            className="w-full bg-transparent border-0 outline-none text-[15px] pr-7 placeholder:text-[var(--muted)]"
+            className="w-full bg-transparent border-0 outline-none text-[16px] pr-7 placeholder:text-[var(--muted)]"
           />
           {query ? (
             <button
@@ -159,7 +159,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
         </div>
 
         {trimmed ? (
-          <p className="px-4 pt-2.5 text-[11px] text-[var(--muted)] tabular-nums">
+          <p className="px-4 pt-2.5 text-[12px] text-[var(--muted)] tabular-nums">
             <span>{results.length}</span>
             <span className="mx-1.5">·</span>
             <span>&ldquo;{trimmed}&rdquo;</span>
@@ -171,11 +171,11 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
           className="max-h-[50vh] overflow-y-auto list-none p-1.5 m-0"
         >
           {!trimmed ? (
-            <li className="py-10 text-center text-[13px] text-[var(--muted)]">
+            <li className="py-10 text-center text-[14px] text-[var(--muted)]">
               검색어를 입력하세요
             </li>
           ) : results.length === 0 ? (
-            <li className="py-10 text-center text-[13px] text-[var(--muted)]">
+            <li className="py-10 text-center text-[14px] text-[var(--muted)]">
               결과 없음
             </li>
           ) : (
@@ -196,9 +196,9 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
                       : ''
                   }`}
                 >
-                  <div className="text-[14px] leading-snug">{r.title}</div>
+                  <div className="text-[15px] font-medium leading-snug">{r.title}</div>
                   {r.summary ? (
-                    <div className="text-[12.5px] text-[var(--muted)] mt-1 truncate">
+                    <div className="text-[13px] text-[var(--muted)] mt-1 truncate">
                       {r.summary}
                     </div>
                   ) : null}
@@ -208,7 +208,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
           )}
         </ul>
 
-        <div className="border-t border-[var(--rule)] px-4 py-2.5 flex items-center justify-between text-[11px] text-[var(--muted)]">
+        <div className="border-t border-[var(--rule)] px-4 py-2.5 flex items-center justify-between text-[12px] text-[var(--muted)]">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <kbd className="kbd">↑</kbd>
