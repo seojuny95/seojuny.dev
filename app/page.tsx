@@ -10,7 +10,7 @@ export default function HomePage() {
           Journal
         </p>
         <h1 className="text-[22px] leading-[1.45] tracking-[-0.01em] max-w-[28ch]">
-          생각을 정리하고, 오래 두고 읽을 글을 씁니다.
+          생각을 기록합니다.
         </h1>
       </div>
       <PostList posts={posts} />
