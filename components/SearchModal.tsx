@@ -202,6 +202,18 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
                       {r.summary}
                     </div>
                   ) : null}
+                  {r.tags && r.tags.length > 0 ? (
+                    <div className="mt-1.5 flex flex-wrap gap-1.5 text-[11px] text-[var(--muted)]">
+                      {r.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="px-1.5 py-0.5 rounded-sm bg-[color-mix(in_srgb,var(--fg)_5%,transparent)]"
+                        >
+                          #{t}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
                 </button>
               </li>
             ))

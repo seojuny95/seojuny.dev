@@ -26,12 +26,6 @@ export function Footer() {
             Posts
           </Link>
           <Link
-            href="/tags"
-            className="hover:text-[var(--fg)] transition-colors duration-200"
-          >
-            Tags
-          </Link>
-          <Link
             href="/about"
             className="hover:text-[var(--fg)] transition-colors duration-200"
           >

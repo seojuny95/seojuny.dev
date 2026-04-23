@@ -23,9 +23,6 @@ export function Header() {
           <Link href="/posts" className="hover:text-[var(--fg)] transition-colors duration-200">
             Posts
           </Link>
-          <Link href="/tags" className="hover:text-[var(--fg)] transition-colors duration-200">
-            Tags
-          </Link>
           <Link href="/about" className="hover:text-[var(--fg)] transition-colors duration-200">
             About
           </Link>

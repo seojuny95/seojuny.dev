@@ -53,18 +53,14 @@ export default async function PostPage({
         </h1>
         <div className="text-[13px] text-[var(--muted)] mt-3 sm:mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums tracking-wide">
           <time>{post.date}</time>
+          <span aria-hidden className="opacity-60">·</span>
+          <span>{post.readingTime}분</span>
           {post.tags.length > 0 ? (
             <>
               <span aria-hidden className="opacity-60">·</span>
               <span className="flex gap-2.5">
                 {post.tags.map((t) => (
-                  <Link
-                    key={t}
-                    href={`/tags/${encodeURIComponent(t)}`}
-                    className="link hover:text-[var(--fg)] transition-colors duration-300"
-                  >
-                    #{t}
-                  </Link>
+                  <span key={t}>#{t}</span>
                 ))}
               </span>
             </>

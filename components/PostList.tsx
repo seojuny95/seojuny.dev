@@ -14,17 +14,17 @@ export function PostList({ posts }: { posts: Post[] }) {
           style={{ '--i': i } as CSSProperties}
           className="group border-t border-[var(--rule)] first:border-t-0"
         >
-          <Link href={`/posts/${p.slug}`} className="block py-4">
-            <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-5">
-              <time className="text-[13px] text-[var(--muted)] sm:w-[76px] shrink-0 tabular-nums tracking-wide transition-colors duration-300 group-hover:text-[var(--fg)]">
-                {p.date}
-              </time>
-              <span className="flex-1 font-medium leading-snug row-nudge inline-block">
-                <span className="link">{p.title}</span>
-              </span>
+          <Link href={`/posts/${p.slug}`} className="block py-4 row-nudge">
+            <div className="font-medium leading-snug">
+              <span className="link">{p.title}</span>
+            </div>
+            <div className="flex items-baseline gap-2 text-[13px] text-[var(--muted)] mt-1 tabular-nums tracking-wide transition-colors duration-300 group-hover:text-[var(--fg)]">
+              <time>{p.date}</time>
+              <span aria-hidden className="opacity-60">·</span>
+              <span>{p.readingTime}분</span>
             </div>
             {p.summary ? (
-              <p className="text-[14px] text-[var(--muted)] mt-1.5 sm:ml-[96px] leading-relaxed row-nudge">
+              <p className="text-[14px] text-[var(--muted)] mt-1.5 leading-relaxed">
                 {p.summary}
               </p>
             ) : null}

@@ -9,12 +9,31 @@ export type Post = {
   summary?: string;
   tags: string[];
   content: string;
+  readingTime: number;
 };
 
-export type TagInfo = { tag: string; count: number };
 export type SearchEntry = Pick<Post, 'slug' | 'title' | 'summary' | 'tags'>;
 
 type RawPost = Post & { draft: boolean };
+
+const KOREAN_CPM = 500;
+const LATIN_WPM = 220;
+
+export function readingTime(content: string): number {
+  const stripped = content
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/<[^>]+>/g, ' ');
+  const korean = (stripped.match(/[가-힣]/g) ?? []).length;
+  const latin = stripped
+    .replace(/[가-힣]/g, ' ')
+    .split(/\s+/)
+    .filter((w) => /[A-Za-z0-9]/.test(w)).length;
+  const minutes = korean / KOREAN_CPM + latin / LATIN_WPM;
+  return Math.max(1, Math.ceil(minutes));
+}
 
 function postsDir(): string {
   return path.join(process.cwd(), 'content', 'posts');
@@ -42,6 +61,7 @@ function readAllRaw(): RawPost[] {
       summary: data.summary ? String(data.summary) : undefined,
       tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
       content,
+      readingTime: readingTime(content),
       draft: Boolean(data.draft),
     };
   });
@@ -58,20 +78,6 @@ export function getPostBySlug(slug: string): Post {
   const post = getAllPosts().find((p) => p.slug === slug);
   if (!post) throw new Error(`Post not found: ${slug}`);
   return post;
-}
-
-export function getAllTags(): TagInfo[] {
-  const counts = new Map<string, number>();
-  for (const p of getAllPosts()) {
-    for (const t of p.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
-  }
-  return [...counts.entries()]
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
-}
-
-export function getPostsByTag(tag: string): Post[] {
-  return getAllPosts().filter((p) => p.tags.includes(tag));
 }
 
 export function getAdjacentPosts(slug: string): { prev?: Post; next?: Post } {

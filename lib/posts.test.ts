@@ -57,20 +57,6 @@ describe('getPostBySlug', () => {
   });
 });
 
-describe('getAllTags', () => {
-  it('counts tags correctly, sorted by count desc', () => {
-    const tags = posts.getAllTags();
-    expect(tags[0]).toEqual({ tag: '일기', count: 2 });
-    expect(tags.find((t) => t.tag === '개발')).toEqual({ tag: '개발', count: 1 });
-  });
-});
-
-describe('getPostsByTag', () => {
-  it('filters posts by tag', () => {
-    expect(posts.getPostsByTag('개발').map((p) => p.slug)).toEqual(['second']);
-  });
-});
-
 describe('getAdjacentPosts', () => {
   it('prev=newer, next=older', () => {
     const { prev, next } = posts.getAdjacentPosts('first');
@@ -92,5 +78,33 @@ describe('getSearchIndex', () => {
     expect(idx[0]).toHaveProperty('slug');
     expect(idx[0]).toHaveProperty('title');
     expect(idx[0]).not.toHaveProperty('content');
+  });
+});
+
+describe('readingTime', () => {
+  it('returns at least 1 minute for short content', () => {
+    expect(posts.readingTime('짧은 글')).toBe(1);
+  });
+
+  it('counts Korean characters at ~500 cpm', () => {
+    expect(posts.readingTime('가'.repeat(1000))).toBe(2);
+  });
+
+  it('counts Latin words at ~220 wpm', () => {
+    const text = Array.from({ length: 660 }, (_, i) => `word${i}`).join(' ');
+    expect(posts.readingTime(text)).toBe(3);
+  });
+
+  it('ignores fenced code blocks', () => {
+    const prose = '가'.repeat(400);
+    const code = '\n```js\n' + 'let x = 1;\n'.repeat(2000) + '```\n';
+    expect(posts.readingTime(prose + code)).toBe(1);
+  });
+
+  it('attaches readingTime to every post', () => {
+    for (const p of posts.getAllPosts()) {
+      expect(typeof p.readingTime).toBe('number');
+      expect(p.readingTime).toBeGreaterThanOrEqual(1);
+    }
   });
 });
