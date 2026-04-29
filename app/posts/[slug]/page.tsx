@@ -2,6 +2,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
+import { Comments } from '@/components/Comments';
 
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -106,6 +107,10 @@ export default async function PostPage({
           <div className="hidden sm:block sm:flex-1" />
         )}
       </nav>
+
+      <section className="mt-16 sm:mt-20" aria-label="댓글">
+        <Comments />
+      </section>
     </article>
   );
 }
