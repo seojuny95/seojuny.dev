@@ -3,7 +3,7 @@
 import Giscus from '@giscus/react';
 import { useSyncExternalStore } from 'react';
 
-type GiscusTheme = 'light' | 'dark_dimmed';
+type Mode = 'light' | 'dark';
 
 function subscribeTheme(callback: () => void) {
   const observer = new MutationObserver(callback);
@@ -14,16 +14,29 @@ function subscribeTheme(callback: () => void) {
   return () => observer.disconnect();
 }
 
-function getThemeClient(): GiscusTheme {
-  return document.documentElement.classList.contains('dark') ? 'dark_dimmed' : 'light';
+function getMode(): Mode {
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
-function getThemeServer(): GiscusTheme {
+function getServerMode(): Mode {
   return 'light';
 }
 
+const noopSubscribe = () => () => {};
+
 export function Comments() {
-  const theme = useSyncExternalStore(subscribeTheme, getThemeClient, getThemeServer);
+  const mounted = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+  const mode = useSyncExternalStore(subscribeTheme, getMode, getServerMode);
+
+  // Theme URL needs to be absolute (giscus iframe fetches it cross-origin).
+  // Wait until mounted so window.location.origin is available.
+  const theme = mounted
+    ? `${window.location.origin}/giscus-theme-${mode}.css`
+    : 'light';
 
   return (
     <Giscus
