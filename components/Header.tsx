@@ -2,10 +2,11 @@ import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
 import { SearchTrigger } from './SearchTrigger';
 import { MobileMenu } from './MobileMenu';
+import { NavLinks } from './NavLinks';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--rule)] bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-[var(--rule)] bg-[color-mix(in_srgb,var(--bg)_94%,transparent)] backdrop-blur-sm">
       <div className="mx-auto w-full max-w-[680px] px-4 sm:px-5 h-[57px] flex items-center">
         <Link
           href="/"
@@ -16,17 +17,7 @@ export function Header() {
           <span className="text-[var(--muted)] font-normal">.blog</span>
         </Link>
 
-        <nav
-          aria-label="Primary"
-          className="hidden md:flex items-center gap-6 ml-8 text-[14px] font-medium text-[var(--muted)]"
-        >
-          <Link href="/posts" className="hover:text-[var(--fg)] transition-colors duration-200">
-            Posts
-          </Link>
-          <Link href="/about" className="hover:text-[var(--fg)] transition-colors duration-200">
-            About
-          </Link>
-        </nav>
+        <NavLinks />
 
         <div className="hidden md:flex items-center gap-4 ml-auto pl-4 border-l border-[var(--rule)]">
           <SearchTrigger />
