@@ -54,6 +54,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={`Switch to ${next} mode`}
+      aria-pressed={isDark}
       className="relative inline-flex w-[18px] h-[18px] items-center justify-center text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
     >
       <span
@@ -75,6 +76,9 @@ export function ThemeToggle() {
         }}
       >
         ☾
+      </span>
+      <span role="status" aria-live="polite" className="sr-only">
+        {isDark ? '다크 모드로 전환됨' : '라이트 모드로 전환됨'}
       </span>
     </button>
   );

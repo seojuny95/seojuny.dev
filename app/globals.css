@@ -13,7 +13,7 @@
 :root.dark {
   --bg: #0c0c0b;
   --fg: #ededeb;
-  --muted: #8e8e88;
+  --muted: #a8a8a0;
   --rule: #232321;
   --accent: #ededeb;
   --yc: #ff7733;
@@ -47,6 +47,51 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Keyboard focus ring — visible only via keyboard, never from mouse clicks. */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Visually hidden, reachable by SR + keyboard focus. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip-to-content link. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transform: translateY(-150%);
+  transition: transform 200ms ease;
+}
+.skip-link:focus {
+  transform: translateY(8px);
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
 }
 
 hr {
@@ -218,11 +263,9 @@ hr {
   .focus-underline::after,
   .row-nudge,
   .toggle-icon,
-  .hamburger-bar {
+  .hamburger-bar,
+  .skip-link {
     transition: none;
-  }
-  * {
-    transition: none !important;
   }
 }
 
