@@ -6,7 +6,7 @@ import { SearchModal } from '@/components/SearchModal';
 import { getSearchIndex } from '@/lib/posts';
 
 export const metadata: Metadata = {
-  title: 'codydev.blog',
+  title: 'seojuny.blog',
   description: '개인 블로그',
   alternates: {
     types: {

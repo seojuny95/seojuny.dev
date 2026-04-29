@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { getAllPosts } from '@/lib/posts';
 
-export const metadata = { title: 'Archive — codydev.blog' };
+export const metadata = { title: 'Archive — seojuny.blog' };
 
 export default function PostsPage() {
   const posts = getAllPosts();

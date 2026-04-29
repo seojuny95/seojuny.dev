@@ -10,7 +10,7 @@ export function Footer() {
             href="/"
             className="font-semibold text-[15px] tracking-[-0.012em] text-[var(--fg)]"
           >
-            codydev
+            seojuny
             <span className="font-normal text-[var(--muted)]">.blog</span>
           </Link>
           <span>© {year}</span>

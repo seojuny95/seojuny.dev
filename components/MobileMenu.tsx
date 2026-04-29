@@ -76,7 +76,7 @@ export function MobileMenu() {
                 onClick={() => setOpen(false)}
                 className="shrink-0 font-semibold text-[15px] tracking-[-0.012em]"
               >
-                codydev
+                seojuny
                 <span className="text-[var(--muted)] font-normal">.blog</span>
               </Link>
               <button
