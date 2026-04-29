@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import type { Post } from '@/lib/posts';
+import { formatDate } from '@/lib/posts';
 
 export function PostList({ posts }: { posts: Post[] }) {
   if (posts.length === 0) {
@@ -19,7 +20,7 @@ export function PostList({ posts }: { posts: Post[] }) {
               <span className="link">{p.title}</span>
             </div>
             <div className="flex items-baseline gap-2 text-[13px] text-[var(--muted)] mt-1 tabular-nums tracking-wide transition-colors duration-300 group-hover:text-[var(--fg)]">
-              <time>{p.date}</time>
+              <time dateTime={p.date}>{formatDate(p.date)}</time>
               <span aria-hidden className="opacity-60">·</span>
               <span>{p.readingTime}분</span>
             </div>

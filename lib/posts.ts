@@ -19,6 +19,18 @@ type RawPost = Post & { draft: boolean };
 const KOREAN_CPM = 500;
 const LATIN_WPM = 220;
 
+const DATE_FORMATTER = new Intl.DateTimeFormat('ko-KR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+export function formatDate(isoDate: string): string {
+  const d = new Date(isoDate);
+  if (Number.isNaN(d.getTime())) return isoDate;
+  return DATE_FORMATTER.format(d);
+}
+
 export function readingTime(content: string): number {
   const stripped = content
     .replace(/```[\s\S]*?```/g, ' ')

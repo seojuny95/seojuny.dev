@@ -1,7 +1,7 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllPosts, getPostBySlug, getAdjacentPosts } from '@/lib/posts';
+import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
 
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -52,7 +52,7 @@ export default async function PostPage({
           {post.title}
         </h1>
         <div className="text-[13px] text-[var(--muted)] mt-3 sm:mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums tracking-wide">
-          <time>{post.date}</time>
+          <time dateTime={post.date}>{formatDate(post.date)}</time>
           <span aria-hidden className="opacity-60">·</span>
           <span>{post.readingTime}분</span>
           {post.tags.length > 0 ? (
