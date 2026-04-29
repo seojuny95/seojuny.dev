@@ -37,7 +37,7 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 
 **Theme / styling**
 - `next-themes` (`attribute="class"`) toggles `:root.dark`; theme variables are CSS custom props in `app/globals.css` consumed through Tailwind v4's `@theme inline`
-- Body font is Pretendard (variable, dynamic-subset) loaded via `@import "pretendard/..."` in `app/globals.css`. The `.ui-sans` class is now a no-op (`font-family: inherit`) retained because many components reference it. Post bodies use the `.prose-blog` class, not `@tailwindcss/typography`.
+- Body font is Pretendard (variable, dynamic-subset) loaded via `@import "pretendard/..."` in `app/globals.css`. Post bodies use the `.prose-blog` class, not `@tailwindcss/typography`.
 
 ## Authoring conventions
 
