@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script>{themeInit}</script>
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <a href="#main" className="skip-link">본문으로 건너뛰기</a>
         <div className="min-h-screen flex flex-col">
           <Header />
