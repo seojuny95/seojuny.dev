@@ -36,8 +36,7 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 - Search is a global ⌘K modal: `app/layout.tsx` builds `SearchEntry[]` (slug/title/summary/tags — no body content) and passes it to the `SearchModal` client component, which runs `fuse.js` in-browser. There is no `/search` route.
 
 **Theme / styling**
-- No `next-themes` dependency: an inline script in `app/layout.tsx` reads `localStorage.theme` + `prefers-color-scheme` before paint and toggles `:root.dark`. `components/ThemeToggle.tsx` flips the class and persists; `lib/use-theme.ts` exposes the current value to client components via `useSyncExternalStore` watching `documentElement.className`.
-- Theme variables are CSS custom props in `app/globals.css` consumed through Tailwind v4's `@theme inline`.
+- Light mode only. Theme variables are CSS custom props on `:root` in `app/globals.css`, consumed through Tailwind v4's `@theme inline`.
 - Body font is Pretendard (variable, dynamic-subset) loaded via `@import "pretendard/..."` in `app/globals.css`. Post bodies use the `.prose-blog` class, not `@tailwindcss/typography`.
 
 ## Authoring conventions

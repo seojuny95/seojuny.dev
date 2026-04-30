@@ -10,15 +10,6 @@
   --yc: #f26522;
 }
 
-:root.dark {
-  --bg: #0c0c0b;
-  --fg: #ededeb;
-  --muted: #a8a8a0;
-  --rule: #232321;
-  --accent: #ededeb;
-  --yc: #ff7733;
-}
-
 @theme inline {
   --color-bg: var(--bg);
   --color-fg: var(--fg);
@@ -235,11 +226,6 @@ hr {
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04),
     0 12px 36px -8px rgba(0, 0, 0, 0.18);
-}
-:root.dark .search-panel {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    0 20px 48px -8px rgba(0, 0, 0, 0.6);
 }
 
 @media (prefers-reduced-motion: reduce) {

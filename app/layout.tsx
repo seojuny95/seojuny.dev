@@ -15,15 +15,10 @@ export const metadata: Metadata = {
   },
 };
 
-const themeInit = `(function(){try{var s=localStorage.getItem('theme');var p=window.matchMedia('(prefers-color-scheme: dark)').matches;var d=s==='dark'||(!s&&p);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const searchIndex = getSearchIndex();
   return (
-    <html lang="ko" suppressHydrationWarning>
-      <head>
-        <script>{themeInit}</script>
-      </head>
+    <html lang="ko">
       <body>
         <a href="#main" className="skip-link">본문으로 건너뛰기</a>
         <div className="min-h-screen flex flex-col">

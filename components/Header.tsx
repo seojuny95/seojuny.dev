@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ThemeToggle } from './ThemeToggle';
 import { SearchTrigger } from './SearchTrigger';
 import { MobileMenu } from './MobileMenu';
 import { NavLinks } from './NavLinks';
@@ -19,9 +18,8 @@ export function Header() {
 
         <NavLinks />
 
-        <div className="hidden md:flex items-center gap-4 ml-auto pl-4 border-l border-[var(--rule)]">
+        <div className="hidden md:flex items-center ml-auto pl-4 border-l border-[var(--rule)]">
           <SearchTrigger />
-          <ThemeToggle />
         </div>
 
         <div className="md:hidden ml-auto flex items-center gap-3">

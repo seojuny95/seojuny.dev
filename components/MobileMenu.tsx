@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ThemeToggle } from './ThemeToggle';
 import { NAV_ITEMS } from '@/lib/nav';
 
 export function MobileMenu() {
@@ -139,11 +138,6 @@ export function MobileMenu() {
               );
             })}
           </nav>
-
-          <div className="mt-auto px-5 py-5 border-t border-[var(--rule)] flex items-center justify-between text-[14px] text-[var(--muted)]">
-            <span>Theme</span>
-            <ThemeToggle />
-          </div>
         </div>,
             document.body,
           )
