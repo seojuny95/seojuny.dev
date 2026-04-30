@@ -9,11 +9,11 @@ export function Header() {
       <div className="mx-auto w-full max-w-[680px] px-4 sm:px-5 h-[57px] flex items-center">
         <Link
           href="/"
-          aria-label="seojuny.blog"
+          aria-label="seojuny.dev"
           className="shrink-0 font-semibold text-[15px] tracking-[-0.012em]"
         >
           seojuny
-          <span className="text-[var(--muted)] font-normal">.blog</span>
+          <span className="text-[var(--muted)] font-normal">.dev</span>
         </Link>
 
         <NavLinks />

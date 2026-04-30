@@ -17,7 +17,7 @@ export async function generateMetadata({
   try {
     const post = getPostBySlug(slug);
     return {
-      title: `${post.title} — seojuny.blog`,
+      title: `${post.title} — seojuny.dev`,
       description: post.summary,
     };
   } catch {

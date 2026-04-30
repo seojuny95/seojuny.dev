@@ -4,11 +4,11 @@ import { getAllPosts } from '@/lib/posts';
 export const dynamic = 'force-static';
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://seojuny.blog';
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://seojuny.dev';
 
 export function GET() {
   const feed = new Feed({
-    title: 'seojuny.blog',
+    title: 'seojuny.dev',
     description: '개인 블로그',
     id: SITE_URL,
     link: SITE_URL,

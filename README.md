@@ -1,4 +1,4 @@
-# seojuny.blog
+# seojuny.dev
 
 Personal blog built on Next.js + MDX.
 

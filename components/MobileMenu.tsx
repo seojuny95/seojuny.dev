@@ -72,7 +72,7 @@ export function MobileMenu() {
                 className="shrink-0 font-semibold text-[15px] tracking-[-0.012em]"
               >
                 seojuny
-                <span className="text-[var(--muted)] font-normal">.blog</span>
+                <span className="text-[var(--muted)] font-normal">.dev</span>
               </Link>
               <button
                 type="button"

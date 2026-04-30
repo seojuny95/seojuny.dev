@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
-export const metadata = { title: 'About — seojuny.blog' };
+export const metadata = { title: 'About — seojuny.dev' };
 
 export default function AboutPage() {
   const source = fs.readFileSync(
