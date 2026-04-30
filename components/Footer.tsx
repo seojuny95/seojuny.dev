@@ -11,7 +11,7 @@ export function Footer() {
             className="font-semibold text-[15px] tracking-[-0.012em] text-[var(--fg)]"
           >
             seojuny
-            <span className="font-normal text-[var(--muted)]">.blog</span>
+            <span className="font-normal text-[var(--muted)]">.dev</span>
           </Link>
           <span>© {year}</span>
         </div>
