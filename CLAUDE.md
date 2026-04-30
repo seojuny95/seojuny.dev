@@ -24,23 +24,24 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 **Content pipeline (`lib/posts.ts`)**
 - `content/posts/YYYY-MM-DD-slug.mdx` → `gray-matter` parses frontmatter (`title`, `date` required; `summary`, `tags`, `draft` optional)
 - Slug derived by stripping the `YYYY-MM-DD-` filename prefix
-- `getAllPosts()` filters drafts and sorts by date desc — every other helper composes on top of it (`getPostBySlug`, `getAllTags`, `getPostsByTag`, `getAdjacentPosts`, `getSearchIndex`)
+- `getAllPosts()` filters drafts and sorts by date desc — every other helper composes on top of it (`getPostBySlug`, `getAdjacentPosts`, `getSearchIndex`)
 - All functions read the filesystem on every call. They rely on `process.cwd()` — the test suite exploits this by `vi.spyOn(process, 'cwd')` to point at a temp dir (`lib/posts.test.ts`).
 
 **Routing (`app/`, App Router)**
-- Dynamic segments return `params` as a **Promise** — must `await params` (Next 16 convention, see `app/posts/[slug]/page.tsx`, `app/tags/[tag]/page.tsx`)
-- Post and tag routes use `generateStaticParams()` for full SSG
+- Dynamic segments return `params` as a **Promise** — must `await params` (Next 16 convention, see `app/posts/[slug]/page.tsx`)
+- Post routes use `generateStaticParams()` for full SSG
 - MDX is rendered in RSC via `next-mdx-remote/rsc` (`<MDXRemote source={post.content} />`) — no MDX build step; source is a string at render time
-- `/about` reads `content/about.mdx` at module scope (statically inlined into the build)
+- `/about` reads `content/about.mdx` inside the page component; the build statically inlines the result.
 - `/feed.xml` is a Route Handler with `export const dynamic = 'force-static'` (Atom feed via the `feed` package). Uses `NEXT_PUBLIC_SITE_URL` for absolute links; set this in Vercel after first deploy.
-- `/search` renders a server-built `SearchEntry[]` (slug/title/summary/tags — no body content) and hands it to the client `SearchBox` which runs `fuse.js` in-browser.
+- Search is a global ⌘K modal: `app/layout.tsx` builds `SearchEntry[]` (slug/title/summary/tags — no body content) and passes it to the `SearchModal` client component, which runs `fuse.js` in-browser. There is no `/search` route.
 
 **Theme / styling**
-- `next-themes` (`attribute="class"`) toggles `:root.dark`; theme variables are CSS custom props in `app/globals.css` consumed through Tailwind v4's `@theme inline`
+- No `next-themes` dependency: an inline script in `app/layout.tsx` reads `localStorage.theme` + `prefers-color-scheme` before paint and toggles `:root.dark`. `components/ThemeToggle.tsx` flips the class and persists; `lib/use-theme.ts` exposes the current value to client components via `useSyncExternalStore` watching `documentElement.className`.
+- Theme variables are CSS custom props in `app/globals.css` consumed through Tailwind v4's `@theme inline`.
 - Body font is Pretendard (variable, dynamic-subset) loaded via `@import "pretendard/..."` in `app/globals.css`. Post bodies use the `.prose-blog` class, not `@tailwindcss/typography`.
 
 ## Authoring conventions
 
 - New post: `content/posts/YYYY-MM-DD-slug.mdx` with required `title` + `date` frontmatter. `draft: true` excludes from build.
-- Images go in `public/` and are referenced as `/filename.ext`.
+- Static assets (images, etc.) go in `public/` (create the directory if it doesn't yet exist) and are referenced as `/filename.ext`. The favicon currently lives at `app/favicon.ico` (App Router convention).
 - Korean is the default content language (`<html lang="ko">`).

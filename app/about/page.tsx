@@ -4,12 +4,11 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 
 export const metadata = { title: 'About — seojuny.blog' };
 
-const source = fs.readFileSync(
-  path.join(process.cwd(), 'content', 'about.mdx'),
-  'utf8',
-);
-
 export default function AboutPage() {
+  const source = fs.readFileSync(
+    path.join(process.cwd(), 'content', 'about.mdx'),
+    'utf8',
+  );
   return (
     <section>
       <header className="mb-10">

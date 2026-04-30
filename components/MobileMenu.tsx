@@ -5,11 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './ThemeToggle';
-
-const NAV = [
-  { href: '/posts', label: 'Posts' },
-  { href: '/about', label: 'About' },
-];
+import { NAV_ITEMS } from '@/lib/nav';
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
@@ -103,7 +99,7 @@ export function MobileMenu() {
             </div>
           </div>
           <nav className="mobile-menu-stagger flex flex-col px-5 pt-4 pb-6 text-[24px] font-semibold tracking-[-0.012em]">
-            {NAV.map((item, i) => {
+            {NAV_ITEMS.map((item, i) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <Link

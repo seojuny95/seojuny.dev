@@ -2,11 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-const NAV = [
-  { href: '/posts', label: 'Posts' },
-  { href: '/about', label: 'About' },
-];
+import { NAV_ITEMS } from '@/lib/nav';
 
 export function NavLinks() {
   const pathname = usePathname();
@@ -15,7 +11,7 @@ export function NavLinks() {
       aria-label="Primary"
       className="hidden md:flex items-center gap-6 ml-8 text-[14px] font-medium"
     >
-      {NAV.map((item) => {
+      {NAV_ITEMS.map((item) => {
         const active =
           pathname === item.href || pathname.startsWith(`${item.href}/`);
         return (

@@ -1,27 +1,11 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { useTheme } from '@/lib/use-theme';
 
 const noopSubscribe = () => () => {};
 const getMountedClient = () => true;
 const getMountedServer = () => false;
-
-function subscribeTheme(callback: () => void) {
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
-  return () => observer.disconnect();
-}
-
-function getThemeClient(): 'dark' | 'light' {
-  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-}
-
-function getThemeServer(): 'dark' | 'light' {
-  return 'light';
-}
 
 export function ThemeToggle() {
   const mounted = useSyncExternalStore(
@@ -29,11 +13,7 @@ export function ThemeToggle() {
     getMountedClient,
     getMountedServer,
   );
-  const theme = useSyncExternalStore(
-    subscribeTheme,
-    getThemeClient,
-    getThemeServer,
-  );
+  const theme = useTheme();
 
   if (!mounted) {
     return <span aria-hidden className="inline-block w-[18px] h-[18px]" />;

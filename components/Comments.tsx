@@ -1,29 +1,11 @@
 'use client';
 
 import Giscus from '@giscus/react';
-import { useSyncExternalStore } from 'react';
-
-type GiscusTheme = 'light' | 'dark_dimmed';
-
-function subscribeTheme(callback: () => void) {
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
-  return () => observer.disconnect();
-}
-
-function getThemeClient(): GiscusTheme {
-  return document.documentElement.classList.contains('dark') ? 'dark_dimmed' : 'light';
-}
-
-function getThemeServer(): GiscusTheme {
-  return 'light';
-}
+import { useTheme } from '@/lib/use-theme';
 
 export function Comments() {
-  const theme = useSyncExternalStore(subscribeTheme, getThemeClient, getThemeServer);
+  const theme = useTheme();
+  const giscusTheme = theme === 'dark' ? 'dark_dimmed' : 'light';
 
   return (
     <Giscus
@@ -37,7 +19,7 @@ export function Comments() {
       reactionsEnabled="1"
       emitMetadata="0"
       inputPosition="bottom"
-      theme={theme}
+      theme={giscusTheme}
       lang="ko"
       loading="lazy"
     />
