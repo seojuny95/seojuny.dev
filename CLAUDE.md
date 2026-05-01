@@ -42,5 +42,5 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 ## Authoring conventions
 
 - New post: `content/posts/YYYY-MM-DD-slug.mdx` with required `title` + `date` frontmatter. `draft: true` excludes from build.
-- Static assets (images, etc.) go in `public/` (create the directory if it doesn't yet exist) and are referenced as `/filename.ext`. The favicon currently lives at `app/favicon.ico` (App Router convention).
+- Static assets (images, etc.) go in `public/` (create the directory if it doesn't yet exist) and are referenced as `/filename.ext`. Brand icons live in `app/` via App Router file conventions: `icon.svg` (vector primary), `favicon.ico` (legacy fallback, multi-size), and `apple-icon.png` (180×180, iOS) — Next.js auto-injects the corresponding `<link>` tags, so no manual metadata is needed.
 - Korean is the default content language (`<html lang="ko">`).
