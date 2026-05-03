@@ -34,6 +34,11 @@ export const metadata: Metadata = {
     title: 'seojuny.dev',
     description: '프론트엔드 개발과 학습 기록을 남기는 seojuny의 개인 블로그.',
   },
+  verification: {
+    other: {
+      'naver-site-verification': '517ef8cf614d57620560dff23bd5fa37dcab4ba7',
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
