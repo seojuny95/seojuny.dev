@@ -41,12 +41,14 @@ export default async function PostPage({
 
   return (
     <article>
-      <Link
-        href="/posts"
-        className="inline-block text-[14px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
-      >
-        ← Posts
-      </Link>
+      <nav aria-label="페이지 이동">
+        <Link
+          href="/posts"
+          className="inline-block text-[14px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
+        >
+          ← Posts
+        </Link>
+      </nav>
 
       <header className="mt-8 mb-10 sm:mt-10 sm:mb-12">
         <h1 className="text-[30px] sm:text-[36px] font-semibold leading-[1.2] tracking-[-0.018em]">
@@ -59,11 +61,11 @@ export default async function PostPage({
           {post.tags.length > 0 ? (
             <>
               <span aria-hidden className="opacity-60">·</span>
-              <span className="flex gap-2.5">
+              <ul aria-label="태그" className="flex gap-2.5 list-none p-0 m-0">
                 {post.tags.map((t) => (
-                  <span key={t}>#{t}</span>
+                  <li key={t}>#{t}</li>
                 ))}
-              </span>
+              </ul>
             </>
           ) : null}
         </div>
@@ -75,7 +77,10 @@ export default async function PostPage({
 
       <hr className="mt-16 mb-8 sm:mt-20 sm:mb-10" />
 
-      <nav className="text-[14px] flex flex-col gap-6 sm:flex-row sm:justify-between">
+      <nav
+        aria-label="이전·다음 글"
+        className="text-[14px] flex flex-col gap-6 sm:flex-row sm:justify-between"
+      >
         {next ? (
           <Link
             href={`/posts/${next.slug}`}

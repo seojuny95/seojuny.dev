@@ -8,8 +8,9 @@ export default function HomePage() {
   const hasMore = all.length > recent.length;
   return (
     <section>
+      <h1 className="sr-only">최근 글</h1>
       <div className="mb-10 flex items-baseline justify-between">
-        <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)]">
+        <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)]" aria-hidden>
           Recent
         </p>
         {hasMore ? (
