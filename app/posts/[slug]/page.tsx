@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -12,13 +13,30 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   try {
     const post = getPostBySlug(slug);
+    const url = `/posts/${slug}`;
     return {
-      title: `${post.title} — seojuny.dev`,
+      title: post.title,
       description: post.summary,
+      alternates: { canonical: url },
+      openGraph: {
+        type: 'article',
+        url,
+        title: post.title,
+        description: post.summary,
+        siteName: 'seojuny.dev',
+        locale: 'ko_KR',
+        publishedTime: post.date,
+        tags: post.tags,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.title,
+        description: post.summary,
+      },
     };
   } catch {
     return {};
