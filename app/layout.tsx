@@ -6,13 +6,33 @@ import { Footer } from '@/components/Footer';
 import { SearchModal } from '@/components/SearchModal';
 import { getSearchIndex } from '@/lib/posts';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://seojuny.dev';
+
 export const metadata: Metadata = {
-  title: 'seojuny.dev',
-  description: '개인 블로그',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'seojuny.dev',
+    template: '%s — seojuny.dev',
+  },
+  description: '프론트엔드 개발과 학습 기록을 남기는 seojuny의 개인 블로그.',
   alternates: {
+    canonical: '/',
     types: {
       'application/atom+xml': '/feed.xml',
     },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'seojuny.dev',
+    locale: 'ko_KR',
+    url: '/',
+    title: 'seojuny.dev',
+    description: '프론트엔드 개발과 학습 기록을 남기는 seojuny의 개인 블로그.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'seojuny.dev',
+    description: '프론트엔드 개발과 학습 기록을 남기는 seojuny의 개인 블로그.',
   },
 };
 
