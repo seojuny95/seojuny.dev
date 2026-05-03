@@ -19,7 +19,7 @@ export default function PostsPage() {
   return (
     <section>
       <header className="mb-12">
-        <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)] mb-2">
+        <p className="text-[13px] uppercase tracking-[0.18em] text-[var(--muted)] mb-2" aria-hidden>
           Archive
         </p>
         <h1 className="text-[28px] font-semibold leading-[1.25] tracking-[-0.015em]">
@@ -51,17 +51,22 @@ export default function PostsPage() {
                       key={p.slug}
                       className="group border-t border-[var(--rule)] first:border-t-0"
                     >
-                      <Link
-                        href={`/posts/${p.slug}`}
-                        className="row-nudge flex items-baseline gap-4 py-2.5"
-                      >
-                        <time className="text-[13px] text-[var(--muted)] w-[48px] shrink-0 tabular-nums tracking-wide">
-                          {p.date.slice(5)}
-                        </time>
-                        <span className="flex-1 min-w-0 leading-snug truncate">
-                          <span className="link">{p.title}</span>
-                        </span>
-                      </Link>
+                      <article>
+                        <Link
+                          href={`/posts/${p.slug}`}
+                          className="row-nudge flex items-baseline gap-4 py-2.5"
+                        >
+                          <time
+                            dateTime={p.date}
+                            className="text-[13px] text-[var(--muted)] w-[48px] shrink-0 tabular-nums tracking-wide"
+                          >
+                            {p.date.slice(5)}
+                          </time>
+                          <h3 className="flex-1 min-w-0 leading-snug truncate font-normal text-[18px] m-0">
+                            <span className="link">{p.title}</span>
+                          </h3>
+                        </Link>
+                      </article>
                     </li>
                   ))}
                 </ul>
