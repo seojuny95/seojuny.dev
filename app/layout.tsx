@@ -41,11 +41,28 @@ export const metadata: Metadata = {
   },
 };
 
+const siteJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: SITE_URL,
+    name: 'seojuny.dev',
+    inLanguage: 'ko-KR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'seojuny',
+    url: SITE_URL,
+  },
+];
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const searchIndex = getSearchIndex();
   return (
     <html lang="ko">
       <body>
+        <script type="application/ld+json">{JSON.stringify(siteJsonLd)}</script>
         <a href="#main" className="skip-link">본문으로 건너뛰기</a>
         <div className="min-h-screen flex flex-col">
           <Header />
