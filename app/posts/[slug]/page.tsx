@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
 import { Comments } from '@/components/Comments';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://seojuny.dev';
+
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
 }
@@ -57,8 +59,28 @@ export default async function PostPage({
   }
   const { prev, next } = getAdjacentPosts(slug);
 
+  const url = `${SITE_URL}/posts/${slug}`;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.summary,
+    datePublished: post.date,
+    inLanguage: 'ko-KR',
+    keywords: post.tags,
+    mainEntityOfPage: url,
+    url,
+    image: `${url}/opengraph-image`,
+    author: {
+      '@type': 'Person',
+      name: 'seojuny',
+      url: `${SITE_URL}/about`,
+    },
+  };
+
   return (
     <article>
+      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       <nav aria-label="페이지 이동">
         <Link
           href="/posts"
