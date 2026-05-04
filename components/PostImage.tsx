@@ -11,7 +11,11 @@ type PostImageProps = {
 
 function getDimensions(src: string): { width: number; height: number } | null {
   try {
-    const filePath = path.join(process.cwd(), 'public', src);
+    const publicDir = path.join(process.cwd(), 'public');
+    const filePath = path.join(publicDir, src);
+    if (filePath !== publicDir && !filePath.startsWith(publicDir + path.sep)) {
+      return null;
+    }
     const { width, height } = imageSize(readFileSync(filePath));
     if (!width || !height) return null;
     return { width, height };
