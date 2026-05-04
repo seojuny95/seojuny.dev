@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
+import { pretendard } from './fonts';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SearchModal } from '@/components/SearchModal';
@@ -60,7 +61,7 @@ const siteJsonLd = [
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const searchIndex = getSearchIndex();
   return (
-    <html lang="ko">
+    <html lang="ko" className={pretendard.variable}>
       <body>
         <script type="application/ld+json">{JSON.stringify(siteJsonLd)}</script>
         <a href="#main" className="skip-link">본문으로 건너뛰기</a>
