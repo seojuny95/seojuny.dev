@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
+import type { MDXRemoteProps } from 'next-mdx-remote/rsc';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
 import { Comments } from '@/components/Comments';
+import { PostImage } from '@/components/PostImage';
+
+const mdxComponents = { img: PostImage } as MDXRemoteProps['components'];
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://seojuny.dev';
 
@@ -112,7 +116,7 @@ export default async function PostPage({
       </header>
 
       <div className="prose-blog">
-        <MDXRemote source={post.content} />
+        <MDXRemote source={post.content} components={mdxComponents} />
       </div>
 
       <hr className="mt-16 mb-8 sm:mt-20 sm:mb-10" />
