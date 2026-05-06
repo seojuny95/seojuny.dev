@@ -23,7 +23,7 @@ export async function generateMetadata({
   const { slug } = await params;
   try {
     const post = getPostBySlug(slug);
-    const url = `/posts/${slug}`;
+    const url = `/${slug}`;
     return {
       title: post.title,
       description: post.summary,
@@ -63,7 +63,7 @@ export default async function PostPage({
   }
   const { prev, next } = getAdjacentPosts(slug);
 
-  const url = `${SITE_URL}/posts/${slug}`;
+  const url = `${SITE_URL}/${slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -87,7 +87,7 @@ export default async function PostPage({
       <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       <nav aria-label="페이지 이동">
         <Link
-          href="/posts"
+          href="/"
           className="inline-block text-[14px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
         >
           ← Posts
@@ -127,7 +127,7 @@ export default async function PostPage({
       >
         {next ? (
           <Link
-            href={`/posts/${next.slug}`}
+            href={`/${next.slug}`}
             className="group block min-w-0 sm:flex-1"
           >
             <span className="block text-[var(--muted)] text-[13px] uppercase tracking-[0.15em] mb-1">
@@ -142,7 +142,7 @@ export default async function PostPage({
         )}
         {prev ? (
           <Link
-            href={`/posts/${prev.slug}`}
+            href={`/${prev.slug}`}
             className="group block min-w-0 sm:flex-1 sm:text-right"
           >
             <span className="block text-[var(--muted)] text-[13px] uppercase tracking-[0.15em] mb-1">

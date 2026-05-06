@@ -12,8 +12,9 @@ export function NavLinks() {
       className="hidden md:flex items-center gap-6 ml-8 text-[14px] font-medium"
     >
       {NAV_ITEMS.map((item) => {
-        const active =
-          pathname === item.href || pathname.startsWith(`${item.href}/`);
+        const active = item.match.some(
+          (m) => pathname === m || pathname.startsWith(`${m}/`),
+        );
         return (
           <Link
             key={item.href}
