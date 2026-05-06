@@ -96,7 +96,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
       const pick = results[activeIdx];
       if (pick) {
         e.preventDefault();
-        router.push(`/posts/${pick.slug}`);
+        router.push(`/${pick.slug}`);
         closeSearch();
       }
     }
@@ -186,7 +186,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
                   role="option"
                   aria-selected={activeIdx === i}
                   onClick={() => {
-                    router.push(`/posts/${r.slug}`);
+                    router.push(`/${r.slug}`);
                     closeSearch();
                   }}
                   onMouseEnter={() => setActiveIdx(i)}

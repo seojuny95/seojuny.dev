@@ -99,7 +99,9 @@ export function MobileMenu() {
           </div>
           <nav className="mobile-menu-stagger flex flex-col px-5 pt-4 pb-6 text-[24px] font-semibold tracking-[-0.012em]">
             {NAV_ITEMS.map((item, i) => {
-              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const active = item.match.some(
+                (m) => pathname === m || pathname.startsWith(`${m}/`),
+              );
               return (
                 <Link
                   key={item.href}

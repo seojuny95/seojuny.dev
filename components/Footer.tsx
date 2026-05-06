@@ -20,7 +20,7 @@ export function Footer() {
           className="flex items-center gap-5 text-[14px]"
         >
           <Link
-            href="/posts"
+            href="/"
             className="hover:text-[var(--fg)] transition-colors duration-200"
           >
             Posts

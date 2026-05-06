@@ -20,19 +20,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${SITE_URL}/posts`,
-      lastModified: latest,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
       url: `${SITE_URL}/about`,
       lastModified: aboutMtime,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     ...posts.map((post) => ({
-      url: `${SITE_URL}/posts/${post.slug}`,
+      url: `${SITE_URL}/${post.slug}`,
       lastModified: post.date,
       changeFrequency: 'monthly' as const,
       priority: 0.8,

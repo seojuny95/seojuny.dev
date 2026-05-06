@@ -28,7 +28,8 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 - All functions read the filesystem on every call. They rely on `process.cwd()` — the test suite exploits this by `vi.spyOn(process, 'cwd')` to point at a temp dir (`lib/posts.test.ts`).
 
 **Routing (`app/`, App Router)**
-- Dynamic segments return `params` as a **Promise** — must `await params` (Next 16 convention, see `app/posts/[slug]/page.tsx`)
+- URL shape is **flat at root**: `/` is the post list (year-grouped), individual posts live at `/<slug>` (no `/posts` namespace). Reserved root paths (`/about`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/manifest.webmanifest`, brand icons in `app/`) take precedence over the `[slug]` segment, so post slugs must not collide with them.
+- Dynamic segments return `params` as a **Promise** — must `await params` (Next 16 convention, see `app/[slug]/page.tsx`)
 - Post routes use `generateStaticParams()` for full SSG
 - MDX is rendered in RSC via `next-mdx-remote/rsc` (`<MDXRemote source={post.content} />`) — no MDX build step; source is a string at render time
 - `/about` reads `content/about.mdx` inside the page component; the build statically inlines the result.
@@ -42,6 +43,6 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 ## Authoring conventions
 
 - New post: `content/posts/YYYY-MM-DD-slug.mdx` with required `title` + `date` frontmatter. `draft: true` excludes from build.
-- MDX 본문은 **`##` (h2)부터 시작**한다. 페이지의 `h1`은 `app/posts/[slug]/page.tsx`가 frontmatter `title`로 렌더링하므로 본문에 `# ...`를 쓰면 h1이 두 개가 되어 헤딩 위계가 깨진다.
+- MDX 본문은 **`##` (h2)부터 시작**한다. 페이지의 `h1`은 `app/[slug]/page.tsx`가 frontmatter `title`로 렌더링하므로 본문에 `# ...`를 쓰면 h1이 두 개가 되어 헤딩 위계가 깨진다.
 - Static assets (images, etc.) go in `public/` (create the directory if it doesn't yet exist) and are referenced as `/filename.ext`. Brand icons live in `app/` via App Router file conventions: `icon.svg` (vector primary), `favicon.ico` (legacy fallback, multi-size), and `apple-icon.png` (180×180, iOS) — Next.js auto-injects the corresponding `<link>` tags, so no manual metadata is needed.
 - Korean is the default content language (`<html lang="ko">`).

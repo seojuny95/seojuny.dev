@@ -1,4 +1,4 @@
 export const NAV_ITEMS = [
-  { href: '/posts', label: 'Posts' },
-  { href: '/about', label: 'About' },
+  { href: '/', label: 'Posts', match: ['/', '/posts'] },
+  { href: '/about', label: 'About', match: ['/about'] },
 ] as const;

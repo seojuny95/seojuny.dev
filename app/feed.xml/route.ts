@@ -20,8 +20,8 @@ export function GET() {
   for (const post of getAllPosts()) {
     feed.addItem({
       title: post.title,
-      id: `${SITE_URL}/posts/${post.slug}`,
-      link: `${SITE_URL}/posts/${post.slug}`,
+      id: `${SITE_URL}/${post.slug}`,
+      link: `${SITE_URL}/${post.slug}`,
       description: post.summary,
       date: new Date(post.date),
     });
