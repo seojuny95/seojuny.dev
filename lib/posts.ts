@@ -18,6 +18,7 @@ type RawPost = Post & { draft: boolean };
 
 const KOREAN_CPM = 500;
 const LATIN_WPM = 220;
+const SECONDS_PER_IMAGE = 12;
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('ko-KR', {
   year: 'numeric',
@@ -32,6 +33,7 @@ export function formatDate(isoDate: string): string {
 }
 
 export function readingTime(content: string): number {
+  const imageCount = (content.match(/!\[[^\]]*\]\([^)]*\)/g) ?? []).length;
   const stripped = content
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
@@ -43,8 +45,9 @@ export function readingTime(content: string): number {
     .replace(/[가-힣]/g, ' ')
     .split(/\s+/)
     .filter((w) => /[A-Za-z0-9]/.test(w)).length;
-  const minutes = korean / KOREAN_CPM + latin / LATIN_WPM;
-  return Math.max(1, Math.ceil(minutes));
+  const textMinutes = korean / KOREAN_CPM + latin / LATIN_WPM;
+  const imageMinutes = (imageCount * SECONDS_PER_IMAGE) / 60;
+  return Math.max(1, Math.ceil(textMinutes + imageMinutes));
 }
 
 function postsDir(): string {
