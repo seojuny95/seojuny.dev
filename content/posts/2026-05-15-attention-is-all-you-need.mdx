@@ -1,0 +1,403 @@
+---
+title: "Attention is all you need, 그게 뭔데?"
+date: "2026-05-15"
+summary: "PI LAB 첫 스프린트를 마치고, 가장 어려웠던 attention과 transformer를 'Attention is all you need' 논문을 따라가며 정리해 본다."
+tags: ["AI", "Transformer", "Attention"]
+draft: false
+---
+
+[PI LAB](https://paaa.ai/)의 첫 스프린트가 끝났다.
+
+이번 스프린트에서는 크게 `선형모델 → 신경망(MLP) → RNN & CNN → Transformer` 순서로 AI 모델이 어떻게 만들어져 있고 어떻게 학습하는지를 배웠다.
+
+그중 개인적으로 가장 어려웠던 개념은 attention과 transformer였는데, 관련해서 더 공부하면 좋을 것 같아 **"Attention is all you need"** 논문에 대해 정리하려고 한다.
+
+## "Attention is all you need" 한눈에 보기
+
+논문은 7개 섹션으로 짜여 있다.
+
+| 절 | 내용 | 핵심 |
+| --- | --- | --- |
+| 1. Introduction | RNN의 한계 | "순차 처리가 문제" |
+| 2. Background | 기존 방법들 | "RNN 시대엔 attention이 보조였다" |
+| 3. Architecture | Transformer 제안 | "어텐션만으로 만들었다" |
+| 4. Why Self-Attention | 정당화 | "3가지 기준에서 우월" |
+| 5. Training | 학습 방법 | "12시간 ~ 3.5일" |
+| 6. Results | 실험 결과 | "SOTA 달성, 일반화도 됨" |
+| 7. Conclusion | 마무리 | "다른 분야로 확장하겠다" |
+
+처음 보면 익숙하지 않은 용어와 부족한 배경지식에 압도된다. 그래서 한 줄 한 줄 해석하는 대신, 읽으며 "아, 이게 이런 얘기였구나" 하고 잡힌 부분을 입문자 시점에서 정리한다.
+
+다만 그러려면 약간의 배경 지식이 먼저 필요하다 — 이번 스프린트에서 배운 내용을 바탕으로 배경 지식부터 정리한 뒤, 그 위에서 논문 내용을 살펴보자.
+
+## AI, 그리고 모델
+
+**AI(인공지능)** 는 사람이 하던 판단이나 인식을 컴퓨터가 대신하게 만드는 분야 전체를 가리키는 큰 개념이다. 그 안에서 데이터를 보고 스스로 규칙을 찾아내게 하는 방식이 **머신러닝**이고, 그중에서 신경망을 여러 겹 쌓아 올린 게 **딥러닝**이다.
+
+![AI ⊃ 머신러닝 ⊃ 딥러닝의 포함 관계](/posts/attention-is-all-you-need/ai-ml-dl.svg "AI ⊃ 머신러닝 ⊃ 딥러닝")
+
+**모델**은, 단순하게 보면 **입력을 받아 출력을 내놓는 함수**다. 단어를 넣으면 다음 단어를 뱉고, 이미지를 넣으면 "고양이"라고 답하는 그런 함수. 다만 그 함수의 모양이 사람이 직접 쓴 `if-else`로 만들어진 게 아니라, 안에 들어 있는 수많은 숫자(**파라미터**, 혹은 **가중치**)에 따라 동작이 결정된다는 점이 다르다.
+
+![입력을 받아 파라미터로 채워진 함수를 거쳐 출력을 내놓는 모델 도식](/posts/attention-is-all-you-need/model.svg "모델 = 입력 → 함수(파라미터) → 출력")
+
+그럼 그 숫자들은 어떻게 정해지느냐 — 그게 **학습(training)** 이다. 가장 흔한 형태는 정답이 달린 데이터를 잔뜩 보여주는 **지도학습(supervised learning)** 이다.
+
+하지만 정답이 일일이 달려 있지 않은 데이터로도 학습이 된다. 예컨대 인터넷에 굴러다니는 문장을 가져와서, "이 문장에서 다음 단어를 맞춰 봐"라고 자기 자신에게 문제를 내는 식이다 — 정답이 데이터 안에 이미 들어 있는 셈. 이런 방식을 **자기지도학습(self-supervised learning)** 이라고 부른다. GPT, Claude 같이 요즘 많이 쓰는 모델들이 이 방식으로 학습된다고 한다.
+
+![지도학습과 자기지도학습 — 정답이 어디서 오는가의 차이](/posts/attention-is-all-you-need/supervised-vs-self-supervised.svg "지도학습 vs 자기지도학습")
+
+이 둘 외에도 데이터의 구조만 학습하는 **비지도학습(unsupervised learning)**, 시행착오로 보상을 최대화하는 **강화학습(reinforcement learning)** 같은 방식도 있다.
+
+어느 방식이든 학습은 한 사이클의 반복이다 — `모델이 답을 내고 → 정답과의 차이를 손실함수(loss function)로 수치화하고 → 그 수치를 거꾸로 따라가며 어느 파라미터가 얼마나 기여했는지 계산해(역전파, backpropagation) → 그 방향으로 W를 조금씩 수정한다`.
+
+손실함수와 역전파의 작동 원리는 워낙 내용이 방대해 다음 글에서 정리할 예정이라, 여기선 전체적인 흐름만 잡고 넘어가자.
+
+![학습 루프 — 예측과 정답의 차이(loss)로 파라미터를 조금씩 민다](/posts/attention-is-all-you-need/training-loop.svg "학습 루프 — loss를 줄이는 방향으로 W를 업데이트")
+
+이처럼 사이클을 반복해서 돌리면 모델이 "이런 입력엔 이런 출력일 확률이 높다"는 패턴을 점점 배우게 된다.
+
+그래서 모델이 다르다는 건, 결국 **입력을 출력으로 바꾸는 함수의 구조가 다르다**는 뜻이다.
+
+## Attention 이전의 AI
+
+초기 신경망은 입력과 출력을 직선 하나로 잇는 **선형 모델**이다. 단순한 만큼 한계도 명확했다 — 세상의 패턴은 직선 하나로 다 담기엔 너무 복잡했다.
+
+![선형 모델: 직선 하나로 패턴을 잇는 구조](/posts/attention-is-all-you-need/linear-model.svg "선형 모델 — 입력과 출력을 직선으로 잇는다")
+
+그 한계를 메꾼 게 **MLP(Multi Layer Perceptron, 다층 신경망)** 다. 층 사이에 비선형 활성화 함수를 끼우고 여러 겹 쌓아서, 선형으로는 못 그리던 곡선 패턴까지 학습할 수 있게 됐다. 다만 MLP는 입력을 한 번에 고정된 길이의 벡터로 받기 때문에, 단어·음성처럼 순서가 있는 데이터 — **시퀀스(sequence)** — 에서는 앞뒤 문맥을 잡지 못했다.
+
+![MLP: 비선형 활성화로 곡선 패턴까지 학습](/posts/attention-is-all-you-need/mlp.svg "MLP — 층을 쌓고 비선형을 끼워 곡선 패턴까지 학습")
+
+이 한계를 해결한 게 **RNN(Recurrent Neural Network)** 이다. 단어를 순서대로 하나씩 받으면서 직전 상태(hidden state)를 함께 들고 가는 구조라, 문맥을 자연스럽게 다룰 수 있었다. 다만 완벽하진 않았다 — 문장이 길어지면 앞쪽 정보가 점점 흐려졌고(long-range dependency), 순차적으로 한 step씩 처리했기 때문에 학습이 느렸다.
+
+![RNN: 순서대로 받으며 hidden state를 들고 다니는 구조](/posts/attention-is-all-you-need/rnn.svg "RNN — 순서대로 받으며 hidden state를 이어 들고 간다")
+
+비슷한 시기에 시퀀스를 **CNN(Convolutional Neural Network)** 으로 풀어보려는 시도도 있었다. 필터(주변 값 몇 개를 한 번에 훑는 작은 창)를 슬라이딩하면서 가까이 붙은 단어들 사이의 패턴을 찾고, 병렬 처리가 되니 학습도 빨랐다. 다만 한 번에 볼 수 있는 범위(receptive field)가 정해져 있어서, 멀리 떨어진 단어를 연결하려면 layer를 여러 겹 쌓아야 했다.
+
+![CNN: 필터가 지역적 패턴을 슬라이딩하며 잡는 구조](/posts/attention-is-all-you-need/cnn.svg "CNN — 필터를 슬라이딩해 지역적 패턴을 잡는다")
+
+원인은 다르지만 — RNN은 정보가 흐려져서, CNN은 닿는 범위가 좁아서 — 결국 멀리 있는 단어를 잘 연결하지 못한다는 치명적인 단점이 있었다.
+
+![Long-range dependency — 멀리 있을수록 앞쪽 hidden state가 흐려진다](/posts/attention-is-all-you-need/long-range-dependency.svg "RNN의 long-range dependency 문제")
+
+## Attention의 등장
+
+앞에서 봤듯 RNN과 CNN은 멀리 떨어진 단어 사이의 관계에서 약했다. 이걸 풀려고 등장한 개념이 **attention**이다.
+
+논문을 읽다 보니 attention 자체는 이 논문이 처음이 아닌 것 같았다.
+
+좀 더 자세히 찾아보니 attention이 처음 등장한 논문은 2014년 [Bahdanau 논문](https://arxiv.org/abs/1409.0473)이었다. RNN seq2seq 옆에 **보조 도구**로 붙이자는 제안이었고, 이후 기계 번역 같은 곳에 쭉 쓰여 왔다.
+
+그럼 "Attention is all you need"에서는 뭐가 달라진 걸까? **보조로만 쓰이던 attention 하나로 모델 전체를 만들 수 있다는 걸 보였다.** 그렇게 나온 모델이 바로 **Transformer**다.
+
+어떤 식으로 쓰이든 attention의 기본 작동 원리는 똑같으니 먼저 그 원리부터 알아보자.
+
+### Attention의 기본 원리
+
+Attention을 한 문장으로 정리하면 이렇다 — **"query와 key-value 쌍들을 받아서 하나의 출력으로 바꾸는 함수."** query, key, value, 출력은 모두 벡터(숫자가 줄지어 모인 묶음)다.
+
+여기서 말하는 query, key, value 이 세 부품을 도서관에서 책을 찾는 비유로 풀어 보면:
+
+- **query (Q)** — "내가 필요한 정보가 뭐야?"라는 질문. 검색창의 검색어.
+- **key (K)** — 각 후보의 식별표. Q와 비교당하는 쪽.
+- **value (V)** — 각 후보의 실제 내용. 가중치대로 섞여서 결과가 된다.
+
+![Q는 검색어, K는 책의 색인표, V는 책의 실제 내용으로 비유한 그림](/posts/attention-is-all-you-need/qkv-library-metaphor.svg "Q / K / V — 도서관 비유")
+
+쉽게 풀면 — **Attention은 Query가 후보들 중 어디에 비중을 둘지 정하고, 그 비중대로 Value들을 섞어 답을 만드는 함수다.**
+
+**Q, K, V는 대체 어디서 오는 거야?** 각 단어는 단어 임베딩(그 단어를 의미 있는 숫자 묶음으로 변환한 벡터)을 하나씩 가진다. 예: `"I" → [0.1, 0.3, -0.2, ...]`. 벡터에 학습된 가중치 행렬 $W_Q$, $W_K$, $W_V$를 곱해서 Q, K, V를 만든다.
+
+```
+"I" 벡터 × W_Q → "I"의 Q
+"I" 벡터 × W_K → "I"의 K
+"I" 벡터 × W_V → "I"의 V
+```
+
+$W_Q, W_K, W_V$는 처음엔 랜덤이지만, 학습을 거치면서 각자의 역할(질문/식별표/내용)에 맞는 행렬로 자리 잡는다. **이 세 행렬**이 attention에서 모델이 학습으로 익히는 핵심 파라미터다 — Q/K/V 자체는 입력 단어가 들어올 때마다 W(가중치)로 다시 계산되는 결과물이고, 학습으로 고정되는 건 $W$ 행렬들이다.
+
+![단어 임베딩 × W_Q/W_K/W_V → Q/K/V](/posts/attention-is-all-you-need/qkv-projection.svg "임베딩 × W → Q, K, V")
+
+### Attention 계산
+
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V
+$$
+
+처음 보면 어려운 수식 때문에 압도되기 쉬운데, 사실 네 단계가 차례로 이어진 단순한 식이다.
+
+**1. $QK^\top$ — 점수 매기기.** Q와 각 K의 내적으로 닮은 정도 점수를 낸다. ($\top$은 곱셈 모양 맞추는 전치.)
+
+![Q와 K를 짝지어 닮은 정도(내적)를 계산하는 그림](/posts/attention-is-all-you-need/qk-transpose.svg "QK⊤ — Q와 K를 짝지어 닮은 정도 계산")
+
+**2. $\sqrt{d_k}$로 나누기 — 점수 다듬기.** $d_k$(Key 벡터 차원)가 클수록 점수가 자연히 커지는데, 너무 크면 다음 단계 softmax가 한쪽에 쏠리니 적당히 다듬는 보정.
+
+![점수가 너무 커지면 √d_k로 나눠 다듬는 보정 그림](/posts/attention-is-all-you-need/sqrt-dk.svg "√d_k — 점수가 너무 커지면 보정")
+
+**3. softmax — 비율로 변환.** 점수들을 합이 1인 비율로 바꿔서 가중치를 만든다. 예: `[1, 2, 3]` → `[0.09, 0.24, 0.67]`.
+
+![softmax가 점수들을 합이 1인 비율로 바꾸는 모습](/posts/attention-is-all-you-need/softmax-intuition.svg "softmax — 점수를 합 1인 비율로")
+
+**4. $V$에 곱하기 — 가중 평균.** 그 가중치대로 Value들을 섞어 최종 출력 한 덩어리를 만든다.
+
+![가중치대로 Value들을 섞어 최종 출력을 만드는 그림](/posts/attention-is-all-you-need/weighted-sum-v.svg "×V — 가중치대로 Value들을 섞어 최종 출력")
+
+그래서 **여기서 구해진 출력 벡터는 뭘까?** — 원본 단어에 주변 맥락이 섞인 새로운 벡터다. 예를 들어 "love"가 Q를 들고 attention을 돌리면, 결과 벡터는 "I와 you를 본 love"라 할 수 있다.
+
+![예시 — "I love you"에서 love가 self-attention으로 새 벡터를 만드는 4단계](/posts/attention-is-all-you-need/attention-example-numeric.svg "구체 예시 — 점수 → √d_k → softmax → V 가중합")
+
+이 결과 벡터가 모델의 다음 단계로 흘러간다. 그렇게 attention 계산을 여러 번 거쳐 마지막에 원하는 출력(번역 단어, 다음 단어 예측 등)이 만들어진다.
+
+여기까지가 attention의 기본 원리다.
+
+### RNN + Attention
+
+Attention은 기계 번역 같은 **시퀀스 → 시퀀스 (seq2seq)** 문제에서 처음 쓰였다. 그 구조를 보면 attention이 어떤 문제를 풀려고 만들어졌는지 명확해진다.
+
+**Encoder/Decoder 구조.** 기계 번역 같은 작업은 보통 모델을 두 덩어리로 나눠서 푼다.
+
+- **Encoder** — 입력 문장(예: 한국어)을 받아 의미가 정리된 벡터들로 바꾼다.
+- **Decoder** — 그 벡터를 받아 다른 언어(예: 영어)로 한 단어씩 만들어 낸다.
+
+번역가가 원문을 읽고(encode) 의미를 잡은 뒤, 다른 언어로 풀어 쓰는(decode) 흐름이라 보면 된다.
+
+![Encoder-Decoder — 한국어를 의미 벡터로 압축하고, decoder가 영어로 풀어 쓴다](/posts/attention-is-all-you-need/encoder-decoder.svg "Encoder–Decoder 구조")
+
+**RNN 시대의 문제.** Encoder가 RNN이었을 때, 한국어 단어를 하나씩 순서대로 읽으면서 hidden state(그때까지 읽은 내용의 요약)를 업데이트한다. 마지막 단어까지 다 읽으면 그 **마지막 hidden state 하나**에 한국어 문장 전체 정보가 압축돼 있다고 보고, decoder에 그 벡터 하나만 넘긴다. Decoder는 그걸 받아 영어 단어를 한 개씩 만든다.
+
+![RNN seq2seq — 마지막 벡터 하나에 문장 전체 정보 압축](/posts/attention-is-all-you-need/rnn-seq2seq.svg "RNN seq2seq — 마지막 hidden state 하나가 통째로 넘어간다")
+
+여기서 문제는 — 문장이 길어지면 그 하나의 벡터에 정보가 다 안 담긴다. 앞쪽 단어가 흐려지고, decoder가 원문의 어느 부분을 봐야 할지 헷갈리게 된다.
+
+이 문제를 해결하기 위해 [Bahdanau 논문](https://arxiv.org/abs/1409.0473)에서 attention을 해결 도구로 제안한다. decoder가 영어 단어 하나를 만들 때마다, encoder가 본 모든 단어의 표현을 다시 들춰 보게 하는 것. 어디를 더 주목할지는 Q와 K의 비교로 정한다.
+
+- Q는 decoder 쪽 (지금 만들고 있는 영어 단어의 상태)
+- K, V는 encoder 쪽 (한국어 단어 표현들)
+
+이렇게 다른 두 시퀀스 사이에서 Q와 K/V가 갈리는 형태를 **cross-attention** (가로지르는 attention) 이라고 부른다.
+
+![Cross-attention — Q는 decoder, K/V는 encoder에서 가져온다](/posts/attention-is-all-you-need/cross-attention.svg "Cross-attention — Q는 decoder 쪽, K/V는 encoder 쪽")
+
+**남은 한계.** Attention 덕분에 멀리 떨어진 단어를 잘 볼 수 있게 됐지만, RNN 자체는 여전히 단어를 순차로 한 단계씩 처리한다. 학습이 느리고, attention도 RNN의 hidden state를 거친 뒤에야 작동한다.
+
+이쯤 되면 의문이 하나 든다 — **RNN을 빼고 attention만으로 가능할까?**
+
+## Attention만으로 — Transformer 제안
+
+"Attention is all you need"에서 제안한 게 정확히 그거였다. RNN을 전부 빼고 attention만으로 모델 전체를 돌리는 것. 그러려면 attention의 새 변형과 몇 가지 보조 부품이 필요한데, 하나씩 살펴보자.
+
+(섹션 마지막에 모든 부품을 한 장의 도식으로 합쳐서 정리할 거니까, 부품 하나하나를 완벽하게 이해하려고 너무 애쓰지 말고 가볍게 따라와도 된다.)
+
+### Self-attention과 Masked 변형
+
+Transformer가 새로 도입한 attention 형태는 **self-attention** — Q, K, V 모두 같은 시퀀스 안에서 가져오는 것이다. (앞 RNN + Attention에서 본 cross-attention과 짝을 이루는 형태.)
+
+문장 "I love you"에서 "love"의 의미를 풍부하게 만들고 싶다고 하자. "love"가 Q를 들고, 같은 문장의 "I", "love", "you"가 K/V를 제공한다.
+
+```
+"love"의 Q  ↔  "I", "love", "you"의 K/V
+              → "love"의 새 벡터
+```
+
+![Self-attention 매트릭스 — 같은 문장의 모든 단어가 모든 단어에 attention](/posts/attention-is-all-you-need/self-attention-matrix.svg "Self-attention — 같은 문장 안에서 모든 단어가 서로를 본다")
+
+**Masked self-attention** — self-attention인데 자기보다 뒤쪽 단어를 못 본다.
+
+Decoder에서 영어를 만들 때 쓰인다. "love"를 만드는 시점에 아직 안 만들어진 "you"를 미리 보면 치팅이니까, 뒤쪽 단어들의 점수를 막아 버린다 (= 마스킹).
+
+```
+"love"를 만들 때 볼 수 있는 단어:  I, love
+"love"를 만들 때 못 보는 단어:    you ← 마스킹
+```
+
+![Masked 매트릭스 — 자기보다 뒤쪽 단어는 가려진다](/posts/attention-is-all-you-need/masked-attention-matrix.svg "Masked self-attention 매트릭스")
+
+세 형태(self / masked self / cross) 모두 계산식은 같다 — 어디서 Q, K, V를 가져오느냐만 다르다.
+
+![Self / Masked Self / Cross — Q, K, V를 어디서 가져오는지만 다르다](/posts/attention-is-all-you-need/attention-types.svg "Attention 3종 비교")
+
+### Multi-head Attention — 여러 관점으로 동시에
+
+지금까지 본 attention은 한 번만 돌리는 그림이었다. 그러면 모든 단어가 한 가지 관점에서만 서로를 보게 된다.
+
+Transformer는 attention을 **여러 번 병렬로** 돌린다. 각 머리(head)는 자기만의 가중치 $W_Q, W_K, W_V$를 가져서 **서로 다른 관점**으로 단어들을 본다. 예를 들어 "I love you"를 8개 head로 보면:
+
+- **head 1**은 **동사-주어 관계** ("love" → "I")에 가중치를 둘 수 있고
+- **head 2**는 **동사-목적어 관계** ("love" → "you")에 둘 수 있고
+- **head 3**은 **대명사-주변어 관계**에 둘 수 있다
+
+어떤 head가 어떤 역할을 할지는 사람이 정해주는 게 아니라 학습으로 자연스럽게 갈린다.
+
+![Single vs Multi-head — 한 관점 vs 여러 관점 동시에](/posts/attention-is-all-you-need/single-vs-multi-head.svg "Single vs Multi-head")
+
+![Multi-head Attention — 같은 입력을 8개 head가 병렬로 본 뒤 합치는 그림](/posts/attention-is-all-you-need/multi-head-attention.svg "Multi-head Attention — 8 heads 병렬 → concat")
+
+$$
+\text{head}_i = \text{Attention}(Q W_i^Q,\; K W_i^K,\; V W_i^V)
+$$
+
+$$
+\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)\, W^O
+$$
+
+**1. 각 head는 자기만의 가중치로 attention을 돌린다.** 입력 Q, K, V에 head $i$가 가진 가중치 행렬 $W_i^Q, W_i^K, W_i^V$ ($i$번째 head의 W)를 곱해서 그 head의 Q/K/V를 새로 만든다. 거기에 앞에서 본 표준 attention $\text{softmax}(QK^\top/\sqrt{d_k})\,V$ 를 돌리면 그 head 하나의 출력 벡터가 나온다.
+
+**2. h개 head의 결과를 합치고 마지막으로 한 번 더 정리한다.** h개 head를 동시에 돌리면 출력 벡터도 h개 나오는데, 이걸 옆으로 이어 붙이면(concat) 벡터 차원이 h배로 커진다. 그래서 마지막에 출력 가중치 $W^O$ (Output용 W)를 한 번 더 곱해서 원래 차원의 새 벡터 하나로 줄인다.
+
+![Multi-head 결과를 concat한 뒤 W^O로 정리하는 과정](/posts/attention-is-all-you-need/concat-wo.svg "concat + W^O — h개 head 출력 → 긴 벡터 → 원래 차원")
+
+### Transformer Block — FFN + Add & Norm
+
+Transformer의 한 층(layer)은 attention만으로 끝나지 않는다. 옆에 부품이 하나 더 붙고, 두 부품 모두 안정 장치로 감싸여 있다.
+
+각 층 = **Multi-head Attention** + **FFN(Feed-Forward Network)**, 둘 다 **Add & Norm**으로 감쌈
+
+Attention이 단어들 사이의 관계를 잡는 부품이라면, FFN은 단어 벡터를 한 개씩 따로 가공하는 부품이다.
+
+$$
+\text{FFN}(x) = \max(0,\; x W_1 + b_1)\, W_2 + b_2
+$$
+
+**1. 펼친다.** 한 단어 벡터($d$=512개 숫자)에 가중치 $W_1$을 곱하고 편향 $b_1$을 더해 더 큰 벡터($4d$=2048개 숫자)로 늘린다. 정보를 담을 공간이 4배로 넓어진다.
+
+**2. 음수는 0으로 자른다 (ReLU).** 펼친 벡터에서 음수 값을 모두 0으로 바꾼다. 단순해 보이지만, 이 한 단계 덕분에 모델이 직선이 아닌 곡선 패턴까지 학습할 수 있다(= 비선형성).
+
+**3. 다시 줄인다.** 가중치 $W_2$를 한 번 더 곱하고 편향 $b_2$를 더해 원래 크기($d$=512개)로 압축한다. 같은 크기로 돌아왔지만, 한 번 펼쳐졌다 돌아온 새로운 벡터다.
+
+(편향 $b_1, b_2$는 가중치 곱한 결과에 더해 주는 상수 벡터 — $W$와 함께 학습으로 결정되는 파라미터다. 결과를 위/아래로 평행이동시켜 표현 자유도를 높이는 역할.)
+
+각 단어 벡터에 같은 변환이 따로따로 적용되는 과정이라(position-wise) 단어 사이엔 정보가 안 섞인다 — 그건 attention이 이미 했고, FFN은 그 다음 단계로 단어 하나씩 더 다듬는 역할이다.
+
+![FFN 3단계 — 펼치고, 음수 자르고, 다시 줄인다](/posts/attention-is-all-you-need/ffn-pipeline.svg "FFN 한 단어 벡터를 d → 4d → ReLU → d 로 가공")
+
+앞에서 잠깐 언급한 **Add & Norm**은 두 부품 — Residual connection과 Layer normalization — 을 한 쌍으로 묶어 부르는 이름이다:
+
+- **Residual connection** — 원래 입력을 출력에 그대로 더해 준다. 층이 변환 도중 일부 정보를 잃어도 원본이 같이 살아남으니 정보가 사라지지 않는다.
+- **Layer normalization** — 층을 통과한 값들을 평균 0, 분산 1로 다시 맞춘다. 층을 거치면서 값이 너무 커지거나 작아지면 학습이 흔들리는데, 매번 다시 맞춰서 그걸 막는다.
+
+두 부품 다 들여다보면 내용이 적지 않은데, 현재로선 이름과 역할 정도만 알아도 뒤에 내용을 이해하는 데에는 무리 없다.
+
+![Residual은 입력을 우회로 더해 주고, LayerNorm은 값 크기를 정규화한다](/posts/attention-is-all-you-need/residual-layernorm.svg "Residual connection + Layer Normalization")
+
+이 층(MHA + FFN + Add & Norm)을 **6번 쌓아서** encoder를 만든다. Decoder도 같은 식인데, 각 층마다 cross-attention(앞 RNN + Attention에서 본 그 형태)이 하나 더 들어간다.
+
+("6번"은 이 논문에서 실험한 기본 설정값일 뿐, Transformer 구조 자체에 정해진 숫자가 아니다. 이후 모델들은 task와 규모에 따라 12, 24, 96층 등 다양하게 쓴다.)
+
+![Transformer Block — Multi-head Attention + FFN, Add & Norm으로 감싸진 구조](/posts/attention-is-all-you-need/transformer-block.svg "Transformer Block — MHA + FFN + Add & Norm, ×N=6")
+
+### Positional Encoding — 단어 순서는 어떻게?
+
+여기서 의문이 하나 남는다. Self-attention은 모든 단어를 동시에 본다. 그러면 단어 **순서**는 어떻게 구분할까? "I love you"와 "you love I"는 의미가 전혀 다른데, attention만 보면 두 문장이 똑같이 처리될 거다.
+
+해결책: 각 단어가 몇 번째인지를 벡터로 만들어, 단어 임베딩에 그냥 더해 버린다.
+
+$$
+\text{input}_{pos} = E_{\text{word}} + PE_{pos}
+$$
+
+$E_{\text{word}}$는 단어 임베딩(그 단어가 **무엇**인지), $PE_{pos}$는 위치 임베딩(**몇 번째** 위치인지). 차원이 같으니 그냥 더하면 끝이다.
+
+위치 임베딩 $PE$는 **위치마다 정해진 고유한 숫자 묶음**이다. 위치 0번, 1번, 2번… 마다 서로 다른 패턴이 미리 정해져 있어서, 단어 임베딩에 더하면 모델이 "이 단어는 몇 번째구나"를 알아챌 수 있게 된다. (구체적으로는 sin/cos 함수를 조합해 만드는데, 공식 자체에도 깊은 이유가 있다 — 이 글에선 직관까지만 잡고, 자세한 풀이는 [원논문](https://arxiv.org/abs/1706.03762) 3.5절에서 찾아볼 수 있다.)
+
+![Positional Encoding — 단어 임베딩에 위치 임베딩을 더해서 모델 입력을 만든다](/posts/attention-is-all-you-need/positional-encoding.svg "Positional Encoding — 단어 정보 + 위치 정보가 한 벡터에 합쳐진다")
+
+![위치마다 미리 정해진 고유한 숫자 패턴 — 같은 위치는 절대 같은 패턴을 갖지 않는다](/posts/attention-is-all-you-need/positional-sin-cos.svg "위치마다 고유한 숫자 패턴")
+
+이 한 줄($E_{\text{word}} + PE_{pos}$) 덕분에 attention이 단어의 순서 정보까지 함께 처리할 수 있게 된다.
+
+### 전체 그림 — 부품을 합치면
+
+여기까지 본 부품들을 한 장에 합치면 이렇게 된다. "나는 너를 사랑해" → "I love you" 번역을 예로, 한 번에 어떤 일이 일어나는지 따라가 보자.
+
+![Transformer 전체 — Encoder가 한국어를 읽고, Decoder가 영어를 한 단어씩 만든다. 가운데 cross-attention 화살표가 두 스택을 잇는다](/posts/attention-is-all-you-need/full-transformer.svg "Transformer 전체 흐름 — ① 한국어끼리 self-attn · ② FFN · ③ 영어끼리 masked self-attn · ④ 영어 Q ↔ 한국어 K/V (cross-attn) · ⑤ FFN")
+
+**왼쪽 — Encoder (한국어 읽기).** 한국어 문장 "나는 너를 사랑해"가 들어오면 단어 임베딩 + 위치 임베딩이 더해진 벡터가 만들어진다. 그 다음:
+
+- ① **Self-attention**: 한국어 단어들끼리 서로를 본다. "나는"이 "사랑해"의 주어라는 관계가 여기서 잡힌다.
+- ② **FFN**: 각 단어 표현을 한 번 더 가공한다.
+
+이 두 단계(+ Add & Norm)가 **한 층**이고, 똑같은 층을 **6번 쌓아서** 더 풍부한 한국어 표현을 만든다. 마지막 층의 출력이 곧 한국어 의미 벡터다 — 이걸 decoder가 참고할 K, V로 넘긴다.
+
+**오른쪽 — Decoder (영어 만들기).** Decoder는 영어 단어를 **한 번에 하나씩** 만든다. 지금까지 만든 영어 단어들(예: `<start> I love`)이 입력으로 들어가서:
+
+- ③ **Masked self-attention**: 영어 단어들끼리만 본다. 아직 안 만든 뒷 단어는 가려진 채로 (= 치팅 방지).
+- ④ **Cross-attention**: 여기가 두 스택을 잇는 핵심이다. **Q는 decoder 쪽** (지금 만들고 있는 영어 상태), **K, V는 encoder 쪽** (한국어 표현)에서 온다. "love 다음에 뭘 만들까?"라고 영어 쪽이 질문을 던지면, 한국어 표현 중 가장 관련 있는 부분("너를")이 답으로 들어온다.
+- ⑤ **FFN**: 한 번 더 가공.
+
+이 세 단계가 decoder 한 층이고, 역시 **6번 쌓는다**. 마지막 층의 출력으로 다음 영어 단어("you")를 예측한다. 그 단어를 입력 끝에 붙여 다시 한 번 같은 과정을 돌리면 그 다음 단어가 나오고, 문장 끝(`<end>`)이 나올 때까지 반복한다.
+
+### Why Self-Attention?
+
+Transformer 이전엔 시퀀스를 처리하는 자리에 RNN이나 CNN이 들어갔는데, Transformer는 그 자리에 **self-attention**을 끼워 넣었다. 왜 self-attention을 골랐을까? 두 가지 결정적 장점이 있다.
+
+**1. 멀리 있는 단어를 한 번에 본다.**
+
+문장 안의 어떤 두 단어를 연결하려고 할 때:
+
+- **RNN 방식**은 단어 사이의 거리만큼 순차로 거쳐 가야 한다. 100단어 떨어진 두 단어를 연결하려면 hidden state를 100번 업데이트해야 하고, 그 사이 정보가 흐려진다.
+- **CNN 방식**은 한 번에 볼 수 있는 범위(receptive field)가 정해져 있어서 멀리 닿으려면 layer를 여러 겹 쌓아야 한다.
+- **Self-attention**은 어떤 두 단어든 한 번에 직접 비교한다. 거리가 1이든 100이든 항상 한 step.
+
+![두 단어를 연결하는 거리 — RNN은 O(n), CNN은 O(log n), Self-attention은 O(1)](/posts/attention-is-all-you-need/path-length-comparison.svg "Path length 비교 — RNN / CNN / Self-attention")
+
+**2. 모든 단어를 한꺼번에 처리한다.**
+
+- **RNN 방식**은 단어를 하나씩 순서대로 처리해야 한다. n개 단어면 n번 기다려야 한다.
+- **Self-attention**은 모든 단어를 동시(병렬)에 처리할 수 있어 학습이 훨씬 빠르다.
+
+![논문 Table 1 — Complexity / Sequential ops / Max path length](/posts/attention-is-all-you-need/complexity-table.svg "Layer별 복잡도 비교 (논문 Table 1)")
+
+## 얼마나 좋아졌나
+
+앞에서 self-attention이 왜 좋은지 이론적으로 알아봤다. 이제 논문에서 실제로 Transformer를 학습시켜 보고, 기존 모델과 비교한 결과를 간단하게 살펴보자.
+
+### 학습
+
+저자들은 Transformer를 **기계 번역** task로 검증했다. 번역은 그 당시 모델 성능 비교의 표준이었고, 기존 SOTA 모델들(RNN·CNN 기반)과 직접 비교가 가능했다.
+
+- **평가 데이터**: WMT 2014 — 매년 열리는 기계 번역 학회의 표준 데이터셋. 영어 → 독일어와 영어 → 프랑스어, 두 task를 사용.
+- **하드웨어**: NVIDIA P100 GPU 8장
+- **학습 시간**: 작은 모델(base) **12시간**, 큰 모델(big) **3.5일**
+
+같은 시기 RNN 기반 1등 모델들이 며칠에서 몇 주까지 걸렸던 것에 비하면, Transformer는 한참 짧게 끝난 셈이다.
+
+### 결과
+
+번역 품질은 **BLEU**라는 점수로 잰다. 모델이 만든 번역이 사람이 직접 만든 정답 번역과 얼마나 겹치는지 0~100점으로 채점하는 방식 — 높을수록 정답에 가깝다는 뜻이다.
+
+WMT 2014 두 task 모두에서 Transformer가 새 **SOTA(State-of-the-Art, 그 시점 1등 점수)** 를 찍었다:
+
+| Task | 이전 1등 | Transformer (big) |
+|---|---|---|
+| English → German | 25.16 (ConvS2S, CNN 기반) | **28.4** |
+| English → French | 40.46 (ConvS2S) | **41.8** |
+
+![WMT 2014 BLEU 비교 — Transformer가 새 SOTA](/posts/attention-is-all-you-need/bleu-scores.svg "BLEU 비교 — GNMT, ConvS2S 대비 Transformer")
+
+기존 1등 모델보다 점수가 높았고, 학습 시간도 훨씬 짧았다. 그리고 번역만 잘 한 게 아니다 — **영어 구문 분석(constituency parsing — 문장의 문법 구조를 트리로 쪼개는 task)** 같이 결이 다른 task에서도 잘 동작했다. 한 task만 잘 하는 모델이 아니라, 분야를 넘어 일반화될 수 있다는 신호로 해석할 수 있다.
+
+### 그 이후
+
+논문 저자들은 마지막에 "Transformer를 이미지, 오디오, 영상으로 확장하겠다"고 적었다. 실제로 그 후 몇 년 안에:
+
+- **BERT, GPT** (NLP)
+- **Vision Transformer (ViT)** (이미지)
+- **Whisper** (음성)
+
+전부 Transformer 기반이다. 지금 우리가 쓰는 ChatGPT, Claude, Gemini도 조금 변형된 형태이지만 본질은 같다.
+
+![Transformer에서 BERT, GPT, ViT, Whisper로 갈라지는 가족 트리](/posts/attention-is-all-you-need/transformer-family-tree.svg "Transformer 이후 — 분야를 넘나드는 확장")
+
+## 마무리
+
+1. 논문이 어렵긴 했지만 천천히 따라가 보니 조금씩 이해가 됐고, 글을 쓰면서 이번 스프린트 내용을 한 번 더 정리할 수 있어 좋았다.
+2. 이제 일상적으로 쓰는 GPT, Claude, Gemini가 어떤 구조 위에서 어떻게 만들어졌는지 엿볼 수 있어 좋았다.
+3. 다음에는 attention을 사용한 모델을 아주 작게라도 코드로 구현해 보고 싶다.
+
+---
+
+이 글은 입문자 시점에서 정리한 내용이라 사실관계나 해석에 오류가 있을 수 있다. 잘못된 내용이나 질문이 있으면 댓글로 편하게 남겨 주세요.
+
+## Reference
+- https://arxiv.org/abs/1706.03762 — Vaswani et al. 2017, "Attention Is All You Need" (Transformer)
+- https://arxiv.org/abs/1409.0473 — Bahdanau et al. 2014, RNN + Attention 원전

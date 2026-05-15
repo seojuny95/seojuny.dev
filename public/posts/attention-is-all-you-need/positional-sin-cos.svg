@@ -1,0 +1,119 @@
+<svg width="100%" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Positional Encoding — 위치마다 고유한 숫자 패턴</title>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">위치마다 미리 정해진 고유한 숫자 패턴</text>
+
+  <text x="340" y="50" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">각 위치는 자기만의 벡터(숫자 묶음)를 가진다 — 모델이 위치를 구별할 수 있게 해주는 ID</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">
+    <text x="90" y="92" text-anchor="end">위치 0</text>
+    <text x="90" y="132" text-anchor="end">위치 1</text>
+    <text x="90" y="172" text-anchor="end">위치 2</text>
+    <text x="90" y="212" text-anchor="end">위치 3</text>
+    <text x="90" y="252" text-anchor="end" opacity="0.55">…</text>
+    <text x="90" y="292" text-anchor="end">위치 100</text>
+  </g>
+
+  <g>
+    <rect x="105" y="78" width="22" height="28" fill="#000" opacity="0.85"/>
+    <rect x="129" y="78" width="22" height="28" fill="#000" opacity="0.15"/>
+    <rect x="153" y="78" width="22" height="28" fill="#000" opacity="0.6"/>
+    <rect x="177" y="78" width="22" height="28" fill="#000" opacity="0.35"/>
+    <rect x="201" y="78" width="22" height="28" fill="#000" opacity="0.9"/>
+    <rect x="225" y="78" width="22" height="28" fill="#000" opacity="0.2"/>
+    <rect x="249" y="78" width="22" height="28" fill="#000" opacity="0.7"/>
+    <rect x="273" y="78" width="22" height="28" fill="#000" opacity="0.5"/>
+    <rect x="297" y="78" width="22" height="28" fill="#000" opacity="0.25"/>
+    <rect x="321" y="78" width="22" height="28" fill="#000" opacity="0.8"/>
+    <rect x="345" y="78" width="22" height="28" fill="#000" opacity="0.4"/>
+    <rect x="369" y="78" width="22" height="28" fill="#000" opacity="0.95"/>
+    <rect x="393" y="78" width="22" height="28" fill="#000" opacity="0.3"/>
+    <rect x="417" y="78" width="22" height="28" fill="#000" opacity="0.65"/>
+    <rect x="441" y="78" width="22" height="28" fill="#000" opacity="0.45"/>
+    <rect x="465" y="78" width="22" height="28" fill="#000" opacity="0.75"/>
+  </g>
+
+  <g>
+    <rect x="105" y="118" width="22" height="28" fill="#000" opacity="0.4"/>
+    <rect x="129" y="118" width="22" height="28" fill="#000" opacity="0.85"/>
+    <rect x="153" y="118" width="22" height="28" fill="#000" opacity="0.2"/>
+    <rect x="177" y="118" width="22" height="28" fill="#000" opacity="0.7"/>
+    <rect x="201" y="118" width="22" height="28" fill="#000" opacity="0.3"/>
+    <rect x="225" y="118" width="22" height="28" fill="#000" opacity="0.9"/>
+    <rect x="249" y="118" width="22" height="28" fill="#000" opacity="0.45"/>
+    <rect x="273" y="118" width="22" height="28" fill="#000" opacity="0.6"/>
+    <rect x="297" y="118" width="22" height="28" fill="#000" opacity="0.8"/>
+    <rect x="321" y="118" width="22" height="28" fill="#000" opacity="0.15"/>
+    <rect x="345" y="118" width="22" height="28" fill="#000" opacity="0.55"/>
+    <rect x="369" y="118" width="22" height="28" fill="#000" opacity="0.35"/>
+    <rect x="393" y="118" width="22" height="28" fill="#000" opacity="0.75"/>
+    <rect x="417" y="118" width="22" height="28" fill="#000" opacity="0.25"/>
+    <rect x="441" y="118" width="22" height="28" fill="#000" opacity="0.95"/>
+    <rect x="465" y="118" width="22" height="28" fill="#000" opacity="0.5"/>
+  </g>
+
+  <g>
+    <rect x="105" y="158" width="22" height="28" fill="#000" opacity="0.7"/>
+    <rect x="129" y="158" width="22" height="28" fill="#000" opacity="0.3"/>
+    <rect x="153" y="158" width="22" height="28" fill="#000" opacity="0.9"/>
+    <rect x="177" y="158" width="22" height="28" fill="#000" opacity="0.5"/>
+    <rect x="201" y="158" width="22" height="28" fill="#000" opacity="0.2"/>
+    <rect x="225" y="158" width="22" height="28" fill="#000" opacity="0.65"/>
+    <rect x="249" y="158" width="22" height="28" fill="#000" opacity="0.85"/>
+    <rect x="273" y="158" width="22" height="28" fill="#000" opacity="0.35"/>
+    <rect x="297" y="158" width="22" height="28" fill="#000" opacity="0.55"/>
+    <rect x="321" y="158" width="22" height="28" fill="#000" opacity="0.95"/>
+    <rect x="345" y="158" width="22" height="28" fill="#000" opacity="0.25"/>
+    <rect x="369" y="158" width="22" height="28" fill="#000" opacity="0.45"/>
+    <rect x="393" y="158" width="22" height="28" fill="#000" opacity="0.8"/>
+    <rect x="417" y="158" width="22" height="28" fill="#000" opacity="0.4"/>
+    <rect x="441" y="158" width="22" height="28" fill="#000" opacity="0.6"/>
+    <rect x="465" y="158" width="22" height="28" fill="#000" opacity="0.15"/>
+  </g>
+
+  <g>
+    <rect x="105" y="198" width="22" height="28" fill="#000" opacity="0.55"/>
+    <rect x="129" y="198" width="22" height="28" fill="#000" opacity="0.95"/>
+    <rect x="153" y="198" width="22" height="28" fill="#000" opacity="0.35"/>
+    <rect x="177" y="198" width="22" height="28" fill="#000" opacity="0.25"/>
+    <rect x="201" y="198" width="22" height="28" fill="#000" opacity="0.7"/>
+    <rect x="225" y="198" width="22" height="28" fill="#000" opacity="0.4"/>
+    <rect x="249" y="198" width="22" height="28" fill="#000" opacity="0.9"/>
+    <rect x="273" y="198" width="22" height="28" fill="#000" opacity="0.2"/>
+    <rect x="297" y="198" width="22" height="28" fill="#000" opacity="0.65"/>
+    <rect x="321" y="198" width="22" height="28" fill="#000" opacity="0.5"/>
+    <rect x="345" y="198" width="22" height="28" fill="#000" opacity="0.85"/>
+    <rect x="369" y="198" width="22" height="28" fill="#000" opacity="0.3"/>
+    <rect x="393" y="198" width="22" height="28" fill="#000" opacity="0.45"/>
+    <rect x="417" y="198" width="22" height="28" fill="#000" opacity="0.8"/>
+    <rect x="441" y="198" width="22" height="28" fill="#000" opacity="0.15"/>
+    <rect x="465" y="198" width="22" height="28" fill="#000" opacity="0.75"/>
+  </g>
+
+  <text x="295" y="252" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" fill="#000" opacity="0.5">···</text>
+
+  <g>
+    <rect x="105" y="278" width="22" height="28" fill="#000" opacity="0.3"/>
+    <rect x="129" y="278" width="22" height="28" fill="#000" opacity="0.6"/>
+    <rect x="153" y="278" width="22" height="28" fill="#000" opacity="0.45"/>
+    <rect x="177" y="278" width="22" height="28" fill="#000" opacity="0.9"/>
+    <rect x="201" y="278" width="22" height="28" fill="#000" opacity="0.5"/>
+    <rect x="225" y="278" width="22" height="28" fill="#000" opacity="0.2"/>
+    <rect x="249" y="278" width="22" height="28" fill="#000" opacity="0.75"/>
+    <rect x="273" y="278" width="22" height="28" fill="#000" opacity="0.35"/>
+    <rect x="297" y="278" width="22" height="28" fill="#000" opacity="0.85"/>
+    <rect x="321" y="278" width="22" height="28" fill="#000" opacity="0.4"/>
+    <rect x="345" y="278" width="22" height="28" fill="#000" opacity="0.7"/>
+    <rect x="369" y="278" width="22" height="28" fill="#000" opacity="0.15"/>
+    <rect x="393" y="278" width="22" height="28" fill="#000" opacity="0.55"/>
+    <rect x="417" y="278" width="22" height="28" fill="#000" opacity="0.95"/>
+    <rect x="441" y="278" width="22" height="28" fill="#000" opacity="0.25"/>
+    <rect x="465" y="278" width="22" height="28" fill="#000" opacity="0.65"/>
+  </g>
+
+  <text x="500" y="190" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.65">→ 가로 한 줄 = 한 위치의 벡터</text>
+  <text x="500" y="206" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.5">(밝기 = 숫자 크기)</text>
+
+  <text x="340" y="340" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.7">위치 0과 1이 절대 같지 않고, 100번째 위치도 0번과 구별됨</text>
+  <text x="340" y="360" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">이 패턴이 단어 임베딩에 더해지면 모델이 위치를 알아챈다</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 680 460" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Transformer Block — Multi-head Attention + FFN + residual + LayerNorm</title>
+
+  <defs>
+    <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Transformer 한 층 — Attention과 FFN, 그 주변의 부수 장치</text>
+
+  <rect x="240" y="55" width="200" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+  <text x="340" y="78" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">입력 (이전 층 출력)</text>
+
+  <line x1="340" y1="91" x2="340" y2="115" stroke="#000" stroke-width="1.4" marker-end="url(#ar3)"/>
+
+  <rect x="200" y="120" width="280" height="50" rx="4" fill="#fff" stroke="#000" stroke-width="1.8"/>
+  <text x="340" y="142" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="500" fill="#000">Multi-head Attention</text>
+  <text x="340" y="160" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">단어들 사이의 관계</text>
+
+  <path d="M 200 145 Q 145 145 145 200 Q 145 215 200 215" stroke="#000" stroke-width="1.2" fill="none" stroke-dasharray="3 3" opacity="0.55"/>
+  <text x="105" y="185" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">residual</text>
+
+  <line x1="340" y1="170" x2="340" y2="195" stroke="#000" stroke-width="1.4" marker-end="url(#ar3)"/>
+
+  <rect x="240" y="200" width="200" height="32" rx="4" fill="#fff" stroke="#000" stroke-width="1.3" opacity="0.85"/>
+  <text x="340" y="220" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">Add (residual) &amp; LayerNorm</text>
+
+  <line x1="340" y1="232" x2="340" y2="252" stroke="#000" stroke-width="1.4" marker-end="url(#ar3)"/>
+
+  <rect x="200" y="257" width="280" height="50" rx="4" fill="#fff" stroke="#000" stroke-width="1.8"/>
+  <text x="340" y="279" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="500" fill="#000">Feed-Forward Network (FFN)</text>
+  <text x="340" y="297" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">각 단어 표현 한 번 더 가공</text>
+
+  <path d="M 200 282 Q 145 282 145 337 Q 145 352 200 352" stroke="#000" stroke-width="1.2" fill="none" stroke-dasharray="3 3" opacity="0.55"/>
+  <text x="105" y="322" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">residual</text>
+
+  <line x1="340" y1="307" x2="340" y2="332" stroke="#000" stroke-width="1.4" marker-end="url(#ar3)"/>
+
+  <rect x="240" y="337" width="200" height="32" rx="4" fill="#fff" stroke="#000" stroke-width="1.3" opacity="0.85"/>
+  <text x="340" y="357" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">Add (residual) &amp; LayerNorm</text>
+
+  <line x1="340" y1="369" x2="340" y2="389" stroke="#000" stroke-width="1.4" marker-end="url(#ar3)"/>
+
+  <rect x="240" y="394" width="200" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+  <text x="340" y="417" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">출력 (다음 층 입력)</text>
+
+  <text x="570" y="240" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000" font-weight="500">× N=6</text>
+  <text x="570" y="258" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">이 층을 6번 쌓음</text>
+</svg>

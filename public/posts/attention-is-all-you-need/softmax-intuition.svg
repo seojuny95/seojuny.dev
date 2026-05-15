@@ -1,0 +1,72 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" style="">
+  <title style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">softmax: 점수를 합이 1인 비율로 바꾼다</title>
+  <desc style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">왼쪽에는 원래 점수 [1, 2, 3]이 막대그래프로, 가운데 softmax 함수 박스, 오른쪽에는 변환된 비율 [0.09, 0.24, 0.67]이 막대로 표현되어 있다. 오른쪽 막대들의 합이 1임을 보여준다.</desc>
+
+  <defs>
+    <marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <!-- 빗금 패턴 -->
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <text x="340" y="35" text-anchor="middle" font-family="var(--font-sans)" font-size="13" font-weight="500" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:13px;font-weight:500;text-anchor:middle;dominant-baseline:auto">softmax: 점수를 합이 1인 비율로 바꾼다</text>
+
+  <!-- ============ 왼쪽: 원래 점수 ============ -->
+  <text x="130" y="80" text-anchor="middle" font-family="var(--font-sans)" font-size="12" fill="#000" opacity="0.75" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.75;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">원래 점수</text>
+
+  <!-- 막대그래프 baseline y=240 -->
+  <line x1="55" y1="240" x2="225" y2="240" stroke="#000" stroke-width="1.2" style="fill:rgb(0, 0, 0);stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.2px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- 점수 1 → 막대 높이 30 -->
+  <rect x="70" y="210" width="35" height="30" fill="none" stroke="#000" stroke-width="1.3" style="fill:none;stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <text x="87.5" y="200" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:ui-monospace, monospace;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">1</text>
+  <text x="87.5" y="258" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#000" opacity="0.7" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">a</text>
+
+  <!-- 점수 2 → 막대 높이 60 -->
+  <rect x="120" y="180" width="35" height="60" fill="none" stroke="#000" stroke-width="1.3" style="fill:none;stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <text x="137.5" y="170" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:ui-monospace, monospace;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">2</text>
+  <text x="137.5" y="258" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#000" opacity="0.7" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">b</text>
+
+  <!-- 점수 3 → 막대 높이 90 -->
+  <rect x="170" y="150" width="35" height="90" fill="none" stroke="#000" stroke-width="1.3" style="fill:none;stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <text x="187.5" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:ui-monospace, monospace;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">3</text>
+  <text x="187.5" y="258" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#000" opacity="0.7" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">c</text>
+
+  <!-- 점수 합 메모 -->
+  <text x="130" y="285" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="#000" opacity="0.7" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:ui-monospace, monospace;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">합 = 6 (제멋대로)</text>
+
+  <!-- ============ 가운데: softmax 박스 ============ -->
+  <path d="M 260 185 Q 260 180 265 180 L 420 181 Q 425 181 425 186 L 424 220 Q 424 225 419 225 L 264 224 Q 259 224 259 219 Z" fill="none" stroke="#000" stroke-width="1.8" style="fill:none;stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.8px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <text x="342" y="202" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="500" fill="#000" dominant-baseline="central" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:14px;font-weight:500;text-anchor:middle;dominant-baseline:central">softmax</text>
+
+  <!-- 화살표 (왼 → 박스) -->
+  <path d="M 225 203 L 257 203" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar3)" style="fill:none;stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- 화살표 (박스 → 오른) -->
+  <path d="M 426 203 L 458 203" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar3)" style="fill:none;stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- ============ 오른쪽: 변환된 비율 ============ -->
+  <text x="555" y="80" text-anchor="middle" font-family="var(--font-sans)" font-size="12" fill="#000" opacity="0.75" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.75;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">합이 1인 비율</text>
+
+  <line x1="480" y1="240" x2="650" y2="240" stroke="#000" stroke-width="1.2" style="fill:rgb(0, 0, 0);stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.2px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- 0.09 → 막대 높이 9 (1점 단위 = 100) -->
+  <rect x="495" y="231" width="35" height="9" fill="url(#hatch)" stroke="#000" stroke-width="1.3" style="stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <text x="512.5" y="221" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:ui-monospace, monospace;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">0.09</text>
+  <text x="512.5" y="258" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#000" opacity="0.7" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">a</text>
+
+  <!-- 0.24 → 막대 높이 24 -->
+  <rect x="545" y="216" width="35" height="24" fill="url(#hatch)" stroke="#000" stroke-width="1.3" style="stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <text x="562.5" y="206" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:ui-monospace, monospace;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">0.24</text>
+  <text x="562.5" y="258" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#000" opacity="0.7" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">b</text>
+
+  <!-- 0.67 → 막대 높이 67 -->
+  <rect x="595" y="173" width="35" height="67" fill="url(#hatch)" stroke="#000" stroke-width="1.3" style="stroke:rgb(0, 0, 0);color:rgb(255, 255, 255);stroke-width:1.3px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <text x="612.5" y="163" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:ui-monospace, monospace;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">0.67</text>
+  <text x="612.5" y="258" text-anchor="middle" font-family="var(--font-sans)" font-size="11" fill="#000" opacity="0.7" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.7;font-family:&quot;Anthropic Sans&quot;, sans-serif;font-size:11px;font-weight:400;text-anchor:middle;dominant-baseline:auto">c</text>
+
+  <!-- 합 = 1 강조 -->
+  <text x="555" y="285" text-anchor="middle" font-family="var(--font-mono)" font-size="11" font-weight="500" fill="#000" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:ui-monospace, monospace;font-size:11px;font-weight:500;text-anchor:middle;dominant-baseline:auto">합 = 1.00</text>
+</svg>
