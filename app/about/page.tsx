@@ -1,6 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import rehypePrettyCode from 'rehype-pretty-code';
+import rehypeUnwrapImages from 'rehype-unwrap-images';
+
+const mdxOptions = {
+  mdxOptions: {
+    remarkPlugins: [remarkGfm, remarkMath],
+    rehypePlugins: [
+      rehypeUnwrapImages,
+      [rehypePrettyCode, { theme: 'github-light', keepBackground: false }],
+      rehypeKatex,
+    ],
+  },
+};
 
 export const metadata = { title: 'About — seojuny.dev' };
 
@@ -18,7 +34,7 @@ export default function AboutPage() {
         <h1 className="text-[28px] font-semibold leading-[1.25] tracking-[-0.015em]">About</h1>
       </header>
       <div className="prose-blog">
-        <MDXRemote source={source} />
+        <MDXRemote source={source} options={mdxOptions} />
       </div>
       <nav aria-label="Social" className="mt-10">
         <ul className="flex items-center gap-5 text-[var(--muted)]">
