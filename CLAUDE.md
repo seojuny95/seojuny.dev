@@ -44,5 +44,6 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 
 - New post: `content/posts/YYYY-MM-DD-slug.mdx` with required `title` + `date` frontmatter. `draft: true` excludes from build.
 - MDX 본문은 **`##` (h2)부터 시작**한다. 페이지의 `h1`은 `app/[slug]/page.tsx`가 frontmatter `title`로 렌더링하므로 본문에 `# ...`를 쓰면 h1이 두 개가 되어 헤딩 위계가 깨진다.
-- Static assets (images, etc.) go in `public/` (create the directory if it doesn't yet exist) and are referenced as `/filename.ext`. Brand icons live in `app/` via App Router file conventions: `icon.svg` (vector primary), `favicon.ico` (legacy fallback, multi-size), and `apple-icon.png` (180×180, iOS) — Next.js auto-injects the corresponding `<link>` tags, so no manual metadata is needed.
+- Per-post images live in `public/posts/<slug>/<image>.ext` and are referenced as `/posts/<slug>/<image>.ext`. The slug must match the post filename's slug (i.e. the `YYYY-MM-DD-` prefix stripped) so each post's assets stay co-located in one folder and can be migrated/deleted as a unit. Use **kebab-case** for image filenames. Site-wide assets (not tied to a specific post) can live directly under `public/`.
+- Brand icons live in `app/` via App Router file conventions: `icon.svg` (vector primary), `favicon.ico` (legacy fallback, multi-size), and `apple-icon.png` (180×180, iOS) — Next.js auto-injects the corresponding `<link>` tags, so no manual metadata is needed.
 - Korean is the default content language (`<html lang="ko">`).
