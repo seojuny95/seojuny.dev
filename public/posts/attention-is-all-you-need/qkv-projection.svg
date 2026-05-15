@@ -1,0 +1,59 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>단어 임베딩에 W_Q, W_K, W_V를 곱해 Q, K, V를 만든다</title>
+
+  <defs>
+    <marker id="ar-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">단어 임베딩 × W → Q / K / V</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">
+    <text x="80" y="80" text-anchor="middle" font-size="11" opacity="0.55">단어 임베딩</text>
+    <rect x="30" y="90" width="100" height="44" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="80" y="110" text-anchor="middle">"love"</text>
+    <text x="80" y="126" text-anchor="middle" font-size="10" opacity="0.6">[0.1, 0.3, …]</text>
+  </g>
+
+  <g stroke="#000" stroke-width="1.2" fill="none">
+    <path d="M 130 100 C 180 100 180 70 240 70" marker-end="url(#ar-p)"/>
+    <path d="M 130 112 L 240 112" marker-end="url(#ar-p)"/>
+    <path d="M 130 124 C 180 124 180 154 240 154" marker-end="url(#ar-p)"/>
+  </g>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">
+    <rect x="245" y="55" width="80" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="285" y="74" text-anchor="middle">× W_Q</text>
+
+    <rect x="245" y="97" width="80" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="285" y="116" text-anchor="middle">× W_K</text>
+
+    <rect x="245" y="139" width="80" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="285" y="158" text-anchor="middle">× W_V</text>
+  </g>
+
+  <g stroke="#000" stroke-width="1.2" fill="none">
+    <line x1="325" y1="70" x2="395" y2="70" marker-end="url(#ar-p)"/>
+    <line x1="325" y1="112" x2="395" y2="112" marker-end="url(#ar-p)"/>
+    <line x1="325" y1="154" x2="395" y2="154" marker-end="url(#ar-p)"/>
+  </g>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">
+    <rect x="400" y="50" width="140" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="425" y="74" text-anchor="middle" font-weight="500">Q</text>
+    <text x="490" y="74" text-anchor="middle" font-size="10" opacity="0.55">"내가 뭘 찾지?"</text>
+
+    <rect x="400" y="92" width="140" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="425" y="116" text-anchor="middle" font-weight="500">K</text>
+    <text x="490" y="116" text-anchor="middle" font-size="10" opacity="0.55">"나는 이런 식별표"</text>
+
+    <rect x="400" y="134" width="140" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="425" y="158" text-anchor="middle" font-weight="500">V</text>
+    <text x="490" y="158" text-anchor="middle" font-size="10" opacity="0.55">"나는 이런 내용"</text>
+  </g>
+
+  <text x="340" y="210" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000" opacity="0.75">같은 단어가 W에 따라 세 가지 다른 역할의 벡터로 변환된다</text>
+  <text x="340" y="232" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">학습으로 자리잡는 건 W 행렬들; Q/K/V는 입력마다 다시 계산되는 결과물</text>
+  <text x="340" y="254" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">모든 단어가 같은 W_Q, W_K, W_V를 공유한다 (= attention 한 회의 파라미터)</text>
+</svg>

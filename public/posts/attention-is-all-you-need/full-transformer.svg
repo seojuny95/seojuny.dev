@@ -1,0 +1,121 @@
+<svg width="100%" viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Transformer 전체 구조 — 번역 예시로 본 데이터 흐름</title>
+
+  <defs>
+    <marker id="ar-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+    <marker id="ar-cx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="26" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Transformer 전체 — "나는 너를 사랑해" → "I love you"</text>
+  <text x="400" y="44" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">왼쪽: 한국어를 읽는 Encoder · 오른쪽: 영어를 만드는 Decoder</text>
+
+  <rect x="50" y="65" width="320" height="495" rx="8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+  <text x="210" y="85" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000" opacity="0.7">Encoder 스택</text>
+
+  <rect x="430" y="65" width="320" height="495" rx="8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+  <text x="590" y="85" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000" opacity="0.7">Decoder 스택</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" fill="#000">
+    <rect x="100" y="100" width="220" height="42" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="210" y="118" text-anchor="middle" font-size="11" opacity="0.6">입력: 한국어 문장</text>
+    <text x="210" y="134" text-anchor="middle" font-size="12">"나는 너를 사랑해"</text>
+  </g>
+
+  <line x1="210" y1="142" x2="210" y2="162" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <rect x="100" y="167" width="220" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.3"/>
+  <text x="210" y="190" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">단어 임베딩 + Positional</text>
+
+  <line x1="210" y1="203" x2="210" y2="223" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <circle cx="75" cy="251" r="13" fill="#000"/>
+  <text x="75" y="256" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#fff">1</text>
+  <rect x="100" y="228" width="220" height="48" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="210" y="250" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Multi-head Self-Attention</text>
+  <text x="210" y="267" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">한국어 단어들끼리 서로를 본다</text>
+
+  <line x1="210" y1="276" x2="210" y2="296" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <rect x="100" y="301" width="220" height="32" rx="4" fill="#fff" stroke="#000" stroke-width="1.2" opacity="0.85"/>
+  <text x="210" y="321" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">Add (residual) &amp; LayerNorm</text>
+
+  <line x1="210" y1="333" x2="210" y2="353" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <circle cx="75" cy="381" r="13" fill="#000"/>
+  <text x="75" y="386" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#fff">2</text>
+  <rect x="100" y="358" width="220" height="48" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="210" y="380" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Feed-Forward Network</text>
+  <text x="210" y="397" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">각 단어 표현 한 번 더 가공</text>
+
+  <line x1="210" y1="406" x2="210" y2="426" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <rect x="100" y="431" width="220" height="32" rx="4" fill="#fff" stroke="#000" stroke-width="1.2" opacity="0.85"/>
+  <text x="210" y="451" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">Add &amp; LayerNorm</text>
+
+  <line x1="210" y1="463" x2="210" y2="495" stroke="#000" stroke-width="2" stroke-dasharray="3 4"/>
+  <rect x="180" y="473" width="60" height="14" rx="2" fill="#fff"/>
+  <text x="210" y="484" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.7">×6 반복</text>
+  <polygon points="206,495 214,495 210,503" fill="#000"/>
+
+  <rect x="100" y="508" width="220" height="38" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+  <text x="210" y="525" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Encoder 출력</text>
+  <text x="210" y="540" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">decoder에 K, V로 공급</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" fill="#000">
+    <rect x="480" y="100" width="220" height="42" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="590" y="118" text-anchor="middle" font-size="11" opacity="0.6">지금까지 만든 영어 단어</text>
+    <text x="590" y="134" text-anchor="middle" font-size="12">"&lt;start&gt; I love"</text>
+  </g>
+
+  <line x1="590" y1="142" x2="590" y2="162" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <rect x="480" y="167" width="220" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.3"/>
+  <text x="590" y="190" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">단어 임베딩 + Positional</text>
+
+  <line x1="590" y1="203" x2="590" y2="223" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <circle cx="725" cy="251" r="13" fill="#000"/>
+  <text x="725" y="256" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#fff">3</text>
+  <rect x="480" y="228" width="220" height="48" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="590" y="250" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Masked Multi-head Self-Attn</text>
+  <text x="590" y="267" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">이미 만든 영어 단어끼리만 본다</text>
+
+  <line x1="590" y1="276" x2="590" y2="296" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <rect x="480" y="301" width="220" height="32" rx="4" fill="#fff" stroke="#000" stroke-width="1.2" opacity="0.85"/>
+  <text x="590" y="321" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">Add &amp; LayerNorm</text>
+
+  <line x1="590" y1="333" x2="590" y2="353" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <circle cx="725" cy="381" r="13" fill="#000"/>
+  <text x="725" y="386" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#fff">4</text>
+  <rect x="480" y="358" width="220" height="48" rx="4" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="590" y="380" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Multi-head Cross-Attention</text>
+  <text x="590" y="397" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">Q는 decoder, K/V는 encoder</text>
+
+  <line x1="590" y1="406" x2="590" y2="426" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <rect x="480" y="431" width="220" height="32" rx="4" fill="#fff" stroke="#000" stroke-width="1.2" opacity="0.85"/>
+  <text x="590" y="451" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">Add &amp; LayerNorm</text>
+
+  <line x1="590" y1="463" x2="590" y2="483" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <circle cx="725" cy="506" r="13" fill="#000"/>
+  <text x="725" y="511" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#fff">5</text>
+  <rect x="480" y="488" width="220" height="38" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="590" y="512" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">FFN + Add &amp; LayerNorm</text>
+
+  <line x1="590" y1="531" x2="590" y2="572" stroke="#000" stroke-width="1.4" marker-end="url(#ar-fl)"/>
+
+  <rect x="480" y="578" width="220" height="32" rx="4" fill="#000" opacity="0.85"/>
+  <text x="590" y="598" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#fff">다음 영어 단어 예측: "you"</text>
+
+  <path d="M 320 527 C 380 527 380 382 480 382" stroke="#000" stroke-width="2" fill="none" marker-end="url(#ar-cx)"/>
+  <rect x="345" y="445" width="110" height="32" rx="4" fill="#fff" stroke="#000" stroke-width="0.8" opacity="0.95"/>
+  <text x="400" y="459" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="500" fill="#000">K, V 공급</text>
+  <text x="400" y="471" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#000" opacity="0.6">cross-attention</text>
+</svg>

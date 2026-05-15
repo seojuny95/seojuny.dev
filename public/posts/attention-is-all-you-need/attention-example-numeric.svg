@@ -1,0 +1,59 @@
+<svg width="100%" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>"I love you" 구체 예시 — love가 self-attention으로 새 표현을 만드는 과정</title>
+
+  <defs>
+    <marker id="ar-ex" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">예시 — "love"가 "I love you"에서 자기 표현을 다시 만든다</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" fill="#000">
+    <text x="60" y="68" font-size="11" opacity="0.65">1. 점수 (QKᵀ): love의 Q vs 각 단어의 K</text>
+
+    <rect x="60" y="80" width="100" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="110" y="102" text-anchor="middle" font-size="11">love · K(I) = 2.0</text>
+
+    <rect x="170" y="80" width="120" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="230" y="102" text-anchor="middle" font-size="11">love · K(love) = 3.0</text>
+
+    <rect x="300" y="80" width="120" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="360" y="102" text-anchor="middle" font-size="11">love · K(you) = 2.5</text>
+
+    <line x1="240" y1="120" x2="240" y2="140" stroke="#000" stroke-width="1.3" marker-end="url(#ar-ex)"/>
+
+    <text x="60" y="158" font-size="11" opacity="0.65">2. √d_k로 나누기 (여기선 √64 = 8로 가정)</text>
+
+    <rect x="60" y="170" width="380" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="250" y="190" text-anchor="middle" font-size="11">[2.0/8, 3.0/8, 2.5/8] ≈ [0.25, 0.375, 0.31]</text>
+
+    <line x1="240" y1="200" x2="240" y2="220" stroke="#000" stroke-width="1.3" marker-end="url(#ar-ex)"/>
+
+    <text x="60" y="238" font-size="11" opacity="0.65">3. softmax → 가중치 (합 = 1)</text>
+
+    <rect x="60" y="250" width="120" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="120" y="272" text-anchor="middle" font-size="11">I: 0.30</text>
+
+    <rect x="190" y="250" width="120" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="250" y="272" text-anchor="middle" font-size="11" font-weight="500">love: 0.37</text>
+
+    <rect x="320" y="250" width="120" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="380" y="272" text-anchor="middle" font-size="11">you: 0.33</text>
+
+    <line x1="240" y1="284" x2="240" y2="304" stroke="#000" stroke-width="1.3" marker-end="url(#ar-ex)"/>
+
+    <text x="60" y="320" font-size="11" opacity="0.65">4. V들을 가중치대로 섞기</text>
+
+    <rect x="60" y="332" width="380" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="250" y="354" text-anchor="middle" font-size="11">new_love = 0.30·V(I) + 0.37·V(love) + 0.33·V(you)</text>
+  </g>
+
+  <g font-family="-apple-system, system-ui, sans-serif" fill="#000">
+    <rect x="470" y="180" width="180" height="100" rx="6" fill="#fff" stroke="#000" stroke-width="1.3" opacity="0.9"/>
+    <text x="560" y="205" text-anchor="middle" font-size="12" font-weight="500">해석</text>
+    <text x="560" y="228" text-anchor="middle" font-size="11" opacity="0.7">"love"의 새 표현은</text>
+    <text x="560" y="246" text-anchor="middle" font-size="11" opacity="0.7">I와 you를 함께 본,</text>
+    <text x="560" y="264" text-anchor="middle" font-size="11" opacity="0.7">맥락이 섞인 벡터</text>
+  </g>
+</svg>

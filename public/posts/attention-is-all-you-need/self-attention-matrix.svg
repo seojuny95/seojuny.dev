@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Self-attention 매트릭스 — 같은 문장의 모든 단어가 모든 단어에 attention</title>
+
+  <text x="340" y="32" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">"I love you" — 같은 문장 안에서 모든 단어가 모든 단어를 본다</text>
+
+  <text x="180" y="78" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">Q (질문)</text>
+  <text x="500" y="78" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">K / V (식별표 + 내용)</text>
+
+  <g stroke="#000" stroke-width="1.1" fill="none" opacity="0.32">
+    <line x1="194" y1="120" x2="486" y2="120"/>
+    <line x1="194" y1="120" x2="486" y2="200"/>
+    <line x1="194" y1="120" x2="486" y2="280"/>
+    <line x1="194" y1="200" x2="486" y2="120"/>
+    <line x1="194" y1="200" x2="486" y2="200"/>
+    <line x1="194" y1="200" x2="486" y2="280"/>
+    <line x1="194" y1="280" x2="486" y2="120"/>
+    <line x1="194" y1="280" x2="486" y2="200"/>
+    <line x1="194" y1="280" x2="486" y2="280"/>
+  </g>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="14" fill="#000">
+    <circle cx="180" cy="120" r="8" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="158" y="125" text-anchor="end">"I"</text>
+
+    <circle cx="180" cy="200" r="8" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="158" y="205" text-anchor="end">"love"</text>
+
+    <circle cx="180" cy="280" r="8" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="158" y="285" text-anchor="end">"you"</text>
+
+    <circle cx="500" cy="120" r="8" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="522" y="125" text-anchor="start">"I"</text>
+
+    <circle cx="500" cy="200" r="8" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="522" y="205" text-anchor="start">"love"</text>
+
+    <circle cx="500" cy="280" r="8" fill="#fff" stroke="#000" stroke-width="1.6"/>
+    <text x="522" y="285" text-anchor="start">"you"</text>
+  </g>
+
+  <text x="340" y="335" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000" opacity="0.6">Q와 K/V가 같은 문장에서 옴 → self-attention</text>
+</svg>
