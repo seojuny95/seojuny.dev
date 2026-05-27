@@ -1,0 +1,68 @@
+<svg width="100%" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Cross-Entropy — 정답 분포와 예측 분포의 차이</title>
+  <desc>왼쪽엔 정답 one-hot 막대(고양이=1, 강아지=0, 새=0). 오른쪽엔 예측 확률 막대(고양이=0.7, 강아지=0.2, 새=0.1). 정답 자리(고양이)에 ★ 표시. 하단에 CE 계산 결과 = -log(0.7) ≈ 0.36.</desc>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Cross-Entropy — 정답 분포 vs 예측 분포</text>
+
+  <!-- ============ 왼쪽: 정답 one-hot ============ -->
+  <text x="170" y="58" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">정답  (one-hot)</text>
+
+  <!-- baseline -->
+  <line x1="50" y1="240" x2="290" y2="240" stroke="#000" stroke-width="1.2"/>
+
+  <!-- 고양이 = 1 (max bar) -->
+  <rect x="80" y="100" width="40" height="140" fill="#000" opacity="0.85"/>
+  <text x="100" y="92" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="700" fill="#000">1</text>
+
+  <!-- 강아지 = 0 -->
+  <line x1="160" y1="240" x2="200" y2="240" stroke="#000" stroke-width="2"/>
+  <text x="180" y="232" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.55">0</text>
+
+  <!-- 새 = 0 -->
+  <line x1="240" y1="240" x2="280" y2="240" stroke="#000" stroke-width="2"/>
+  <text x="260" y="232" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.55">0</text>
+
+  <!-- 정답 ★ (고양이 위, "1" 라벨과 충분히 띄움) -->
+  <g transform="translate(100 68)" stroke="#000" stroke-width="1.3" fill="#fff" stroke-linejoin="round">
+    <path d="M 0 -8 L 2.4 -2.6 L 8 -2.6 L 3.3 1.3 L 5.3 7.3 L 0 4 L -5.3 7.3 L -3.3 1.3 L -8 -2.6 L -2.4 -2.6 Z"/>
+  </g>
+
+  <text x="100" y="260" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">고양이</text>
+  <text x="180" y="260" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">강아지</text>
+  <text x="260" y="260" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">새</text>
+
+  <!-- ============ 구분선 ============ -->
+  <line x1="340" y1="50" x2="340" y2="280" stroke="#000" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.4"/>
+
+  <!-- ============ 오른쪽: 예측 확률 ============ -->
+  <text x="510" y="58" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">예측  (모델의 확률)</text>
+
+  <line x1="390" y1="240" x2="630" y2="240" stroke="#000" stroke-width="1.2"/>
+
+  <!-- 고양이 = 0.7 (height 98) -->
+  <rect x="420" y="142" width="40" height="98" fill="#000" opacity="0.85"/>
+  <text x="440" y="134" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="700" fill="#000">0.7</text>
+
+  <!-- 강아지 = 0.2 (height 28) -->
+  <rect x="500" y="212" width="40" height="28" fill="#000" opacity="0.55"/>
+  <text x="520" y="204" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.7">0.2</text>
+
+  <!-- 새 = 0.1 (height 14) -->
+  <rect x="580" y="226" width="40" height="14" fill="#000" opacity="0.55"/>
+  <text x="600" y="218" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.7">0.1</text>
+
+  <!-- 정답 ★ (고양이 위, "0.7" 라벨과 충분히 띄움) -->
+  <g transform="translate(440 110)" stroke="#000" stroke-width="1.3" fill="#fff" stroke-linejoin="round">
+    <path d="M 0 -8 L 2.4 -2.6 L 8 -2.6 L 3.3 1.3 L 5.3 7.3 L 0 4 L -5.3 7.3 L -3.3 1.3 L -8 -2.6 L -2.4 -2.6 Z"/>
+  </g>
+
+  <text x="440" y="260" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">고양이</text>
+  <text x="520" y="260" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">강아지</text>
+  <text x="600" y="260" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">새</text>
+
+  <!-- ============ 하단: CE 계산 ============ -->
+  <line x1="40" y1="285" x2="640" y2="285" stroke="#000" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.4"/>
+
+  <text x="340" y="308" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" font-weight="600" fill="#000">CE = −log(0.7) ≈ 0.36</text>
+  <text x="340" y="328" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.7">★ 자리(정답 카테고리)에 모델이 매긴 확률만 손실에 반영된다</text>
+</svg>

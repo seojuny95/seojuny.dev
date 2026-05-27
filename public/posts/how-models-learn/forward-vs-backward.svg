@@ -1,0 +1,52 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Forward vs Backward — 같은 그래프, 반대 방향</title>
+  <desc>같은 노드 그래프 위에서 위쪽으로는 데이터가 앞으로(forward, 입력 → 손실) 흐르고, 아래쪽으로는 기울기가 뒤로(backward, 손실 → 입력) 흐른다.</desc>
+
+  <defs>
+    <marker id="fb-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">같은 그래프 — 데이터는 앞으로, 기울기는 뒤로</text>
+
+  <!-- ============ 위쪽: Forward 라벨 ============ -->
+  <text x="340" y="62" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="700" fill="#000">→ Forward (데이터)</text>
+  <text x="340" y="78" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.7">입력에서 손실까지 — 예측을 만든다</text>
+
+  <!-- Forward 화살표 (노드 위쪽, 오른쪽으로) -->
+  <g fill="none" stroke="#000" stroke-width="2" stroke-linecap="round">
+    <path d="M 134 130 Q 200 110 256 130" marker-end="url(#fb-arr)"/>
+    <path d="M 304 130 Q 370 110 426 130" marker-end="url(#fb-arr)"/>
+    <path d="M 474 130 Q 540 110 576 130" marker-end="url(#fb-arr)"/>
+  </g>
+
+  <!-- ============ 노드 4개 ============ -->
+  <g>
+    <circle cx="110" cy="170" r="26" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <text x="110" y="177" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="600" fill="#000">x</text>
+
+    <circle cx="280" cy="170" r="26" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <text x="280" y="177" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="600" fill="#000">a</text>
+
+    <circle cx="450" cy="170" r="26" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <text x="450" y="177" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="600" fill="#000">b</text>
+
+    <circle cx="600" cy="170" r="26" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <text x="600" y="177" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="600" fill="#000">L</text>
+  </g>
+
+  <!-- ============ 아래쪽: Backward 화살표 (왼쪽으로, 점선) ============ -->
+  <g fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 3">
+    <path d="M 576 210 Q 540 230 474 210" marker-end="url(#fb-arr)"/>
+    <path d="M 426 210 Q 370 230 304 210" marker-end="url(#fb-arr)"/>
+    <path d="M 256 210 Q 200 230 134 210" marker-end="url(#fb-arr)"/>
+  </g>
+
+  <!-- Backward 라벨 -->
+  <text x="340" y="265" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="700" fill="#000">← Backward (기울기)</text>
+  <text x="340" y="281" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.7">손실에서 시작해 거꾸로 — 각 파라미터의 기울기 계산</text>
+
+  <!-- ============ 하단 요약 ============ -->
+  <text x="340" y="308" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">한 번 forward + 한 번 backward = 모든 파라미터의 기울기 완성</text>
+</svg>

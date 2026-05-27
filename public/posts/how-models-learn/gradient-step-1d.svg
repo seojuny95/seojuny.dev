@@ -1,0 +1,70 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>기울기 → 그 반대로 한 걸음</title>
+  <desc>왼쪽 패널에서 현재 위치의 기울기는 오른쪽 위(오르막)를 가리킨다. 오른쪽 패널에서 그 반대 방향(왼쪽 아래)으로 한 걸음 옮기면 새 위치는 최저점에 더 가깝다.</desc>
+
+  <defs>
+    <marker id="gs-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">기울기는 오르막 방향 — 그 반대로 한 걸음</text>
+
+  <!-- ============================================================ -->
+  <!-- ① 왼쪽 패널 -->
+  <!-- ============================================================ -->
+  <text x="170" y="56" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="700" fill="#000">① 지금 기울기를 본다</text>
+
+  <!-- U-curve (vertex (170, 225)) -->
+  <path d="M 60 100 Q 170 350 280 100" fill="none" stroke="#000" stroke-width="2"/>
+
+  <!-- 라벨 (U 내부 빈 공간) -->
+  <text x="155" y="135" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">기울기</text>
+  <text x="155" y="155" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">= 오르막 방향 ↗</text>
+
+  <!-- 현재 위치 — 곡선 위 (225, 194), t=0.75 -->
+  <circle cx="225" cy="194" r="7" fill="#000"/>
+  <text x="240" y="215" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">현재 w</text>
+
+  <!-- 기울기 화살표 (현재에서 오른쪽 위로) -->
+  <path d="M 230 188 L 273 140" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" marker-end="url(#gs-arr)"/>
+
+  <!-- 하단 -->
+  <text x="170" y="295" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">곡선이 오른쪽으로 올라가는 중 → 기울기 양수</text>
+
+  <!-- ============================================================ -->
+  <!-- 구분선 -->
+  <!-- ============================================================ -->
+  <line x1="340" y1="48" x2="340" y2="300" stroke="#000" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.4"/>
+
+  <!-- ============================================================ -->
+  <!-- ② 오른쪽 패널 -->
+  <!-- ============================================================ -->
+  <text x="510" y="56" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="700" fill="#000">② 반대 방향으로 한 걸음</text>
+
+  <!-- U-curve (vertex (510, 225)) -->
+  <path d="M 400 100 Q 510 350 620 100" fill="none" stroke="#000" stroke-width="2"/>
+
+  <!-- 라벨 (U 내부 빈 공간) -->
+  <text x="495" y="135" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">한 걸음</text>
+  <text x="495" y="155" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">= 기울기 반대 방향 ↙</text>
+
+  <!-- 현재 위치 (참고용, 살짝 흐림) -->
+  <circle cx="565" cy="194" r="5.5" fill="#000" opacity="0.5"/>
+  <text x="580" y="198" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.7">현재</text>
+
+  <!-- 한 걸음 화살표 (곡선 따라 왼쪽 아래로) -->
+  <path d="M 558 200 Q 540 222 530 226" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round" marker-end="url(#gs-arr)"/>
+
+  <!-- 다음 위치 — 곡선 위 (525, 223) -->
+  <circle cx="525" cy="223" r="7" fill="#fff" stroke="#000" stroke-width="2.4"/>
+  <text x="510" y="247" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="700" fill="#000">다음 w</text>
+
+  <!-- 하단 -->
+  <text x="510" y="295" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">→ 다음 위치는 최저점에 더 가깝다</text>
+
+  <!-- ============================================================ -->
+  <!-- 하단 식 -->
+  <!-- ============================================================ -->
+  <text x="340" y="314" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" font-weight="600" fill="#000">w ← w − η × 기울기</text>
+</svg>
