@@ -1,0 +1,107 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>모델은 파라미터로 가득 찬 함수</title>
+  <desc>왼쪽에서 입력 x가 들어가고, 가운데 모델 박스 안에는 W와 b로 쓰인 수많은 숫자들이 들어 있으며, 오른쪽으로 출력 ŷ이 나온다. 박스 안 숫자들이 모델의 동작을 결정한다.</desc>
+
+  <defs>
+    <marker id="mf-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <mask id="mf-title-gap" maskUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="680" height="360" fill="white"/>
+      <rect x="295" y="52" width="90" height="24" fill="black" rx="3"/>
+    </mask>
+  </defs>
+
+  <text x="340" y="30" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">입력 → 함수(파라미터) → 출력</text>
+
+  <!-- 입력 박스 (살짝 기울어짐) -->
+  <g transform="rotate(-3 90 165)">
+    <path d="M 45 130 Q 45 127 48 127 L 133 126 Q 136 126 136 129 L 136 200 Q 136 203 133 203 L 47 204 Q 44 204 44 201 Z"
+          fill="none" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/>
+    <text x="90" y="168" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="18" font-weight="500" fill="#000">x</text>
+  </g>
+  <text x="90" y="230" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000" opacity="0.7">입력</text>
+
+  <!-- 화살표 -->
+  <path d="M 148 165 Q 175 161 198 163" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#mf-arr)"/>
+
+  <!-- 모델 박스 -->
+  <path d="M 215 85 Q 215 80 220 80 L 468 82 Q 473 82 473 87 L 471 248 Q 471 253 466 253 L 217 251 Q 212 251 212 246 Z"
+        fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"
+        mask="url(#mf-title-gap)"/>
+
+  <!-- 모델 라벨 (박스 상단 가운데, 살짝 기울어진 작은 박스) -->
+  <g transform="rotate(-2 340 64)">
+    <rect x="295" y="52" width="90" height="24" rx="3" fill="none" stroke="#000" stroke-width="1.5"/>
+    <text x="340" y="64" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">함수</text>
+  </g>
+
+  <!-- 박스 안 숫자들 (W, b 표현) -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.78">
+    <text x="225" y="108">0.42</text>
+    <text x="268" y="106">-1.07</text>
+    <text x="315" y="109">0.88</text>
+    <text x="357" y="107">-0.31</text>
+    <text x="400" y="109">2.14</text>
+    <text x="440" y="107">-0.56</text>
+
+    <text x="223" y="132">-0.19</text>
+    <text x="268" y="134">0.73</text>
+    <text x="310" y="131">1.42</text>
+    <text x="354" y="133">-0.94</text>
+    <text x="398" y="131">0.08</text>
+    <text x="440" y="134">1.21</text>
+
+    <text x="226" y="156">1.55</text>
+    <text x="265" y="154">-0.27</text>
+    <text x="313" y="156">0.61</text>
+    <text x="355" y="153">2.03</text>
+    <text x="397" y="156">-1.18</text>
+    <text x="442" y="153">0.49</text>
+
+    <text x="224" y="179">-0.84</text>
+    <text x="268" y="181">1.92</text>
+    <text x="314" y="178">-0.05</text>
+    <text x="356" y="181">0.77</text>
+    <text x="399" y="178">-2.31</text>
+    <text x="441" y="181">0.36</text>
+
+    <text x="227" y="203">0.93</text>
+    <text x="266" y="201">-1.45</text>
+    <text x="314" y="203">0.62</text>
+    <text x="357" y="201">1.08</text>
+    <text x="400" y="203">-0.71</text>
+    <text x="442" y="201">2.55</text>
+
+    <text x="223" y="226">-1.32</text>
+    <text x="268" y="228">0.41</text>
+    <text x="313" y="226">1.79</text>
+    <text x="356" y="228">-0.62</text>
+    <text x="400" y="226">0.27</text>
+    <text x="441" y="228">-1.04</text>
+  </g>
+
+  <!-- 화살표 (모델 → 출력) -->
+  <path d="M 485 165 Q 510 161 533 163" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#mf-arr)"/>
+
+  <!-- 출력 박스 -->
+  <g transform="rotate(2 595 165)">
+    <path d="M 550 130 Q 550 127 553 127 L 638 128 Q 641 128 641 131 L 641 200 Q 641 203 638 203 L 552 204 Q 549 204 549 201 Z"
+          fill="none" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/>
+    <text x="595" y="168" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="18" font-weight="500" fill="#000">ŷ</text>
+  </g>
+  <text x="595" y="230" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000" opacity="0.7">출력</text>
+
+  <!-- 점선 구분 -->
+  <line x1="40" y1="280" x2="640" y2="280" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+
+  <!-- 박스 안 숫자 가리키는 점선 -->
+  <path d="M 252 145 Q 240 270 280 305" fill="none" stroke="#000" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3" opacity="0.55"/>
+
+  <text x="340" y="315" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000">
+    파라미터 (가중치 W, 편향 b) — 이 숫자들이 함수의 동작을 결정한다
+  </text>
+  <text x="340" y="338" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.65">
+    학습 = 이 숫자들을 조금씩 조정해서 출력이 정답에 가까워지도록 만드는 일
+  </text>
+</svg>

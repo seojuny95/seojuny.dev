@@ -1,0 +1,85 @@
+<svg width="100%" viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>L(w) = (w−3)² 위에서 w가 0에서 시작해 3으로 수렴</title>
+  <desc>U자 손실 곡선 L=(w−3)² 위에서 초기값 w=0에서 시작한 점이 매 step마다 기울기 반대 방향으로 0.1만큼 옮겨 최저점 w=3에 수렴한다.</desc>
+
+  <defs>
+    <marker id="qd-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">L(w) = (w−3)² — 한 걸음씩 정답 w=3으로 수렴</text>
+
+  <!-- ============ 축 ============ -->
+  <line x1="60" y1="60" x2="60" y2="280" stroke="#000" stroke-width="1.4"/>
+  <line x1="60" y1="280" x2="630" y2="280" stroke="#000" stroke-width="1.4"/>
+  <path d="M 56 66 L 60 57 L 64 66" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 624 276 L 633 280 L 624 284" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 축 이름 -->
+  <text x="44" y="65" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">손실 L</text>
+  <text x="640" y="285" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">w</text>
+
+  <!-- X 눈금 -->
+  <g stroke="#000" stroke-width="1.2">
+    <line x1="60" y1="280" x2="60" y2="285"/>
+    <line x1="153" y1="280" x2="153" y2="285"/>
+    <line x1="247" y1="280" x2="247" y2="285"/>
+    <line x1="340" y1="280" x2="340" y2="285"/>
+    <line x1="433" y1="280" x2="433" y2="285"/>
+    <line x1="527" y1="280" x2="527" y2="285"/>
+    <line x1="620" y1="280" x2="620" y2="285"/>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000" opacity="0.75" text-anchor="middle">
+    <text x="60" y="298">0</text>
+    <text x="153" y="298">1</text>
+    <text x="247" y="298">2</text>
+    <text x="340" y="298" font-weight="700">3</text>
+    <text x="433" y="298">4</text>
+    <text x="527" y="298">5</text>
+    <text x="620" y="298">6</text>
+  </g>
+
+  <!-- ============ 포물선 L = (w−3)² ============ -->
+  <path d="M 60 73 Q 340 487 620 73" fill="none" stroke="#000" stroke-width="2"/>
+
+  <!-- ============ 시작점 + 라벨 (안전한 위치, 곡선과 분리) ============ -->
+  <circle cx="60" cy="73" r="6.5" fill="#000"/>
+  <text x="78" y="70" font-family="ui-monospace, Menlo, monospace" font-size="11" font-weight="700" fill="#000">start</text>
+  <text x="78" y="84" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000" opacity="0.7">w=0, L=9</text>
+
+  <!-- ============ 중간 step 점들 (모두 곡선 위) ============ -->
+  <g fill="#000">
+    <!-- step 0 → (116, 148) -->
+    <circle cx="116" cy="148" r="5"/>
+    <!-- step 1 → (161, 195) -->
+    <circle cx="161" cy="195" r="5"/>
+    <!-- step 2 → (196, 226) -->
+    <circle cx="196" cy="226" r="5"/>
+    <!-- step 3 → (225, 245) -->
+    <circle cx="225" cy="245" r="4.5"/>
+    <!-- step 5 → (266, 266) -->
+    <circle cx="266" cy="266" r="4"/>
+    <!-- step 10 → (319, 279) -->
+    <circle cx="319" cy="279" r="3.5"/>
+  </g>
+
+  <!-- ============ 단계 사이 화살표 (또렷하게) ============ -->
+  <g fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.7">
+    <path d="M 67 82 Q 90 115 112 144" marker-end="url(#qd-arr)"/>
+    <path d="M 121 154 Q 140 178 158 192" marker-end="url(#qd-arr)"/>
+    <path d="M 166 201 Q 180 215 193 223" marker-end="url(#qd-arr)"/>
+    <path d="M 201 230 Q 213 240 223 243" marker-end="url(#qd-arr)"/>
+  </g>
+
+  <!-- ============ 최저점 (= step 19 도착점) ============ -->
+  <circle cx="340" cy="280" r="7" fill="#fff" stroke="#000" stroke-width="2.4"/>
+
+  <!-- 최저점 라벨 + leader -->
+  <line x1="340" y1="225" x2="340" y2="271" stroke="#000" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.5"/>
+  <text x="340" y="213" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="700" fill="#000">최저점 (step 19 ≈)</text>
+  <text x="340" y="227" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000" opacity="0.75">w ≈ 3.00</text>
+
+  <!-- ============ 하단 ============ -->
+  <text x="340" y="325" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">매 step마다 기울기 반대 방향으로 0.1만큼 — 20번이면 사실상 최저점 도달</text>
+</svg>
