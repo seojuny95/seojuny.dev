@@ -52,7 +52,11 @@ from datasets import load_dataset
 ds = load_dataset("gvlassis/california_housing")
 
 print(ds)
-# DatasetDict({ train: Dataset({ features: [...], num_rows: 20640 }) })
+# DatasetDict({
+#     train:      Dataset({ features: [...], num_rows: 16640 }),
+#     validation: Dataset({ features: [...], num_rows: 2000 }),
+#     test:       Dataset({ features: [...], num_rows: 2000 }),
+# })
 
 print(ds["train"][0])
 # {'MedInc': 8.3252, 'HouseAge': 41.0, ..., 'MedHouseVal': 4.526}
@@ -405,7 +409,7 @@ for epoch in range(200):
 
 w, b = model.weight.item(), model.bias.item()
 print(f"학습 후: w={w:.2f}, b={b:.2f}")
-# 학습 후: w=2.00, b=1.00
+# 학습 후: w≈2.00, b≈1.00  (노이즈에 따라 미세 변동)
 ```
 
 ### 핵심 메소드 설명
