@@ -18,6 +18,7 @@ type RawPost = Post & { draft: boolean };
 
 const KOREAN_CPM = 500;
 const LATIN_WPM = 220;
+const CODE_WPM = 100;
 const SECONDS_PER_IMAGE = 12;
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('ko-KR', {
@@ -33,12 +34,17 @@ export function formatDate(isoDate: string): string {
 }
 
 export function readingTime(content: string): number {
-  const imageCount = (content.match(/!\[[^\]]*\]\([^)]*\)/g) ?? []).length;
-  const stripped = content
-    .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/`[^`]*`/g, ' ')
+  const codeWords = (content.match(/```[\s\S]*?```/g) ?? [])
+    .map((block) => block.replace(/^```[^\n]*\n?/, '').replace(/```$/, ''))
+    .join(' ')
+    .split(/\s+/)
+    .filter(Boolean).length;
+  const withoutCode = content.replace(/```[\s\S]*?```/g, ' ');
+  const imageCount = (withoutCode.match(/!\[[^\]]*\]\([^)]*\)/g) ?? []).length;
+  const stripped = withoutCode
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, ' $1 ')
+    .replace(/`([^`]*)`/g, ' $1 ')
     .replace(/<[^>]+>/g, ' ');
   const korean = (stripped.match(/[가-힣]/g) ?? []).length;
   const latin = stripped
@@ -46,8 +52,9 @@ export function readingTime(content: string): number {
     .split(/\s+/)
     .filter((w) => /[A-Za-z0-9]/.test(w)).length;
   const textMinutes = korean / KOREAN_CPM + latin / LATIN_WPM;
+  const codeMinutes = codeWords / CODE_WPM;
   const imageMinutes = (imageCount * SECONDS_PER_IMAGE) / 60;
-  return Math.max(1, Math.ceil(textMinutes + imageMinutes));
+  return Math.max(1, Math.ceil(textMinutes + codeMinutes + imageMinutes));
 }
 
 function postsDir(): string {
