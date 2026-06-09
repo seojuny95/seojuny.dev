@@ -1,0 +1,53 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>이중 양자화 — 양자화에 딸린 기준 숫자까지 한 번 더 줄인다</title>
+  <desc>가중치를 64개씩 묶어 4bit로 저장하면, 묶음마다 그 크기를 적어두는 기준 숫자가 하나씩 따라붙는다. 이 기준 숫자는 32bit라 묶음이 1억 개를 넘는 7B 모델에선 다 모으면 수백 MB다. 이중 양자화는 이 기준 숫자들마저 8bit로 한 번 더 양자화해 용량을 약 1/4로 줄인다.</desc>
+
+  <defs>
+    <pattern id="dq-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="0.6" opacity="0.18"/>
+    </pattern>
+    <marker id="dq-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">이중 양자화 — 딸린 기준 숫자까지 한 번 더 줄인다</text>
+
+  <!-- 윗단: 기준 숫자가 어디서 오나 -->
+  <text x="340" y="52" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.85">가중치는 64개씩 묶어 4bit로 저장하고, 묶음마다 기준 숫자를 하나씩 둔다</text>
+
+  <rect x="176" y="70" width="80" height="44" rx="4" fill="url(#dq-hatch)" stroke="#000" stroke-width="1.6"/>
+  <text x="216" y="90" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">가중치 묶음</text>
+  <text x="216" y="104" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#000" opacity="0.6">64개 · 4bit</text>
+
+  <path d="M 262 92 L 300 92" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#dq-arr)"/>
+
+  <rect x="306" y="72" width="76" height="40" rx="4" fill="#000" fill-opacity="0.05" stroke="#000" stroke-width="1.6"/>
+  <text x="344" y="90" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">기준 숫자</text>
+  <text x="344" y="104" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="9" fill="#000" opacity="0.6">32bit</text>
+
+  <text x="400" y="88" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.7">묶음마다 1개</text>
+  <text x="400" y="102" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#000" opacity="0.55">(7B면 1억 개 넘음)</text>
+
+  <!-- 구분선 -->
+  <line x1="40" y1="138" x2="640" y2="138" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.45"/>
+
+  <!-- 아랫단: 기준 숫자를 8bit로 -->
+  <text x="340" y="162" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.85">이중 양자화: 이 기준 숫자들을 8bit로 한 번 더 압축</text>
+
+  <rect x="176" y="180" width="80" height="46" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="216" y="202" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">기준 숫자</text>
+  <text x="216" y="217" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000" opacity="0.6">32bit</text>
+  <text x="216" y="250" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">다 모으면 수백 MB</text>
+
+  <text x="330" y="193" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">8bit로 양자화</text>
+  <path d="M 268 204 L 392 204" fill="none" stroke="#000" stroke-width="1.5" marker-end="url(#dq-arr)"/>
+
+  <rect x="430" y="189" width="80" height="30" rx="4" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.6"/>
+  <text x="470" y="208" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000">8bit</text>
+  <text x="470" y="250" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">약 1/4</text>
+
+  <!-- 캡션 -->
+  <line x1="40" y1="270" x2="640" y2="270" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="290" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">가중치는 이미 4bit. 거기 딸린 기준 숫자까지 줄여 덤으로 메모리를 아낀다</text>
+</svg>

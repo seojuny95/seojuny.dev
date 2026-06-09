@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>PEFT가 메모리를 줄이는 법 — 학습 메모리를 작은 어댑터에만</title>
+  <desc>풀 파인튜닝은 본체 전체를 학습해서 가중치(14GB)에 학습 메모리(기울기·옵티마이저, 약 98GB)가 더해져 112GB가 든다. PEFT는 본체를 동결해 14GB만 올려 두고, 작은 어댑터에만 학습 메모리가 붙어 약 15GB로 끝난다. 그래서 개인 GPU 한 장에 들어온다.</desc>
+
+  <defs>
+    <pattern id="pm-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="0.6" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <text x="340" y="26" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">PEFT가 메모리를 줄이는 법 — 학습 메모리를 작은 어댑터에만 붙인다</text>
+
+  <!-- 개인 GPU 기준선 -->
+  <line x1="92" y1="211" x2="526" y2="211" stroke="#000" stroke-width="1" stroke-dasharray="5 4" opacity="0.65"/>
+  <text x="96" y="206" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.75">개인 GPU 한 장 ≈ 24GB</text>
+
+  <!-- ===== 풀 파인튜닝 막대 ===== -->
+  <!-- 학습 메모리 -->
+  <rect x="168" y="70" width="66" height="157.5" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="1.5"/>
+  <!-- 가중치 -->
+  <rect x="168" y="227.5" width="66" height="22.5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="201" y="60" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">≈ 112GB</text>
+  <text x="201" y="272" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">풀 파인튜닝</text>
+
+  <!-- 풀 막대 라벨 -->
+  <text x="244" y="142" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">학습 메모리</text>
+  <text x="244" y="157" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.65">기울기·옵티마이저</text>
+  <text x="244" y="243" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">본체 가중치 ≈ 14GB</text>
+
+  <!-- ===== PEFT 막대 ===== -->
+  <!-- 어댑터 학습 메모리 (아주 작음) -->
+  <rect x="455" y="220.5" width="66" height="7" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="1.5"/>
+  <!-- 본체 (동결) -->
+  <rect x="455" y="227.5" width="66" height="22.5" fill="url(#pm-hatch)" stroke="#000" stroke-width="1.5"/>
+  <text x="488" y="272" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">PEFT</text>
+
+  <!-- PEFT 막대 라벨 -->
+  <text x="531" y="218" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">어댑터 학습 메모리</text>
+  <text x="531" y="232" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.65">(아주 작음)</text>
+  <text x="531" y="247" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">본체 동결 ≈ 14GB</text>
+  <text x="595" y="200" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="700" fill="#000">≈ 15GB</text>
+
+  <!-- 범례 -->
+  <rect x="180" y="294" width="15" height="11" rx="2" fill="url(#pm-hatch)" stroke="#000" stroke-width="1.3"/>
+  <text x="201" y="303" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.75">동결된 본체</text>
+  <rect x="300" y="294" width="15" height="11" rx="2" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="1.3"/>
+  <text x="321" y="303" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.75">학습 메모리 (기울기·옵티마이저)</text>
+</svg>
