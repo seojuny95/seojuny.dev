@@ -95,10 +95,31 @@ describe('readingTime', () => {
     expect(posts.readingTime(text)).toBe(3);
   });
 
-  it('ignores fenced code blocks', () => {
-    const prose = '가'.repeat(400);
-    const code = '\n```js\n' + 'let x = 1;\n'.repeat(2000) + '```\n';
-    expect(posts.readingTime(prose + code)).toBe(1);
+  it('counts fenced code blocks at ~100 wpm', () => {
+    // 250 lines × 4 tokens = 1000 code words → 10 minutes
+    const code = '```js\n' + 'let x = 1;\n'.repeat(250) + '```';
+    expect(posts.readingTime(code)).toBe(10);
+  });
+
+  it('counts inline code content as readable text', () => {
+    const prose = '가'.repeat(400); // 0.8 min
+    const inline = ' `alpha beta` '.repeat(110); // 220 words → 1 min
+    expect(posts.readingTime(prose + inline)).toBe(2);
+  });
+
+  it('counts link display text as readable text', () => {
+    const links = '[word word](https://example.com) '.repeat(220); // 440 words → 2 min
+    expect(posts.readingTime(links)).toBe(2);
+  });
+
+  it('adds 12 seconds per image', () => {
+    const images = '![alt](/posts/x/img.png)\n'.repeat(10); // 120s → 2 min
+    expect(posts.readingTime(images)).toBe(2);
+  });
+
+  it('does not count image syntax inside code blocks as images', () => {
+    const code = '```md\n' + '![alt](/img.png)\n'.repeat(10) + '```';
+    expect(posts.readingTime(code)).toBe(1);
   });
 
   it('attaches readingTime to every post', () => {
