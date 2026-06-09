@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>NF4 코드북 — 4bit 번호마다 실제 값을 정해 둔다</title>
+  <desc>4bit로는 0000부터 1111까지 16개의 번호만 만들 수 있다. 각 번호가 어떤 실제 값인지는 표(코드북)가 정한다. NF4는 0 근처 값을 촘촘히(0, 0.02, 0.04…), 양 끝은 듬성하게 둔다. 가중치 0.03은 표에서 가장 가까운 0.04에 해당하는 번호 1001로 저장된다.</desc>
+
+  <text x="340" y="32" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">NF4 표 — 4bit 번호마다 실제 값을 정해 둔다</text>
+
+  <!-- 열 제목 -->
+  <text x="210" y="70" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">4bit 번호</text>
+  <text x="370" y="70" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">실제 값</text>
+  <line x1="120" y1="78" x2="470" y2="78" stroke="#000" stroke-width="0.8" opacity="0.4"/>
+  <line x1="290" y1="84" x2="290" y2="318" stroke="#000" stroke-width="0.6" opacity="0.3"/>
+
+  <!-- 강조 행 배경 (1001 → 0.04) -->
+  <rect x="118" y="230" width="354" height="26" rx="3" fill="#000" fill-opacity="0.07"/>
+
+  <!-- 행들 -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="14" fill="#000">
+    <text x="210" y="111" text-anchor="middle">0000</text>  <text x="370" y="111" text-anchor="middle">-1.0</text>
+    <text x="210" y="141" text-anchor="middle" opacity="0.5">⋮</text> <text x="370" y="141" text-anchor="middle" opacity="0.5">⋮</text>
+    <text x="210" y="171" text-anchor="middle">0111</text>  <text x="370" y="171" text-anchor="middle">0.00</text>
+    <text x="210" y="201" text-anchor="middle">1000</text>  <text x="370" y="201" text-anchor="middle">0.02</text>
+    <text x="210" y="249" text-anchor="middle" font-weight="700">1001</text>  <text x="370" y="249" text-anchor="middle" font-weight="700">0.04</text>
+    <text x="210" y="279" text-anchor="middle">1010</text>  <text x="370" y="279" text-anchor="middle">0.07</text>
+    <text x="210" y="309" text-anchor="middle" opacity="0.5">⋮</text> <text x="370" y="309" text-anchor="middle" opacity="0.5">⋮</text>
+  </g>
+
+  <!-- 오른쪽 주석 -->
+  <text x="500" y="186" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">0 근처: 값 촘촘</text>
+  <text x="500" y="201" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.6">(0.02씩)</text>
+  <text x="500" y="111" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">양 끝: 값 듬성</text>
+
+  <!-- 0.03 예시 콜아웃 -->
+  <text x="118" y="249" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.85">0.03 →</text>
+
+  <!-- 캡션 -->
+  <line x1="40" y1="332" x2="640" y2="332" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="352" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">가중치 0.03 → 표에서 가장 가까운 0.04 → 그 번호 1001(4bit)만 저장</text>
+</svg>

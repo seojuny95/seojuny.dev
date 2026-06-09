@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>bit 수가 표현할 수 있는 값의 개수를 정한다</title>
+  <desc>bit 한 자리는 0 아니면 1이다. 자리가 하나 늘 때마다 경우의 수가 2배가 된다. 그래서 4bit는 2×2×2×2 = 16가지, 16bit는 2를 16번 곱한 65,536가지를 표현할 수 있다.</desc>
+
+  <text x="340" y="30" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">bit 한 자리는 0 아니면 1 — 자리가 늘수록 경우의 수는 2배</text>
+
+  <!-- 4bit -->
+  <text x="66" y="100" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">4bit</text>
+  <g fill="#fff" stroke="#000" stroke-width="1.4">
+    <rect x="116" y="84" width="28" height="28" rx="3"/>
+    <rect x="150" y="84" width="28" height="28" rx="3"/>
+    <rect x="184" y="84" width="28" height="28" rx="3"/>
+    <rect x="218" y="84" width="28" height="28" rx="3"/>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000" opacity="0.7" text-anchor="middle">
+    <text x="130" y="102">0/1</text><text x="164" y="102">0/1</text><text x="198" y="102">0/1</text><text x="232" y="102">0/1</text>
+  </g>
+  <text x="286" y="103" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000">2×2×2×2 = <tspan font-weight="700">16가지</tspan></text>
+
+  <!-- 16bit -->
+  <text x="66" y="172" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">16bit</text>
+  <g fill="#fff" stroke="#000" stroke-width="1.1">
+    <rect x="116" y="158" width="11" height="24" rx="2"/>
+    <rect x="131" y="158" width="11" height="24" rx="2"/>
+    <rect x="146" y="158" width="11" height="24" rx="2"/>
+    <rect x="161" y="158" width="11" height="24" rx="2"/>
+    <rect x="176" y="158" width="11" height="24" rx="2"/>
+    <rect x="191" y="158" width="11" height="24" rx="2"/>
+    <rect x="206" y="158" width="11" height="24" rx="2"/>
+    <rect x="221" y="158" width="11" height="24" rx="2"/>
+    <rect x="236" y="158" width="11" height="24" rx="2"/>
+    <rect x="251" y="158" width="11" height="24" rx="2"/>
+    <rect x="266" y="158" width="11" height="24" rx="2"/>
+    <rect x="281" y="158" width="11" height="24" rx="2"/>
+    <rect x="296" y="158" width="11" height="24" rx="2"/>
+    <rect x="311" y="158" width="11" height="24" rx="2"/>
+    <rect x="326" y="158" width="11" height="24" rx="2"/>
+    <rect x="341" y="158" width="11" height="24" rx="2"/>
+  </g>
+  <text x="370" y="174" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000">2를 16번 곱 = <tspan font-weight="700">65,536가지</tspan></text>
+
+  <!-- 캡션 -->
+  <line x1="40" y1="210" x2="640" y2="210" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="232" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">자리가 하나 늘 때마다 경우의 수가 2배라서, 4bit는 16개, 16bit는 65,536개</text>
+</svg>

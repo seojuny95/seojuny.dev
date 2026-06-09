@@ -1,0 +1,57 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>PEFT — layer 속 고른 가중치 행렬에만 어댑터</title>
+  <desc>한 transformer layer 안에는 가중치 행렬이 여러 개 있다 — 어텐션의 q·k·v·o와 MLP 등. PEFT는 이 행렬들을 모두 동결하고, 그중 고른 행렬(예: q와 v)에만 각각 전용 어댑터를 하나씩 붙여 그것만 학습한다. 모델은 이런 layer를 여러 개 쌓은 것이며, 본체는 전부 동결되고 어댑터만 학습된다.</desc>
+
+  <defs>
+    <pattern id="pe2-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="0.6" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <text x="340" y="26" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#000">PEFT — 한 layer 속 가중치 행렬은 여러 개, 그중 고른 행렬에만 어댑터</text>
+
+  <!-- 뒤쪽 layer 스택 힌트 -->
+  <rect x="67" y="52" width="570" height="150" rx="10" fill="#fff" stroke="#000" stroke-width="1.2" opacity="0.28"/>
+
+  <!-- layer 컨테이너 -->
+  <rect x="55" y="62" width="570" height="150" rx="10" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="340" y="84" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.7">layer 하나를 들여다보면</text>
+
+  <!-- 그룹 라벨 -->
+  <text x="242" y="96" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#000" opacity="0.8">어텐션</text>
+  <text x="528" y="96" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#000" opacity="0.8">MLP</text>
+
+  <!-- 가중치 행렬들 (모두 동결) -->
+  <rect x="68" y="102" width="78" height="50" rx="5" fill="url(#pe2-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="107" y="132" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000">q</text>
+  <rect x="158" y="102" width="78" height="50" rx="5" fill="url(#pe2-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="197" y="132" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000">k</text>
+  <rect x="248" y="102" width="78" height="50" rx="5" fill="url(#pe2-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="287" y="132" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000">v</text>
+  <rect x="338" y="102" width="78" height="50" rx="5" fill="url(#pe2-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="377" y="132" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000">o</text>
+  <rect x="444" y="102" width="78" height="50" rx="5" fill="url(#pe2-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="483" y="132" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">MLP &#8593;</text>
+  <rect x="534" y="102" width="78" height="50" rx="5" fill="url(#pe2-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="573" y="132" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">MLP &#8595;</text>
+
+  <!-- q 어댑터 -->
+  <line x1="107" y1="152" x2="107" y2="162" stroke="#000" stroke-width="1.2"/>
+  <rect x="82" y="162" width="50" height="24" rx="5" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="2.2"/>
+  <text x="107" y="177" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#000">어댑터</text>
+
+  <!-- v 어댑터 -->
+  <line x1="287" y1="152" x2="287" y2="162" stroke="#000" stroke-width="1.2"/>
+  <rect x="262" y="162" width="50" height="24" rx="5" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="2.2"/>
+  <text x="287" y="177" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#000">어댑터</text>
+
+  <!-- 캡션 -->
+  <text x="340" y="234" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">행렬마다 전용 어댑터가 따로 — 여기선 고른 행렬(q·v)에만 붙고, 나머지 행렬은 동결</text>
+  <text x="340" y="252" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">모델은 이런 layer를 여러 개 쌓은 것 — 본체(모든 행렬·layer)는 동결, 어댑터만 학습한다</text>
+
+  <!-- 범례 -->
+  <rect x="178" y="272" width="15" height="11" rx="2" fill="url(#pe2-hatch)" stroke="#000" stroke-width="1.3"/>
+  <text x="199" y="281" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.75">동결(freeze)</text>
+  <rect x="330" y="272" width="15" height="11" rx="2" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="1.8"/>
+  <text x="351" y="281" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.75">어댑터(학습)</text>
+</svg>

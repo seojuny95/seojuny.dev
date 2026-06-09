@@ -1,0 +1,43 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>큰 행렬도 세로 줄 하나 × 가로 줄 하나로</title>
+  <desc>4096×4096 크기의 큰 행렬(약 1,677만 칸)도, 길이 4096짜리 세로 줄 하나와 가로 줄 하나의 곱으로 만들어 낼 수 있다. 두 줄에 담긴 숫자 8,192개만 있으면 큰 행렬 전체가 복원된다. 이것이 줄 한 쌍, 즉 랭크 1짜리 분해다.</desc>
+
+  <defs>
+    <pattern id="ld-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="0.6" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">먼저 줄 한 쌍 — 세로 줄 하나 × 가로 줄 하나</text>
+
+  <!-- 큰 행렬 -->
+  <rect x="70" y="70" width="120" height="120" rx="4" fill="url(#ld-hatch)" stroke="#000" stroke-width="1.7"/>
+  <text x="130" y="135" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="500" fill="#000" opacity="0.85">큰 행렬</text>
+  <text x="130" y="208" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000" opacity="0.7">4096×4096 ≈ 1,677만 칸</text>
+
+  <!-- ≈ -->
+  <text x="218" y="136" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="22" fill="#000">&#8776;</text>
+
+  <!-- 세로 줄 하나 (아주 가는 세로 막대) -->
+  <rect x="248" y="70" width="13" height="120" rx="2" fill="#000" fill-opacity="0.08" stroke="#000" stroke-width="2"/>
+  <text x="254" y="208" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">세로 줄 하나</text>
+  <text x="254" y="222" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="9.5" fill="#000" opacity="0.7">4096×1</text>
+
+  <!-- × -->
+  <text x="284" y="136" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="18" fill="#000">×</text>
+
+  <!-- 가로 줄 하나 (아주 가는 가로 막대) -->
+  <rect x="302" y="124" width="120" height="13" rx="2" fill="#000" fill-opacity="0.08" stroke="#000" stroke-width="2"/>
+  <text x="362" y="160" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">가로 줄 하나</text>
+  <text x="362" y="174" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="9.5" fill="#000" opacity="0.7">1×4096</text>
+
+  <!-- 오른쪽 결론 -->
+  <text x="470" y="118" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">두 줄에 담긴</text>
+  <text x="470" y="146" font-family="-apple-system, system-ui, sans-serif" font-size="22" font-weight="700" fill="#000">8,192개</text>
+  <text x="470" y="167" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">로 큰 행렬을 복원</text>
+
+  <!-- 구분선 + 캡션 -->
+  <line x1="40" y1="244" x2="640" y2="244" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="266" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">구구단표처럼, 긴 줄 한 쌍(세로·가로)을 곱하면 큰 행렬이 나온다</text>
+  <text x="340" y="284" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">이게 줄 한 쌍 = 랭크 1짜리 분해다</text>
+</svg>
