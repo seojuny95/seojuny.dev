@@ -246,7 +246,8 @@ hr {
   .row-nudge,
   .toggle-icon,
   .hamburger-bar,
-  .skip-link {
+  .skip-link,
+  .code-copy {
     transition: none;
   }
 }
@@ -307,6 +308,54 @@ hr {
   border: 1px solid var(--rule);
 }
 .prose-blog pre code { background: transparent; padding: 0; }
+
+/* Code block: language label + copy button, floating top-right. */
+.code-block {
+  position: relative;
+}
+.code-controls {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.code-lang {
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  user-select: none;
+}
+.code-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 180ms ease, color 180ms ease;
+}
+.code-block:hover .code-copy,
+.code-copy:focus-visible,
+.code-copy[data-copied] {
+  opacity: 1;
+}
+.code-copy:hover,
+.code-copy[data-copied] {
+  color: var(--fg);
+}
+@media (hover: none) {
+  .code-copy {
+    opacity: 1;
+  }
+}
 .prose-blog hr { margin: 2.5em 0; }
 .prose-blog .table-wrap {
   overflow-x: auto;

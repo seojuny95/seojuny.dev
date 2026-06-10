@@ -10,11 +10,13 @@ import rehypeKatex from 'rehype-katex';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
+import { CodeBlock } from '@/components/CodeBlock';
 import { Comments } from '@/components/Comments';
 import { PostImage } from '@/components/PostImage';
 
 const mdxComponents = {
   img: PostImage,
+  pre: CodeBlock,
   table: (props: ComponentPropsWithoutRef<'table'>) => (
     <div className="table-wrap">
       <table {...props} />
