@@ -3,7 +3,7 @@ title: "파인튜닝과 PEFT"
 date: "2026-06-10"
 summary: "AI 모델을 내 도메인에 맞추는 파인튜닝. 메모리 부담을 PEFT·LoRA·QLoRA로 줄이는 법과, 실무에서 언제 쓰는지 정리한다."
 tags: ["AI", "Fine-tuning", "PEFT", "LoRA", "QLoRA"]
-draft: true
+draft: False
 ---
 
 요즘 AI로 무언가를 만든다고 하면, 보통 GPT나 Llama 같은 이미 똑똑하게 학습된 모델을 가져다 쓰는 데서 출발한다. 모델을 처음부터 학습시키는 건 많은 리소스가 필요하기에 쉽게 할 수 있는 일이 아니기 때문이다. 그런데 이런 범용 모델을 그대로 쓰는 것만으로는 부족할 때가 있다. 만들려는 서비스에는 모델의 말투나 출력 형식이 안 맞을 수도 있고, 정작 필요한 도메인 지식을 모델이 모를 수도 있다. 그렇다면 이미 학습된 모델을 어떻게 내 서비스에 맞게 변경할 수 있을까?
@@ -218,34 +218,17 @@ QLoRA의 **장점**은 분명하다.
 
 ## 미니 실험 — LoRA vs QLoRA
 
-지금까지 정리한 내용을 실제 코드로 확인해 보자. 이 실험에서는 Colab이 제공하는 무료 GPU(T4, 16GB)를 사용한다.
+지금까지 정리한 내용을 실제 코드로 확인해 보자. **같은 설정으로 두 번 학습한다** — 16bit 원본에 어댑터를 붙인 **LoRA**, 4bit로 압축한 원본에 붙인 **QLoRA**. 이렇게 다음 세 가지를 직접 실험해 본다.
 
-> 전체 코드는 [Colab 노트북](https://colab.research.google.com/drive/1cTM_HablOUYu12cFlwdkiL5gT94Hs9uZ?usp=sharing)에서 바로 실행해 볼 수 있다.
+- **파인튜닝 효과** — 프롬프트만으로는 못 풀던 작업을 학습 뒤엔 풀게 되는지, **정답률 숫자**로 확인한다.
+- **LoRA의 장점** — 학습하는 파라미터와 저장 파일이 얼마나 작은지
+- **QLoRA의 장단점** — 메모리는 얼마나 줄고 시간은 얼마나 늘어나는지
 
-실험은 단순하다. **같은 모델·데이터·어댑터 설정으로 두 번 학습한다.** 한 번은 16bit 원본에 어댑터를 붙인 **LoRA**, 한 번은 4bit로 압축한 원본에 어댑터를 붙인 **QLoRA**다. 이 실험을 통해 세 가지 내용을 확인해 볼 수 있다.
-
-- **파인튜닝 효과** — 문장을 이어가기만 하던 베이스 모델이, 학습 뒤 지시에 답하게 되는지
-- **LoRA의 장점** — 학습하는 파라미터와 저장하는 파일이 얼마나 작은지
-- **QLoRA의 장단점** — 메모리는 얼마나 줄고, 시간은 얼마나 늘어나는지
-
-사용하는 모델·데이터·라이브러리는 다음과 같다.
-
-- **모델 `Qwen/Qwen2.5-3B`** — 아직 지시를 따르지 않는 **베이스**(사전학습만 된) 버전이라 학습 전후가 또렷이 갈리고, 16bit로도 약 6GB라 T4 한 장에서 LoRA와 QLoRA를 모두 돌려 볼 수 있다.
-- **데이터 `databricks/databricks-dolly-15k`** — 사람이 쓴 지시-응답 1.5만 쌍. "지시 다음엔 답이 온다"를 가르치기에 알맞다.
-- **라이브러리**
-  - `transformers` — 허깅페이스에서 모델을 받아 로드하고 실행
-  - `datasets` — 허깅페이스에서 데이터셋 받아 오기
-  - `peft` — 동결한 원본에 LoRA 어댑터 끼우기
-  - `bitsandbytes` — NF4·이중 양자화·페이지 옵티마이저, 곧 QLoRA의 'Q'
-  - `trl` — 지시-응답 데이터로 학습 루프 돌리기(`SFTTrainer`)
-
-```bash
-pip install transformers peft trl bitsandbytes datasets
-```
+이 실험에서는 뉴스 기사를 World / Sports / Business / Sci/Tech 네 분야로 분류한다. **정답이 있고 채점할 수 있어서** 학습 전후를 정답률로 비교할 수 있다. 모델은 사전학습만 된 `Qwen/Qwen2.5-0.5B`(16bit로 약 1GB), 데이터는 분류 데이터셋 `fancyzhx/ag_news`에서 1,000건만 쓴다.
 
 **① 공통 준비 — 데이터와 어댑터 설정**
 
-지시-응답을 `### Instruction / ### Response` 형식으로 이어 붙여, 모델이 "지시 다음엔 답이 온다"를 배우게 한다. dolly에는 지문(context)을 읽고 답하는 예제도 섞여 있어서, 지시만으로 답할 수 있는 예제만 남긴다.
+지시와 출력을 `### Instruction / ### Response` 형식으로 잇고 출력 자리에 정답 라벨을 넣는다. 채점용 테스트 50건은 학습에서 빼 둔다.
 
 ```python
 import torch
@@ -254,25 +237,44 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import LoraConfig
 from trl import SFTConfig, SFTTrainer
 
-MODEL = "Qwen/Qwen2.5-3B"
+MODEL = "Qwen/Qwen2.5-0.5B"
 tokenizer = AutoTokenizer.from_pretrained(MODEL)
 
-TEMPLATE = "### Instruction:\n{}\n\n### Response:\n{}"
-raw = load_dataset("databricks/databricks-dolly-15k", split="train")
-raw = raw.filter(lambda r: not r["context"]).select(range(1000))   # 지문 없이 답할 수 있는 예제만
-data = raw.map(lambda r: {"text": TEMPLATE.format(r["instruction"], r["response"]) + tokenizer.eos_token},
-               remove_columns=raw.column_names)
+LABELS = ["World", "Sports", "Business", "Sci/Tech"]
+TEMPLATE = (
+    "### Instruction:\n"
+    "Classify the news into one of: World, Sports, Business, Sci/Tech.\n\n"
+    "{}\n\n"
+    "### Response:\n{}"
+)
 
-lora = LoraConfig(r=8, lora_alpha=16, target_modules=["q_proj", "v_proj"],   # 어댑터는 q·v에만 붙인다
-                  lora_dropout=0.05, task_type="CAUSAL_LM")
+# 학습용 1,000건 — 지시·기사·정답 라벨을 한 문자열로 합치고 끝에 EOS를 붙인다
+raw = load_dataset("fancyzhx/ag_news", split="train").shuffle(seed=42).select(range(1000))
+data = raw.map(
+    lambda r: {"text": TEMPLATE.format(r["text"], LABELS[r["label"]]) + tokenizer.eos_token},
+    remove_columns=raw.column_names,
+)
+
+# 정답률 측정용 테스트 50건 (학습에는 쓰지 않음)
+test = load_dataset("fancyzhx/ag_news", split="test").shuffle(seed=42).select(range(50))
+
+# 어댑터 설정 — LoRA와 QLoRA가 공유한다
+lora = LoraConfig(
+    r=16, lora_alpha=32,
+    target_modules="all-linear",   # 빠른 실험을 위해 모든 선형층에 부착
+    lora_dropout=0.05, task_type="CAUSAL_LM",
+)
 ```
+
+적은 스텝으로도 변화가 또렷이 보이도록 어댑터를 모든 선형층에 붙였지만(`all-linear`), 그래도 학습하는 양은 전체의 1.7%뿐이다.
 
 **② 학습 함수 — LoRA와 QLoRA의 차이는 한 줄**
 
-코드에서 둘의 차이는 **원본 모델을 4bit로 로드하느냐**뿐이다. 그래서 양자화 여부만 인자로 받는 함수 하나면 두 실험을 다 돌릴 수 있다. 비교를 위해 상주 메모리·피크 메모리·학습 시간도 같이 출력한다.
+코드에서 둘의 차이는 **원본 모델을 4bit로 로드하느냐**뿐이라, 양자화 여부만 인자로 받는 함수 하나로 두 실험을 다 돌린다.
 
 ```python
 def train(quantize):
+    # QLoRA의 'Q' — 원본을 4bit로 압축해서 로드 (LoRA면 None)
     bnb = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",               # ① NF4
@@ -281,68 +283,110 @@ def train(quantize):
     ) if quantize else None
 
     model = AutoModelForCausalLM.from_pretrained(
-        MODEL, quantization_config=bnb, torch_dtype=torch.float16, device_map="auto")
+        MODEL, quantization_config=bnb, dtype=torch.float16, device_map="auto")
     print(f"상주 메모리: {model.get_memory_footprint() / 1e9:.1f} GB")
 
     torch.cuda.reset_peak_memory_stats()
     trainer = SFTTrainer(
         model=model, train_dataset=data, peft_config=lora,
-        args=SFTConfig(num_train_epochs=1, per_device_train_batch_size=4,
-                       learning_rate=2e-4, max_length=512,
-                       optim="paged_adamw_8bit" if quantize else "adamw_torch"),   # ③ 페이지 옵티마이저
+        args=SFTConfig(
+            max_steps=100, per_device_train_batch_size=4,
+            learning_rate=2e-4, max_length=256, packing=True,
+            fp16=True, warmup_steps=10, logging_steps=10,
+        ),
     )
+
+    # 4bit 로드 시 학습 파라미터(어댑터)가 bf16으로 만들어지는데 T4는 bf16 미지원이다.
+    # fp16 AMP는 "어댑터=fp32 마스터, 연산만 fp16"을 전제하므로 어댑터를 fp32로 올린다.
+    if quantize:
+        for p in trainer.model.parameters():
+            if p.requires_grad:
+                p.data = p.data.to(torch.float32)
+
     trainer.model.print_trainable_parameters()
     runtime = trainer.train().metrics["train_runtime"]
     print(f"피크 메모리: {torch.cuda.max_memory_allocated() / 1e9:.1f} GB")
-    print(f"학습 시간: {runtime / 60:.0f}분")
+    print(f"학습 시간: {runtime / 60:.1f}분")
+    trainer.model.eval()   # 학습이 끝났으니 dropout을 끄고 생성 모드로
     return trainer
 ```
 
-③ 페이지 옵티마이저는 메모리를 한계까지 쓰는 QLoRA 쪽에만 넣는다.
+> `fp16=True`는 T4에서 학습을 안정시키는 설정, `packing=True`는 짧은 예제를 이어 붙여 학습을 빠르게 하는 설정이다. 본문에서 다룬 페이지 옵티마이저는 0.5B엔 메모리 여유가 충분해 쓰지 않았다.
 
-**③ LoRA — 파인튜닝 전후 비교**
+**③ LoRA — 파인튜닝 전후 정답률 비교**
 
 ```python
 trainer = train(quantize=False)
-# 상주 메모리: 6.2 GB
-# trainable params: 약 184만 개 — 전체의 0.06%
-# 피크 메모리: 약 9 GB
-# 학습 시간: 약 8분
+# 상주 메모리: 1.0 GB
+# trainable params: 8,798,208 || all params: 502,830,976 || trainable%: 1.7497
 ```
 
-학습한 가중치는 <strong>전체의 0.06%</strong>뿐이다(LoRA 장점). 대신 동결한 16bit 원본 6.2GB는 학습 내내 통째로 메모리에 올라가 있다(LoRA 한계) — 7B(14GB)였다면 로드만으로 T4가 거의 가득 차 학습이 불가능하다.
+학습한 가중치는 <strong>전체의 1.7%</strong>뿐이다(LoRA 장점). 대신 동결한 16bit 원본 1GB는 학습 내내 통째로 메모리에 올라가 있다(LoRA 한계).
 
-이제 파인튜닝 효과를 보자. 같은 지시를 어댑터를 끄고(`disable_adapter`, 베이스 그대로) / 켜고(학습본) 줘 본다.
+이제 테스트 50건을 어댑터를 끄고(`disable_adapter`, 베이스) / 켜고(학습본) 풀려서 정답률을 측정한다.
 
 ```python
-def answer(model, instruction):
-    prompt = TEMPLATE.format(instruction, "")          # "### Response:\n"까지만
+def classify(model, text):
+    prompt = TEMPLATE.format(text, "")                 # "### Response:\n"까지만
     ids = tokenizer(prompt, return_tensors="pt").to(model.device)
-    out = model.generate(**ids, max_new_tokens=150)
-    return tokenizer.decode(out[0][ids.input_ids.shape[-1]:], skip_special_tokens=True)
+    out = model.generate(**ids, max_new_tokens=8)
+    gen = tokenizer.decode(out[0][ids.input_ids.shape[-1]:], skip_special_tokens=True)
+    pos = {l: gen.find(l) for l in LABELS if l in gen}   # 가장 먼저 등장한 라벨 = 예측
+    return min(pos, key=pos.get) if pos else None
 
-q = "List three tips for staying focused while working."
+def accuracy(model):
+    correct = sum(classify(model, r["text"]) == LABELS[r["label"]] for r in test)
+    print(f"정답률: {correct}/{len(test)} = {correct/len(test):.0%}")
+
 with trainer.model.disable_adapter():
-    print(answer(trainer.model, q))    # 학습 전: 답 대신 비슷한 문장을 계속 이어 씀
-print(answer(trainer.model, q))        # 학습 후: 지시에 맞춰 답함
+    accuracy(trainer.model)   # 학습 전 (베이스)
+accuracy(trainer.model)       # 학습 후 (LoRA)
 ```
 
-아래 내용은 예시 결과이다.
-
 ```
-[before · 베이스]   List three benefits of exercise. List three ways to save money. ...
-                  (답 대신 비슷한 "지시문"을 계속 만들어 낸다)
-[after  · LoRA]    1. Silence notifications and keep your phone out of reach.
-                  2. Work in short, focused blocks with brief breaks.
-                  3. Keep only one task in front of you at a time.
+[before · 베이스]   정답률: 7/50 = 14%
+[after  · LoRA]    정답률: 40/50 = 80%
 ```
 
-행동이 "문장 잇기"에서 "지시 따라 답하기"로 바뀌었다 — 파인튜닝 효과다. 저장은 어댑터만 하면 되고(LoRA 장점), 다음 실험을 위해 GPU 메모리를 비워 둔다.
+정답률 차이가 어디서 오는지는, 같은 기사를 베이스와 학습본에 각각 풀려서 출력을 나란히 보면 분명하다.
 
 ```python
-trainer.save_model("adapter-lora")   # 어댑터만 수 MB — 6GB 넘는 원본은 저장할 필요 없다
+def generate(model, text):
+    prompt = TEMPLATE.format(text, "")
+    ids = tokenizer(prompt, return_tensors="pt").to(model.device)
+    out = model.generate(**ids, max_new_tokens=8)
+    return tokenizer.decode(out[0][ids.input_ids.shape[-1]:], skip_special_tokens=True).strip()
+
+for r in test.select(range(3)):
+    with trainer.model.disable_adapter():
+        base = generate(trainer.model, r["text"])   # 베이스
+    lora = generate(trainer.model, r["text"])        # 학습본
+    print(f"[정답 {LABELS[r['label']]}] {r['text'][:50]}...")
+    print(f"  베이스: {base!r}")
+    print(f"  LoRA : {lora!r}")
+```
+
+```
+[정답 Sports] Indian board plans own telecast of Australia series...
+  베이스: 'The Indian cricket board has decided to broadcast'
+  LoRA : 'Sports'
+[정답 Business] Stocks Higher on Drop in Jobless Claims A sharp dr...
+  베이스: 'The news is that the stock market is'
+  LoRA : 'Business'
+[정답 Sports] Nuggets 112, Raptors 106 Carmelo Anthony scored 3...
+  베이스: 'The news is about a basketball game between'
+  LoRA : 'Sports'
+```
+
+라벨 목록까지 줬는데도 베이스는 분류는커녕 **뉴스 문장을 그대로 이어 쓰고**, 학습본은 **라벨 하나**로 정확히 답한다. 프롬프트만으로는 제대로 된 출력을 못 만들던 모델이 작은 학습으로 쓸 만한 분류 모델이 된 것이다.
+
+저장은 어댑터만 하면 되고(LoRA 장점), 다음 실험을 위해 GPU 메모리를 비워 둔다.
+
+```python
+trainer.save_model("adapter-lora")   # 어댑터만 수십 MB — 1GB짜리 원본은 저장할 필요 없다
 
 del trainer
+import gc; gc.collect()
 torch.cuda.empty_cache()
 ```
 
@@ -350,27 +394,25 @@ torch.cuda.empty_cache()
 
 ```python
 trainer = train(quantize=True)
-# 상주 메모리: 2.1 GB   (LoRA의 1/3)
-# trainable params: 약 184만 개 — 전체의 0.06% (LoRA와 동일)
-# 피크 메모리: 약 5 GB
-# 학습 시간: 약 13분    (LoRA보다 느리다)
-
-print(answer(trainer.model, q))   # LoRA 학습본과 비슷한 품질로 답한다
+accuracy(trainer.model)   # LoRA 학습본과 비슷한 정답률
 ```
 
-이론상 4bit는 16bit의 1/4지만 상주 메모리는 1/3쯤(6.2GB→2.1GB)인데, 임베딩처럼 일부 층이 고정밀로 남아 그만큼 덜 줄기 때문이다.
+상주 메모리가 LoRA보다 줄어든다. 줄어든 폭과 학습 시간·정답률은 아래 표에서 LoRA와 나란히 정리한다.
 
 **⑤ 결과 정리**
 
-| | LoRA (16bit 원본) | QLoRA (4bit 원본) |
+|  | **LoRA** (16bit 원본) | **QLoRA** (4bit 원본) |
 | --- | --- | --- |
-| 상주 메모리 | 6.2GB | **2.1GB** |
-| 학습 피크 메모리 | 약 9GB | **약 5GB** |
-| 학습 시간 | **약 8분** | 약 13분 |
-| 학습한 가중치 | 전체의 0.06% | 전체의 0.06% |
-| 학습 후 행동 | 지시를 따름 | 지시를 따름 (품질 비슷) |
+| 상주 메모리 | 1.0GB | **0.5GB** |
+| 학습 피크 메모리 | 3.5GB | 3.0GB |
+| 학습 시간 | 0.9분 | 1.0분 |
+| 학습한 가중치 | 전체의 1.7% | 전체의 1.7% |
+| 분류 정답률 *(학습 전 14%)* | 80% | 80% |
 
-전체의 0.06%만 학습해도 모델의 행동이 바뀌었고, QLoRA는 메모리를 더 줄이는 대신 시간이 더 걸렸다.
+전체의 <strong>1.7%</strong>만 학습해서 정답률이 <strong>14% → 80%</strong>로 올랐다.
+
+- **LoRA** — 학습·저장 대상이 작다. 어댑터만 수십 MB로 저장한다.
+- **QLoRA** — 원본을 4bit로 눌러 **상주 메모리를 절반**(1.0 → 0.5GB)으로 줄였다. 대신 압축·복원 오버헤드로 시간이 조금 더 걸렸고(0.9 → 1.0분), 정답률은 LoRA와 동일하게 유지됐다.
 
 ## 마무리
 
