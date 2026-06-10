@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { ComponentPropsWithoutRef } from 'react';
 import type { MDXRemoteProps } from 'next-mdx-remote/rsc';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
@@ -12,7 +13,14 @@ import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/
 import { Comments } from '@/components/Comments';
 import { PostImage } from '@/components/PostImage';
 
-const mdxComponents = { img: PostImage } as MDXRemoteProps['components'];
+const mdxComponents = {
+  img: PostImage,
+  table: (props: ComponentPropsWithoutRef<'table'>) => (
+    <div className="table-wrap">
+      <table {...props} />
+    </div>
+  ),
+} as MDXRemoteProps['components'];
 const mdxOptions: MDXRemoteProps['options'] = {
   mdxOptions: {
     remarkPlugins: [remarkGfm, remarkMath],
