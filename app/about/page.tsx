@@ -1,23 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { MDXRemoteProps } from 'next-mdx-remote/rsc';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import rehypePrettyCode from 'rehype-pretty-code';
-import rehypeUnwrapImages from 'rehype-unwrap-images';
-
-const mdxOptions: MDXRemoteProps['options'] = {
-  mdxOptions: {
-    remarkPlugins: [remarkGfm, remarkMath],
-    rehypePlugins: [
-      rehypeUnwrapImages,
-      [rehypePrettyCode, { theme: 'github-light', keepBackground: false }],
-      rehypeKatex,
-    ],
-  },
-};
+import { mdxOptions } from '@/lib/mdx';
 
 export const metadata = { title: 'About — seojuny.dev' };
 

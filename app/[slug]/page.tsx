@@ -4,12 +4,8 @@ import type { MDXRemoteProps } from 'next-mdx-remote/rsc';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import rehypePrettyCode from 'rehype-pretty-code';
-import rehypeUnwrapImages from 'rehype-unwrap-images';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
+import { mdxOptions } from '@/lib/mdx';
 import { CodeBlock } from '@/components/CodeBlock';
 import { Comments } from '@/components/Comments';
 import { PostImage } from '@/components/PostImage';
@@ -23,16 +19,6 @@ const mdxComponents = {
     </div>
   ),
 } as MDXRemoteProps['components'];
-const mdxOptions: MDXRemoteProps['options'] = {
-  mdxOptions: {
-    remarkPlugins: [remarkGfm, remarkMath],
-    rehypePlugins: [
-      rehypeUnwrapImages,
-      [rehypePrettyCode, { theme: 'github-light', keepBackground: false }],
-      rehypeKatex,
-    ],
-  },
-};
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://seojuny.dev';
 

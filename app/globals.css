@@ -247,6 +247,7 @@ hr {
   .toggle-icon,
   .hamburger-bar,
   .skip-link,
+  .heading-anchor,
   .code-copy {
     transition: none;
   }
@@ -267,6 +268,23 @@ hr {
 }
 .prose-blog h2 { font-size: 1.4rem; }
 .prose-blog h3 { font-size: 1.15rem; }
+.prose-blog h2,
+.prose-blog h3 {
+  scroll-margin-top: 90px;
+}
+
+/* Heading anchor: '#' appended by rehype-autolink-headings, shown on hover. */
+.prose-blog .heading-anchor {
+  background-image: none;
+  margin-left: 0.4em;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.prose-blog h2:hover .heading-anchor,
+.prose-blog h3:hover .heading-anchor {
+  opacity: 1;
+}
 .prose-blog p { margin: 1em 0; }
 .prose-blog a {
   background-image: linear-gradient(currentColor, currentColor);
