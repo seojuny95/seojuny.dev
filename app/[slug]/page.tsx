@@ -9,6 +9,8 @@ import { mdxOptions } from '@/lib/mdx';
 import { CodeBlock } from '@/components/CodeBlock';
 import { Comments } from '@/components/Comments';
 import { PostImage } from '@/components/PostImage';
+import { ReadingProgress } from '@/components/ReadingProgress';
+import { Toc } from '@/components/Toc';
 
 const mdxComponents = {
   img: PostImage,
@@ -96,6 +98,8 @@ export default async function PostPage({
   return (
     <article>
       <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      <ReadingProgress />
+      <Toc />
       <nav aria-label="페이지 이동">
         <Link
           href="/"
