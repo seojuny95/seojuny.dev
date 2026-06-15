@@ -1,0 +1,65 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>문서 파싱 — 표와 이미지까지 텍스트로</title>
+  <desc>PDF에는 본문 텍스트뿐 아니라 표와 이미지·도식이 섞여 있다. 본문은 그대로 쓰고, 표는 행·열 관계가 살아 있는 Markdown 표로 변환하고, 이미지는 비전 모델이나 OCR로 설명 텍스트를 뽑는다. 셋을 모두 텍스트로 통일한 뒤 청킹·임베딩한다.</desc>
+
+  <defs>
+    <marker id="cp-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="26" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">문서 파싱 — 표와 이미지까지 텍스트로</text>
+
+  <!-- PDF 페이지 -->
+  <text x="111" y="52" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000" opacity="0.7">PDF 페이지</text>
+  <rect x="36" y="60" width="150" height="188" rx="6" fill="#fff" stroke="#000" stroke-width="1.6"/>
+
+  <!-- 본문 텍스트 -->
+  <text x="46" y="78" font-family="-apple-system, system-ui, sans-serif" font-size="9" font-weight="600" fill="#000" opacity="0.7">본문 텍스트</text>
+  <line x1="46" y1="86" x2="172" y2="86" stroke="#000" stroke-width="1.2" opacity="0.55"/>
+  <line x1="46" y1="93" x2="172" y2="93" stroke="#000" stroke-width="1.2" opacity="0.55"/>
+  <line x1="46" y1="100" x2="150" y2="100" stroke="#000" stroke-width="1.2" opacity="0.55"/>
+
+  <!-- 표 -->
+  <text x="46" y="120" font-family="-apple-system, system-ui, sans-serif" font-size="9" font-weight="600" fill="#000" opacity="0.7">표</text>
+  <rect x="46" y="124" width="126" height="34" fill="none" stroke="#000" stroke-width="1.1" opacity="0.65"/>
+  <line x1="88" y1="124" x2="88" y2="158" stroke="#000" stroke-width="1.1" opacity="0.65"/>
+  <line x1="130" y1="124" x2="130" y2="158" stroke="#000" stroke-width="1.1" opacity="0.65"/>
+  <line x1="46" y1="135" x2="172" y2="135" stroke="#000" stroke-width="1.1" opacity="0.65"/>
+  <line x1="46" y1="147" x2="172" y2="147" stroke="#000" stroke-width="1.1" opacity="0.65"/>
+
+  <!-- 이미지·도식 -->
+  <text x="46" y="178" font-family="-apple-system, system-ui, sans-serif" font-size="9" font-weight="600" fill="#000" opacity="0.7">이미지·도식</text>
+  <rect x="46" y="184" width="126" height="52" rx="3" fill="none" stroke="#000" stroke-width="1.1" opacity="0.65"/>
+  <circle cx="68" cy="200" r="6" fill="none" stroke="#000" stroke-width="1.1" opacity="0.65"/>
+  <path d="M 52 232 L 84 204 L 104 222 L 134 192 L 166 232" fill="none" stroke="#000" stroke-width="1.1" stroke-linejoin="round" opacity="0.65"/>
+
+  <!-- 변환 화살표 -->
+  <path d="M 186 92 L 296 92" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cp-arr)"/>
+  <path d="M 186 140 L 296 148" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cp-arr)"/>
+  <path d="M 186 208 L 296 212" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cp-arr)"/>
+
+  <!-- 변환기 박스 -->
+  <rect x="300" y="72" width="184" height="40" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="392" y="92" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="500" fill="#000">텍스트 — 그대로 사용</text>
+
+  <rect x="300" y="124" width="184" height="48" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="392" y="142" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="500" fill="#000">표 → Markdown 표</text>
+  <text x="392" y="159" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#000" opacity="0.6">Unstructured·LlamaParse</text>
+
+  <rect x="300" y="184" width="184" height="48" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="392" y="202" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="500" fill="#000">이미지 → 설명 텍스트</text>
+  <text x="392" y="219" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#000" opacity="0.6">비전 모델·OCR</text>
+
+  <!-- 합치기 화살표 -->
+  <path d="M 484 92 Q 516 110 532 142" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cp-arr)"/>
+  <path d="M 484 148 L 536 154" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cp-arr)"/>
+  <path d="M 484 208 Q 516 190 532 168" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cp-arr)"/>
+
+  <!-- 최종 -->
+  <rect x="538" y="120" width="118" height="72" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="597" y="148" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">텍스트로 통일</text>
+  <text x="597" y="166" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.65">→ 청킹·임베딩</text>
+
+  <text x="340" y="284" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">표는 행·열 관계를 살려서, 이미지는 설명을 뽑아서 — 모두 텍스트로 바꿔야 검색된다</text>
+</svg>

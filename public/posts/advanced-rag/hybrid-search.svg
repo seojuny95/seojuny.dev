@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>하이브리드 검색 — 의미와 키워드를 RRF로 결합</title>
+  <desc>질문을 의미 검색(임베딩)과 키워드 검색(BM25)에 동시에 넣어 각각 순위를 얻고, RRF로 두 순위를 합쳐 최종 순위를 만든다. 의미 검색은 동의어에 강하고 키워드 검색은 정확한 단어 매칭에 강해 서로를 보완한다.</desc>
+
+  <defs>
+    <marker id="hs-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">하이브리드 검색 — 의미와 키워드를 RRF로 결합</text>
+
+  <!-- 질문 -->
+  <rect x="22" y="130" width="104" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="74" y="159" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">질문</text>
+
+  <!-- 두 갈래 -->
+  <path d="M 126 148 Q 150 100 174 96" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#hs-arr)"/>
+  <path d="M 126 162 Q 150 210 174 214" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#hs-arr)"/>
+
+  <!-- 의미 검색 -->
+  <rect x="176" y="72" width="178" height="56" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="265" y="94" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">의미 검색 (임베딩)</text>
+  <text x="265" y="113" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">동의어·말바꿈에 강함</text>
+
+  <!-- 키워드 검색 -->
+  <rect x="176" y="182" width="178" height="56" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="265" y="204" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">키워드 검색 (BM25)</text>
+  <text x="265" y="223" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">정확한 단어 매칭에 강함</text>
+
+  <!-- RRF로 수렴 -->
+  <text x="384" y="148" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">순위</text>
+  <path d="M 354 100 Q 384 130 406 150" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#hs-arr)"/>
+  <path d="M 354 210 Q 384 180 406 160" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#hs-arr)"/>
+
+  <rect x="408" y="120" width="122" height="70" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="469" y="147" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="600" fill="#000">RRF</text>
+  <text x="469" y="167" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">두 순위 결합</text>
+
+  <path d="M 530 155 L 566 155" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#hs-arr)"/>
+  <rect x="568" y="130" width="96" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="616" y="159" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">최종 순위</text>
+
+  <text x="340" y="284" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">양쪽에서 고루 위에 오른 청크가 결국 높은 점수를 받는다</text>
+</svg>
