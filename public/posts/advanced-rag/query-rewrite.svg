@@ -1,0 +1,35 @@
+<svg width="100%" viewBox="0 0 680 170" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>쿼리 재작성 — 모호한 질문을 검색에 맞게 다시 쓴다</title>
+  <desc>모호하거나 불완전한 질문을 LLM이 검색에 친화적인 명확한 문장으로 다시 쓴 뒤, 그 문장으로 검색한다. 예를 들어 "그거 어떻게 해?"를 "연차 신청 절차"로 바꾼다.</desc>
+
+  <defs>
+    <marker id="qr-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="26" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">쿼리 재작성 — 모호한 질문을 검색에 맞게</text>
+
+  <!-- 1. 원래 질문 -->
+  <rect x="20" y="62" width="150" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="95" y="83" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">"그거 어떻게 해?"</text>
+  <text x="95" y="100" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="8.5" fill="#000" opacity="0.6">모호한 질문</text>
+  <path d="M 170 87 L 205 87" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#qr-arr)"/>
+
+  <!-- 2. LLM 재작성 -->
+  <rect x="205" y="62" width="130" height="50" rx="6" fill="#000" stroke="#000" stroke-width="1.5"/>
+  <text x="270" y="91" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#fff">LLM 재작성</text>
+  <path d="M 335 87 L 370 87" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#qr-arr)"/>
+
+  <!-- 3. 다시 쓴 질문 -->
+  <rect x="370" y="62" width="160" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="450" y="83" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">"연차 신청 절차"</text>
+  <text x="450" y="100" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="8.5" fill="#000" opacity="0.6">검색 친화적 문장</text>
+  <path d="M 530 87 L 565 87" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#qr-arr)"/>
+
+  <!-- 4. 검색 -->
+  <rect x="565" y="62" width="95" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="612.5" y="91" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">검색</text>
+
+  <text x="340" y="146" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">모호한 질문을 LLM이 검색하기 좋은 문장으로 다시 쓴 뒤 검색한다</text>
+</svg>
