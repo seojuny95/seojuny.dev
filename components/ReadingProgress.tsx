@@ -40,7 +40,6 @@ export function ReadingProgress() {
 
   if (!mounted) return null;
 
-  // 헤더 하단의 슬롯(absolute, sticky 헤더와 함께 따라다님)에 채운다.
   const slot = document.getElementById('reading-progress');
   if (!slot) return null;
 
