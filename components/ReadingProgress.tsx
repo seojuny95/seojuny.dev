@@ -43,7 +43,7 @@ export function ReadingProgress() {
   return createPortal(
     <div
       aria-hidden
-      className="fixed top-0 left-0 right-0 z-50 h-[2px] pointer-events-none"
+      className="fixed top-[56px] left-0 right-0 z-50 h-[2px] pointer-events-none"
     >
       <div
         ref={barRef}
