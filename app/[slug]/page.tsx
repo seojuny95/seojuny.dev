@@ -83,6 +83,7 @@ export default async function PostPage({
     headline: post.title,
     description: post.summary,
     datePublished: post.date,
+    dateModified: post.date,
     inLanguage: 'ko-KR',
     keywords: post.tags,
     mainEntityOfPage: url,
@@ -92,6 +93,15 @@ export default async function PostPage({
       '@type': 'Person',
       name: 'seojuny',
       url: `${SITE_URL}/about`,
+      sameAs: [
+        'https://github.com/seojuny95',
+        'https://www.linkedin.com/in/seoj95/',
+      ],
+    },
+    publisher: {
+      '@type': 'Person',
+      name: 'seojuny',
+      url: SITE_URL,
     },
   };
 
