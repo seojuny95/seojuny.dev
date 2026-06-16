@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import type { Metadata } from 'next';
 import type { ComponentPropsWithoutRef } from 'react';
 import type { MDXRemoteProps } from 'next-mdx-remote/rsc';
@@ -6,6 +8,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
 import { mdxOptions } from '@/lib/mdx';
+import { ArticleActions } from '@/components/ArticleActions';
 import { CodeBlock } from '@/components/CodeBlock';
 import { Comments } from '@/components/Comments';
 import { PostImage } from '@/components/PostImage';
@@ -76,6 +79,12 @@ export default async function PostPage({
   }
   const { prev, next } = getAdjacentPosts(slug);
 
+  const hasAudio = fs.existsSync(
+    path.join(process.cwd(), 'public', 'posts', slug, 'audio.mp3'),
+  );
+  const audioSrc = hasAudio ? `/posts/${slug}/audio.mp3` : undefined;
+  const timingSrc = hasAudio ? `/posts/${slug}/audio.json` : undefined;
+
   const url = `${SITE_URL}/${slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -139,6 +148,8 @@ export default async function PostPage({
           ) : null}
         </div>
       </header>
+
+      <ArticleActions audioSrc={audioSrc} timingSrc={timingSrc} />
 
       <div className="prose-blog">
         <MDXRemote source={post.content} components={mdxComponents} options={mdxOptions} />
