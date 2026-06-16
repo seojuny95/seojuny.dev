@@ -9,7 +9,8 @@ const SITE_URL =
 export function GET() {
   const feed = new Feed({
     title: 'seojuny.dev',
-    description: '개인 블로그',
+    description:
+      '소프트웨어 개발자가 일하고 공부하며 남기는 기록.',
     id: SITE_URL,
     link: SITE_URL,
     language: 'ko',

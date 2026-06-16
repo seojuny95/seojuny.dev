@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     default: 'seojuny.dev',
     template: '%s — seojuny.dev',
   },
-  description: '프론트엔드 개발과 학습 기록을 남기는 seojuny의 개인 블로그.',
+  description:
+    '소프트웨어 개발자가 일하고 공부하며 남기는 기록.',
   alternates: {
     canonical: '/',
     types: {
@@ -28,12 +29,14 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     url: '/',
     title: 'seojuny.dev',
-    description: '프론트엔드 개발과 학습 기록을 남기는 seojuny의 개인 블로그.',
+    description:
+    '소프트웨어 개발자가 일하고 공부하며 남기는 기록.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'seojuny.dev',
-    description: '프론트엔드 개발과 학습 기록을 남기는 seojuny의 개인 블로그.',
+    description:
+    '소프트웨어 개발자가 일하고 공부하며 남기는 기록.',
   },
   verification: {
     other: {
@@ -48,13 +51,21 @@ const siteJsonLd = [
     '@type': 'WebSite',
     url: SITE_URL,
     name: 'seojuny.dev',
+    description:
+      '소프트웨어 개발자가 일하고 공부하며 남기는 기록.',
     inLanguage: 'ko-KR',
+    author: { '@type': 'Person', name: 'seojuny', url: SITE_URL },
   },
   {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'seojuny',
     url: SITE_URL,
+    jobTitle: '소프트웨어 개발자',
+    sameAs: [
+      'https://github.com/seojuny95',
+      'https://www.linkedin.com/in/seoj95/',
+    ],
   },
 ];
 
