@@ -28,9 +28,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* 읽기 진행 바 슬롯 — 글 페이지에서만 ReadingProgress가 여기에 portal로 채운다.
-          header가 sticky(=positioned)라 absolute 자식은 헤더 기준으로 배치되고,
-          -bottom-px로 헤더의 border-b 위에 겹쳐 함께 sticky로 따라다닌다. */}
       <div
         id="reading-progress"
         aria-hidden
