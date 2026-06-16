@@ -40,17 +40,16 @@ export function ReadingProgress() {
 
   if (!mounted) return null;
 
+  // 헤더 하단의 슬롯(absolute, sticky 헤더와 함께 따라다님)에 채운다.
+  const slot = document.getElementById('reading-progress');
+  if (!slot) return null;
+
   return createPortal(
     <div
-      aria-hidden
-      className="fixed top-[56px] left-0 right-0 z-50 h-[2px] pointer-events-none"
-    >
-      <div
-        ref={barRef}
-        className="h-full w-full origin-left bg-[var(--fg)]"
-        style={{ transform: 'scaleX(0)' }}
-      />
-    </div>,
-    document.body,
+      ref={barRef}
+      className="h-full w-full origin-left bg-[var(--fg)]"
+      style={{ transform: 'scaleX(0)' }}
+    />,
+    slot,
   );
 }
