@@ -14,6 +14,7 @@ Package manager: `pnpm` (see `pnpm-workspace.yaml`).
 - `pnpm test` — Vitest, runs files in `lib/**/*.test.ts` (Node env)
 - `pnpm test:watch` — Vitest watch mode
 - Single test: `pnpm vitest run lib/posts.test.ts -t "excludes drafts"` (filters by file + test name)
+- `pnpm generate:audio` — 글 본문 음성(TTS) + 문장 타이밍 생성. 기본은 **오디오 없는 글만**(증분). `--all`이면 전체 재생성(글로사리·보이스·추출 로직 변경 시), `<slug>` 지정 시 그 글만(본문 수정 시). 로컬 실행 — `ffmpeg`와 네트워크 필요.
 
 Stack versions are non-trivially ahead of LLM training data: **Next.js 16.2**, **React 19.2**, **Tailwind v4** (CSS-first via `@import "tailwindcss"`), **Vitest 4**. Reread Next docs from `node_modules/next/dist/docs/` before writing code.
 
@@ -47,3 +48,4 @@ File-based MDX blog. All content lives in `content/`; `lib/posts.ts` is the sing
 - Per-post images live in `public/posts/<slug>/<image>.ext` and are referenced as `/posts/<slug>/<image>.ext`. The slug must match the post filename's slug (i.e. the `YYYY-MM-DD-` prefix stripped) so each post's assets stay co-located in one folder and can be migrated/deleted as a unit. Use **kebab-case** for image filenames. Site-wide assets (not tied to a specific post) can live directly under `public/`.
 - Brand icons live in `app/` via App Router file conventions: `icon.svg` (vector primary), `favicon.ico` (legacy fallback, multi-size), and `apple-icon.png` (180×180, iOS) — Next.js auto-injects the corresponding `<link>` tags, so no manual metadata is needed.
 - Korean is the default content language (`<html lang="ko">`).
+- 글 작성 후 **음성(듣기) 생성**: `pnpm generate:audio <slug>` 를 실행해 그 글만 만들고, 생성된 `public/posts/<slug>/audio.mp3`·`audio.json` 을 본문과 함께 커밋한다. 인자 없이 실행하면 오디오 없는 글만(증분) 생성된다 — 매번 전체를 다시 만들 필요 없음. 음성용 텍스트 정제(괄호·URL 제거)와 영어 용어 발음 교정은 `scripts/generate-audio.ts`의 `PRONUNCIATION` 글로사리에서 조정한다(글로사리를 바꾸면 `--all`로 전체 재생성). 페이지는 `audio.mp3` 존재를 감지해 "듣기" 컨트롤을 켠다.

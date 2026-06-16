@@ -374,6 +374,21 @@ hr {
     opacity: 1;
   }
 }
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* 음성 재생 중 현재 읽는 문장 하이라이트 (CSS Custom Highlight API) */
+::highlight(reading) {
+  background-color: color-mix(in srgb, var(--yc) 20%, transparent);
+  color: inherit;
+}
 .prose-blog hr { margin: 2.5em 0; }
 .prose-blog .table-wrap {
   overflow-x: auto;
