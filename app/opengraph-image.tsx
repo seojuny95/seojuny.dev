@@ -49,7 +49,7 @@ export default async function Image() {
             letterSpacing: '-0.01em',
           }}
         >
-          프론트엔드 개발과 학습 기록
+          소프트웨어 개발과 AI 학습 기록
         </div>
       </div>
     ),
