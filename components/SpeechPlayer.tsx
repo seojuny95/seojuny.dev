@@ -193,6 +193,19 @@ export function SpeechPlayer({
     audio.currentTime = Math.min(Math.max(audio.currentTime + delta, 0), max);
   }, []);
 
+  const scrollToCurrent = useCallback(() => {
+    const segments = segmentsRef.current;
+    const active = activeRef.current;
+    const range = active >= 0 && segments ? segments[active].range : null;
+    range?.startContainer.parentElement?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, []);
+
+  const resumeFollow = useCallback(() => {
+    followRef.current = true;
+    setFollowSuspended(false);
+    scrollToCurrent();
+  }, [scrollToCurrent]);
+
   const cycleRate = useCallback(() => {
     const next = RATES[(RATES.indexOf(rate) + 1) % RATES.length];
     setRate(next);
@@ -325,6 +338,12 @@ export function SpeechPlayer({
             />
           </div>
         </div>
+      ) : null}
+      {followSuspended && status === 'playing' ? (
+        <button type="button" onClick={resumeFollow} className="speech-jump">
+          <span aria-hidden>↓</span>
+          <span>지금 읽는 곳으로</span>
+        </button>
       ) : null}
     </>
   );
