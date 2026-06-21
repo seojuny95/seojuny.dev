@@ -1,0 +1,69 @@
+<svg width="100%" viewBox="0 0 680 392" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>CLIP 대조학습 — N×N 정답·오답 격자</title>
+  <desc>한 배치의 이미지(행)와 캡션(열)으로 N×N 격자가 생긴다. 짝이 맞는 대각선 칸은 두 벡터가 가까워지도록, 나머지 칸은 멀어지도록 학습한다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .axis { font-size: 12px; font-weight: 600; text-anchor: middle; }
+      .clbl { font-size: 11px; text-anchor: middle; }
+      .rlbl { font-size: 11px; text-anchor: end; }
+      .chk { font-size: 22px; font-weight: 700; text-anchor: middle; fill: #fff; }
+      .leg { font-size: 11px; dominant-baseline: central; }
+      .cap { font-size: 11.5px; fill: #8a8a85; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <text x="346" y="28" class="hdr">CLIP — 정답은 붙이고, 오답은 떼고</text>
+
+  <!-- 축 라벨 -->
+  <text x="346" y="60" class="axis">캡션</text>
+  <text x="170" y="208" class="axis" transform="rotate(-90 170 208)">이미지</text>
+
+  <!-- 열(캡션) 라벨 -->
+  <text x="258" y="82" class="clbl">강아지</text>
+  <text x="316" y="82" class="clbl">고양이</text>
+  <text x="374" y="82" class="clbl">자동차</text>
+  <text x="432" y="82" class="clbl">피자</text>
+
+  <!-- 행(이미지) 라벨 -->
+  <text x="218" y="120" class="rlbl" dominant-baseline="central">강아지</text>
+  <text x="218" y="178" class="rlbl" dominant-baseline="central">고양이</text>
+  <text x="218" y="236" class="rlbl" dominant-baseline="central">자동차</text>
+  <text x="218" y="294" class="rlbl" dominant-baseline="central">피자</text>
+
+  <!-- 격자 (행 r, 열 c) -->
+  <!-- r0 -->
+  <rect x="230" y="92"  width="56" height="56" rx="3" fill="#f26522"/>
+  <text x="258" y="121" class="chk">✓</text>
+  <rect x="288" y="92"  width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="346" y="92"  width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="404" y="92"  width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <!-- r1 -->
+  <rect x="230" y="150" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="288" y="150" width="56" height="56" rx="3" fill="#f26522"/>
+  <text x="316" y="179" class="chk">✓</text>
+  <rect x="346" y="150" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="404" y="150" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <!-- r2 -->
+  <rect x="230" y="208" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="288" y="208" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="346" y="208" width="56" height="56" rx="3" fill="#f26522"/>
+  <text x="374" y="237" class="chk">✓</text>
+  <rect x="404" y="208" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <!-- r3 -->
+  <rect x="230" y="266" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="288" y="266" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="346" y="266" width="56" height="56" rx="3" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <rect x="404" y="266" width="56" height="56" rx="3" fill="#f26522"/>
+  <text x="432" y="295" class="chk">✓</text>
+
+  <!-- 범례 -->
+  <rect x="150" y="346" width="15" height="15" rx="2" fill="#f26522"/>
+  <text x="172" y="354" class="leg">정답(대각선) — 가까워지도록</text>
+  <rect x="410" y="346" width="15" height="15" rx="2" fill="#f5f5f3" stroke="#e6e6e3"/>
+  <text x="432" y="354" class="leg">나머지 — 멀어지도록</text>
+
+  <text x="340" y="382" class="cap">사진에 맞는 캡션을 고르는 객관식 — 정답은 가깝게, 오답은 멀게 학습한다</text>
+</svg>
