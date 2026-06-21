@@ -14,6 +14,7 @@ export const PRONUNCIATION: Record<string, string> = {
   // 고유명사
   'PI Lab': '파이 랩',
   Sprint2: '스프린트 투',
+  Sprint3: '스프린트 쓰리',
   LangChain: '랭체인',
   Llama: '라마',
   Claude: '클로드',
@@ -21,12 +22,20 @@ export const PRONUNCIATION: Record<string, string> = {
   // 약어·모델/기법
   RAG: '래그',
   LLM: '엘엘엠',
+  'GPT-4o': '지피티 포 오',
   GPT: '지피티',
   LoRA: '로라',
   QLoRA: '큐로라',
   PEFT: '펩트',
   RNN: '알엔엔',
   CNN: '씨엔엔',
+  ViT: '비전 트랜스포머',
+  VLM: '브이엘엠',
+  CLIP: '클립',
+  AST: '에이에스티',
+  AGI: '에이지아이',
+  SDK: '에스디케이',
+  MIT: '엠아이티',
   FFN: '에프에프엔',
   MLP: '엠엘피',
   RRF: '알알에프',
@@ -39,6 +48,14 @@ export const PRONUNCIATION: Record<string, string> = {
   DB: '디비',
   GB: '기가바이트',
   PDF: '피디에프',
+  // 실습 도구·모델 (멀티모달 글)
+  ffmpeg: '에프엠펙',
+  OPENAI_API_KEY: '오픈에이아이 에이피아이 키',
+  'gpt-4o': '지피티 포 오',
+  'whisper-1': '위스퍼 원',
+  'mlx-whisper': '엠엘엑스 위스퍼',
+  'qwen2.5vl': '퀜 이 점 오 브이엘',
+  base64: '베이스 식스티포',
 };
 
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -83,8 +100,11 @@ export function mdxToReadableText(raw: string): string {
   t = t.replace(/https?:\/\/\S+/g, ' '); // 본문에 노출된 raw URL 제거(낭독 방지)
   t = t.replace(/<\/?[a-zA-Z][^>]*>/g, ''); // HTML/JSX 태그 제거(<strong> 등, 텍스트는 유지)
   t = t.replace(/`([^`]+)`/g, '$1'); // 인라인 코드 → 텍스트
-  t = t.replace(/(\*\*|__)(.*?)\1/g, '$2'); // 굵게
-  t = t.replace(/(\*|_)(.*?)\1/g, '$2'); // 기울임
+  t = t.replace(/\*\*(.*?)\*\*/g, '$1'); // 굵게(*)
+  t = t.replace(/\*([^*\n]+?)\*/g, '$1'); // 기울임(*)
+  // 단어 안 밑줄(예: OPENAI_API_KEY)은 기울임으로 보지 않는다 — 양옆이 영숫자가 아닐 때만.
+  t = t.replace(/(^|[^A-Za-z0-9])__(.+?)__(?![A-Za-z0-9])/g, '$1$2'); // 굵게(_)
+  t = t.replace(/(^|[^A-Za-z0-9])_([^_\n]+?)_(?![A-Za-z0-9])/g, '$1$2'); // 기울임(_)
   t = t.replace(/~~(.*?)~~/g, '$1'); // 취소선
   return t;
 }
