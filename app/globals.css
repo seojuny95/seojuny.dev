@@ -383,6 +383,29 @@ hr {
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
 }
+/* 음성 재생 중 상단 인라인 컨트롤이 화면 밖으로 나가면 뜨는 고정 미니플레이어 */
+.speech-mini {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 40;
+  background-color: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.speech-mini-inner {
+  max-width: 680px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 1rem;
+}
+@media (min-width: 640px) {
+  .speech-mini-inner {
+    padding-inline: 1.25rem;
+  }
+}
 
 /* 음성 재생 중 현재 읽는 문장 하이라이트 (CSS Custom Highlight API) */
 ::highlight(reading) {

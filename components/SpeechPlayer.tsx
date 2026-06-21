@@ -95,6 +95,8 @@ export function SpeechPlayer({
   const [rate, setRate] = useState<(typeof RATES)[number]>(1);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [inlineVisible, setInlineVisible] = useState(true);
+  const inlineRef = useRef<HTMLDivElement | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const segmentsRef = useRef<Segment[] | null>(null);
@@ -199,6 +201,17 @@ export function SpeechPlayer({
     [],
   );
 
+  useEffect(() => {
+    const el = inlineRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInlineVisible(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   // 듣기 세션 중(재생/일시정지)에는 스페이스바로 재생/일시정지 토글.
   // 입력창·버튼 포커스 시에는 가로채지 않아 평소 스크롤·버튼 동작을 보존한다.
   useEffect(() => {
@@ -232,38 +245,57 @@ export function SpeechPlayer({
     );
   }
 
+  const showMini = !inlineVisible && status !== 'idle';
+
   return (
-    <div className="flex items-center gap-4">
-      <audio
-        ref={audioRef}
-        src={audioSrc}
-        preload="none"
-        onPlay={() => setStatus('playing')}
-        onPause={() => {
-          setStatus((s) => (s === 'idle' ? 'idle' : 'paused'));
-          activeRef.current = -1;
-          setHighlight(null);
-        }}
-        onEnded={() => {
-          setStatus('idle');
-          activeRef.current = -1;
-          setHighlight(null);
-        }}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
-        onDurationChange={(e) => setDuration(e.currentTarget.duration || 0)}
-        className="hidden"
-      />
-      <Controls
-        status={status}
-        time={time}
-        duration={duration}
-        rate={rate}
-        onPlayPause={handlePlayPause}
-        onSkip={skip}
-        onCycleRate={cycleRate}
-      />
-    </div>
+    <>
+      <div ref={inlineRef} className="flex items-center gap-4">
+        <audio
+          ref={audioRef}
+          src={audioSrc}
+          preload="none"
+          onPlay={() => setStatus('playing')}
+          onPause={() => {
+            setStatus((s) => (s === 'idle' ? 'idle' : 'paused'));
+            activeRef.current = -1;
+            setHighlight(null);
+          }}
+          onEnded={() => {
+            setStatus('idle');
+            activeRef.current = -1;
+            setHighlight(null);
+          }}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
+          onDurationChange={(e) => setDuration(e.currentTarget.duration || 0)}
+          className="hidden"
+        />
+        <Controls
+          status={status}
+          time={time}
+          duration={duration}
+          rate={rate}
+          onPlayPause={handlePlayPause}
+          onSkip={skip}
+          onCycleRate={cycleRate}
+        />
+      </div>
+      {showMini ? (
+        <div className="speech-mini" role="region" aria-label="음성 재생 컨트롤">
+          <div className="speech-mini-inner">
+            <Controls
+              status={status}
+              time={time}
+              duration={duration}
+              rate={rate}
+              onPlayPause={handlePlayPause}
+              onSkip={skip}
+              onCycleRate={cycleRate}
+            />
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
 
