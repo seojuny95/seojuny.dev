@@ -1,9 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { matchable } from '@/lib/speech';
+import { matchable, isHighlightOutOfView } from '@/lib/speech';
 
 const RATES = [1, 1.25, 1.5, 2] as const;
+
+const TOP_INSET = 96;
+const BOTTOM_INSET = 40;
 
 type Status = 'idle' | 'playing' | 'paused';
 type Timing = { text: string; start: number; end: number };
@@ -97,6 +100,8 @@ export function SpeechPlayer({
   const [duration, setDuration] = useState(0);
   const [inlineVisible, setInlineVisible] = useState(true);
   const inlineRef = useRef<HTMLDivElement | null>(null);
+  const followRef = useRef(true);
+  const [followSuspended, setFollowSuspended] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const segmentsRef = useRef<Segment[] | null>(null);
@@ -152,9 +157,9 @@ export function SpeechPlayer({
     activeRef.current = active;
     const range = active >= 0 ? segments[active].range : null;
     setHighlight(range);
-    if (range) {
+    if (range && followRef.current) {
       const rect = range.getBoundingClientRect();
-      if (rect.top < 80 || rect.bottom > window.innerHeight - 40) {
+      if (isHighlightOutOfView(rect, window.innerHeight, { top: TOP_INSET, bottom: BOTTOM_INSET })) {
         range.startContainer.parentElement?.scrollIntoView({
           block: 'center',
           behavior: 'smooth',
@@ -170,7 +175,11 @@ export function SpeechPlayer({
       audio.pause();
       return;
     }
-    if (status === 'idle') audio.currentTime = 0; // 새로/끝난 뒤 재생은 처음부터
+    if (status === 'idle') {
+      audio.currentTime = 0;
+      followRef.current = true;
+      setFollowSuspended(false);
+    }
     await prepare();
     audio.playbackRate = rate;
     audio.preservesPitch = true;
@@ -211,6 +220,28 @@ export function SpeechPlayer({
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (status === 'idle') return;
+    const yield_ = () => {
+      if (!followRef.current) return;
+      followRef.current = false;
+      setFollowSuspended(true);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) {
+        yield_();
+      }
+    };
+    window.addEventListener('wheel', yield_, { passive: true });
+    window.addEventListener('touchmove', yield_, { passive: true });
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('wheel', yield_);
+      window.removeEventListener('touchmove', yield_);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [status]);
 
   // 듣기 세션 중(재생/일시정지)에는 스페이스바로 재생/일시정지 토글.
   // 입력창·버튼 포커스 시에는 가로채지 않아 평소 스크롤·버튼 동작을 보존한다.
