@@ -1,0 +1,333 @@
+---
+title: "멀티모달, 그게 뭔데?"
+date: "2026-06-22"
+summary: "텍스트만 다루던 AI가 어떻게 보고 듣고 그리게 됐을까. 멀티모달의 개념과 역사(CLIP), 여러 모달이 들어오고 나가는 원리, 그리고 가장 까다로운 영상까지 그림과 함께 정리한다."
+tags: ["AI", "Multimodal", "CLIP", "Vision-Language", "LLM"]
+draft: false
+---
+
+[PI Lab](https://paaa.ai/) Sprint3을 마쳤다. 이번 스프린트에서는 모달의 정의, AI가 멀티모달까지 발전해 온 역사를 살펴봤고, 멀티모달 RAG를 직접 구현해 봤다. 이번 포스팅에서는 스프린트 기간 동안 배운 내용과 추가적으로 혼자 학습한 내용을 정리해보려고 한다.
+
+Sprint2까지 다룬 모델은 텍스트를 넣으면 텍스트가 나오는 text-to-text였다. 하지만 한동안 화제가 된 지브리풍 이미지, ChatGPT와 음성으로 주고받는 대화는 어떻게 만들어진 걸까? 글로 그림을 그리고 목소리로 답하는 일이 어느새 자연스러워졌다. AI가 텍스트를 넘어 여러 모달을 다루기 시작한 것, 이것이 <strong>멀티모달(multimodal)</strong>이다. 멀티모달이 무엇이고 어떻게 발전했는지, 여러 모달이 어떻게 들어오고 나가는지, 특히 영상은 어떻게 다루는지 하나씩 살펴보자.
+
+## 멀티모달이란
+
+멀티모달의 <strong>모달(modal)</strong>은 모달리티를 뜻한다. <strong>모달리티(modality)</strong>는 정보가 들어오는 종류, 혹은 채널이다. 텍스트, 이미지, 오디오, 비디오, 표처럼 데이터의 형태 하나하나가 모달리티다.
+
+- <strong>유니모달(unimodal)</strong>: 한 종류만 다룬다. 텍스트만 받는 초기 GPT, 이미지를 다루는 [ResNet](https://arxiv.org/abs/1512.03385)이 그렇다.
+- <strong>멀티모달(multimodal)</strong>: 두 종류 이상을 함께 이해하거나 생성한다. 사진을 보고 설명을 쓰거나, 음성을 듣고 답하는 모델이다.
+
+![유니모달은 모달마다 다른 모델을 쓰고, 멀티모달은 한 모델이 여러 모달을 함께 다룬다](/posts/what-is-multimodal/unimodal-vs-multimodal.svg "유니모달 vs 멀티모달")
+
+핵심은 단순히 "여러 입력을 받는다"가 아니다. **서로 다른 모달리티를 같은 벡터 공간에서 연결**하는 것이 멀티모달의 본질이다. <strong>벡터 공간(의미 공간)</strong>은 데이터를 숫자 벡터로 바꿔 놓은 공간으로, 뜻이 비슷한 것끼리 가까이 모인다. "강아지"라는 단어와 강아지 사진을 같은 공간에 넣으면, 둘이 서로 가까이 놓인다.
+
+![강아지 사진과 강아지 글자는 가까이, 자동차는 멀리 — 같은 벡터 공간](/posts/what-is-multimodal/vector-space.svg "벡터 공간 — 뜻이 가까우면 모인다")
+
+형식이 완전히 다른 데이터를 같은 공간에 담는 것이 멀티모달의 핵심 과제다. 이 과제를 어떻게 해결했는지, 역사를 살펴보자.
+
+## 멀티모달의 역사
+
+이전까지 AI는 텍스트와 이미지를 각자 따로 다뤘고, 오디오와 영상이 뒤따라 합류했다.
+
+![텍스트(RNN→Transformer)와 이미지(CNN→ViT)가 CLIP에서 만나 VLM으로 이어진다](/posts/what-is-multimodal/two-tracks.svg "두 갈래가 CLIP에서 만나다")
+
+### 텍스트: RNN → Transformer
+
+2017년 이전 텍스트 AI의 중심은 <strong>[RNN(Recurrent Neural Network)](https://ko.wikipedia.org/wiki/순환_신경망)</strong>이었다. 문장을 단어 하나씩 순서대로 읽으며, 지금까지 읽은 내용을 벡터 하나에 압축해 다음 단어로 넘겼다. 문제는 문장이 길어질수록 앞부분이 희미해진다는 것이었다(기울기 소실). 단어를 순서대로 처리하니 병렬화도 안 돼 느렸다.
+
+2017년 구글이 내놓은 <strong>[Transformer](https://arxiv.org/abs/1706.03762)</strong>가 두 문제를 한 번에 풀었다. 핵심은 셀프 어텐션(self-attention)이다. 문장 안 모든 단어가 다른 모든 단어를 동시에, 직접 참조한다. 덕분에 병렬 처리가 되고 멀리 떨어진 단어끼리도 바로 연결된다. 어텐션의 원리는 [이전 글](/attention-is-all-you-need)에서 자세히 다뤘다. 이후 [BERT](https://arxiv.org/abs/1810.04805)와 [GPT](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)가 텍스트 AI의 전성기를 열었다. 다만 모두 텍스트만 다뤘다. 이미지는 전혀 이해하지 못했다.
+
+![RNN은 단어를 순서대로 읽어 앞부분이 희미해지고, Transformer는 모든 단어가 동시에 서로를 참조한다](/posts/what-is-multimodal/rnn-vs-transformer.svg "RNN 순차 처리 vs Transformer 동시 참조")
+
+### 이미지: CNN → ViT
+
+이미지 쪽은 <strong>[CNN(Convolutional Neural Network)](https://ko.wikipedia.org/wiki/합성곱_신경망)</strong>이 중심이었다. CNN의 핵심은 작은 <strong>필터</strong>다. 몇 픽셀짜리 필터를 이미지 곳곳에 대 보며 "이 자리에 이런 무늬가 있나?"를 검사한다. 처음 층은 가장자리나 색이 바뀌는 지점 같은 단순한 무늬를 잡는다. 이런 필터 층을 여러 겹 쌓으면, 앞 층이 찾은 단순한 무늬를 조합해 더 복잡한 것을 찾는다. 가장자리에서 곡선으로, 다시 눈·코로, 끝내 얼굴로 올라가, 마지막에는 "고양이 92%"처럼 분류 점수를 낸다.
+
+![CNN은 가장자리에서 곡선·패턴, 부분, 얼굴로 패턴을 층층이 감지해 분류 점수를 낸다](/posts/what-is-multimodal/cnn-hierarchy.svg "CNN — 패턴을 층층이 감지")
+
+분류는 잘했지만 두 가지 한계가 있었다. 첫째, 텍스트를 만들지 못했다. "고양이"라고 판정할 뿐 "이 사진을 설명해줘"에는 답하지 못했다. 둘째, 텍스트 AI와 합칠 수 없었다. CNN이 내놓는 숫자 배열과 Transformer가 내놓는 숫자 배열은 겉보기엔 같은 실수 벡터지만, 서로 다른 기준으로 만들어진 값이었다. 둘을 더하거나 비교하는 건 킬로미터와 킬로그램을 더하는 것과 같다.
+
+2020년 구글의 <strong>[ViT(Vision Transformer)](https://arxiv.org/abs/2010.11929)</strong>가 발상을 뒤집었다. 픽셀 하나하나를 토큰으로 보면 224×224 이미지만 해도 약 5만 개라, 셀프 어텐션이 감당하기엔 너무 많다(어텐션은 토큰 수의 제곱에 비례해 무거워진다).
+
+그래서 ViT는 이미지를 16×16 묶음(패치)으로 자른다. 224×224 이미지는 패치 196개가 되고, 패치 하나가 토큰 하나가 된다. 이렇게 줄 세우면 텍스트 토큰을 늘어놓은 것과 구조가 똑같아져, 이미지도 텍스트와 같은 방식(Transformer)으로 처리할 수 있다. 두 AI가 같은 방식으로 돌아갈 수 있음을 보인 것이 멀티모달의 기술적 출발점이 됐다.
+
+![이미지를 패치로 잘라 줄 세우면 텍스트 토큰 시퀀스와 구조가 같아진다](/posts/what-is-multimodal/vit-patches.svg "ViT — 이미지를 패치 시퀀스로")
+
+### 오디오와 영상
+
+오디오와 영상은 별도 갈래로 발전하지 않고, 이미지와 같은 기술을 썼다. 소리는 <strong>스펙트로그램</strong>(시간에 따른 주파수 세기를 그린 그림)으로 바꾸면 한 장의 이미지처럼 다룰 수 있다. 영상은 화면과 소리가 함께 들어 있는데, 화면은 프레임을 잘라내면 이미지의 연속이고 소리는 방금처럼 스펙트로그램이 된다. 결국 둘 다 이미지로 바꿔 다룰 수 있다. 그래서 이미지가 Transformer로 처리되기 시작하자, 오디오와 영상도 자연스럽게 같은 방식으로 처리됐다.
+
+![소리는 스펙트로그램으로, 영상은 프레임으로 바꾸면 이미지와 같은 방식으로 처리된다](/posts/what-is-multimodal/audio-video-as-image.svg "소리와 영상도 이미지가 된다")
+
+텍스트 AI는 이미지를 이해하지 못하고, 이미지 AI는 텍스트를 만들지 못한다. 게다가 두 AI의 출력 벡터는 좌표계가 달라 합치거나 비교할 수도 없다. 이 중에서 서로 다른 모달리티를 같은 공간에 정렬하는 문제를 푼 것이 CLIP이다.
+
+## CLIP
+
+<strong>[CLIP(Contrastive Language-Image Pre-training)](https://arxiv.org/abs/2103.00020)</strong>은 **대조(contrastive)** 방식으로 **언어와 이미지**를 함께 **사전학습**한다. 이미지 인코더와 텍스트 인코더가 **같은 차원의 벡터**를 내놓도록 만들어, "강아지" 사진과 "강아지" 글자가 같은 공간에서 가까이 놓이게 한다. 학습 데이터는 인터넷에서 모은 (이미지, 캡션) 쌍 수억 개다.
+
+### 대조 학습
+
+한 배치에 (이미지, 캡션) 쌍이 N개 있으면, 이미지 N장과 캡션 N개로 N×N 격자가 생긴다. 짝이 맞는 건 대각선의 N개뿐이고, 나머지는 전부 틀린 조합이다.
+
+![배치의 이미지와 캡션으로 만든 N×N 격자에서 대각선은 가깝게, 나머지는 멀게 학습한다](/posts/what-is-multimodal/clip-grid.svg "CLIP 대조학습 — 정답은 붙이고 오답은 떼고")
+
+대각선(정답)은 두 벡터가 가까워지도록, 나머지(오답)는 멀어지도록 학습한다. "이 사진에 맞는 캡션을 N개 중에 골라라"라는 객관식을 푸는 셈이다. 가까운지 먼지는 <strong>코사인 유사도</strong>로 따진다. 두 벡터가 같은 방향이면 1, 반대면 -1이다. 코드로 보면 이렇다.
+
+```python
+# 이미지 N장, 캡션 N개를 각각 벡터로
+img_vecs = image_encoder(images)    # (N, d)
+txt_vecs = text_encoder(captions)   # (N, d)
+
+# 모든 조합의 유사도 → N×N 격자
+sim = img_vecs @ txt_vecs.T         # (N, N)
+
+# 정답은 대각선: 0번 사진의 정답은 0번 캡션, 1번은 1번 ...
+labels = range(N)
+
+# "각 사진이 맞는 캡션을 고르게" + "각 캡션이 맞는 사진을 고르게"
+loss = cross_entropy(sim, labels) + cross_entropy(sim.T, labels)
+```
+
+`cross_entropy`는 [손실함수](/how-models-learn)다. 사진에서 맞는 캡션을 찾는 방향과 캡션에서 맞는 사진을 찾는 방향, 두 손실을 더해 양쪽을 함께 학습시킨다.
+
+### Zero-shot 분류
+
+객관식을 수억 번 풀고 나면 **이미지와 텍스트가 같은 벡터 공간에 정렬**된다. 그러면 학습 때 본 적 없는 작업도 추가 학습 없이 할 수 있다. 대표적인 게 <strong>[zero-shot 분류](https://arxiv.org/abs/2103.00020)</strong>다.
+
+![사진과 후보 문장을 같은 벡터 공간에 넣고 사진에 가장 가까운 문장을 고른다](/posts/what-is-multimodal/clip-zeroshot.svg "CLIP zero-shot 분류")
+
+```python
+# "개 vs 고양이" 분류기를 따로 학습한 적이 없어도
+candidates = ["a photo of a dog", "a photo of a cat"]
+img = image_encoder(my_image)
+txt = text_encoder(candidates)
+answer = candidates[(img @ txt.T).argmax()]   # 더 가까운 문장을 고른다
+```
+
+후보 문장만 바꿔 주면 분류기를 새로 학습하지 않고도 어떤 분류든 할 수 있다. 그래서 CLIP이 멀티모달의 전환점이 됐다. 모달리티를 한번 정렬해 두면 다양한 응용이 가능해진다.
+
+단, CLIP은 이미지와 텍스트가 얼마나 비슷한지 비교만 한다. 이미지를 보고 문장을 지어내지는 못한다. 하지만 CLIP이 정렬해 둔 이미지 인코더에 글을 생성하는 LLM을 붙이면, 이미지를 보고 답하는 모델이 된다.
+
+![CLIP 이미지 인코더에 LLM을 붙이면 이미지를 보고 답하는 VLM이 된다](/posts/what-is-multimodal/clip-to-vlm.svg "이미지 인코더 + LLM = 보고 답하는 모델")
+
+## 입력과 출력
+
+방금 본 "이미지를 보고 답하는 모델"은 멀티모달을 받아 텍스트를 내놓는다. 방향을 뒤집으면 텍스트로 이미지를 만들 수도 있다. 이렇게 멀티모달은 입력과 출력 중 어느 쪽이 여러 모달이냐에 따라 세 가지로 나뉜다.
+
+![멀티모달 입력에서 텍스트 출력, 텍스트 입력에서 멀티모달 출력, 멀티모달 입력에서 멀티모달 출력의 세 방향](/posts/what-is-multimodal/directions.svg "멀티모달의 세 가지 방향")
+
+- **멀티모달 입력 → 텍스트 출력 (이해)**: 사진·음성을 받아 글로 설명하거나 답한다.
+- **텍스트 입력 → 멀티모달 출력 (생성)**: 글로 이미지·오디오를 만들어 낸다.
+- **멀티모달 입력 → 멀티모달 출력 (옴니)**: 여러 모달을 받아 여러 모달로 답한다. [GPT-4o](https://openai.com/index/hello-gpt-4o/)가 여기에 속한다.
+
+### 입력
+
+텍스트가 아닌 모달을 LLM에 넣는 방법은 모달이 달라도 모두 같다. **모달마다 전용 인코더로 벡터를 뽑고, 프로젝터가 LLM이 알아듣는 토큰처럼 바꿔, 텍스트 토큰과 한 줄로 잇는다.**
+
+![이미지·오디오·영상은 각자 인코더를 거쳐 토큰이 되어 텍스트와 함께 LLM에 들어간다](/posts/what-is-multimodal/projector-pipeline.svg "여러 모달을 한 줄의 토큰으로")
+
+인코더는 모달마다 다르다.
+
+- **이미지**: ViT. 이미지를 패치로 잘라 각 패치를 벡터로 만든다. CLIP으로 미리 정렬해 둔 ViT를 흔히 쓴다.
+- **오디오**: 소리를 스펙트로그램(이미지)으로 바꾼 뒤 그 그림을 ViT로 처리한다. 스펙트로그램을 패치로 잘라 ViT에 넣는 [AST(Audio Spectrogram Transformer)](https://arxiv.org/abs/2104.01778)가 대표적이다. 말소리라면 [Whisper](https://arxiv.org/abs/2212.04356)의 인코더를 쓰기도 한다.
+
+<strong>프로젝터(projector)</strong>는 인코더가 내놓은 벡터를 LLM이 받을 수 있는 형태로 바꾼다. 크게 두 가지를 손본다.
+
+- **차원 맞추기**: 인코더 출력 벡터와 LLM 토큰은 차원이 다르다. 예를 들어 ViT 출력은 1024차원인데 LLM 토큰은 4096차원이다. 프로젝터가 1024를 4096으로 바꿔 규격을 맞춘다. 가장 단순하게는 행렬 하나(선형 변환), 보통은 두어 층짜리 MLP를 쓴다. 학습할 때는 인코더와 LLM을 그대로 두고(freeze) 프로젝터만 이미지-캡션 쌍으로 훈련해, 이미지 벡터가 LLM이 알아듣는 자리로 가도록 맞춘다.
+- **개수 줄이기**: 이미지 한 장이 패치 수백 개면 토큰도 그만큼 많아진다. 어텐션은 토큰이 많아질수록 계산이 가파르게 늘어서, 이미지 하나가 텍스트보다 토큰을 너무 많이 차지하면 LLM이 버겁다. 그래서 <strong>리샘플러(resampler)</strong>로 수백 개를 수십 개로 줄인다. 패치 전체를 훑어 중요한 정보만 골라 담는 작은 신경망이다.
+
+이렇게 손본 벡터를 텍스트 토큰 사이에 끼워 넣으면, LLM은 이미지든 글이든 똑같은 토큰으로 보고 셀프 어텐션으로 함께 처리한다. 이렇게 **인코더·프로젝터·LLM을 합친 모델 전체**를, 이미지를 보고 텍스트로 답한다는 뜻에서 <strong>VLM(Vision-Language Model)</strong>이라 부른다. 프로젝터는 그 안의 한 부품이다.
+
+![프로젝터는 인코더의 많고 좁은(1024차원) 벡터를 적고 넓은(4096차원) 토큰으로 바꿔 LLM에 넣는다](/posts/what-is-multimodal/projector-detail.svg "프로젝터가 하는 두 가지")
+
+**영상은 특히 까다롭다.** 한 모달이 아니라 화면(프레임)과 소리(오디오 트랙)가 섞여 있고, 프레임 수도 엄청나기 때문이다. 가장 흔한 방법은 화면과 소리를 나눠 처리한 뒤 시간 기준으로 합치는 것이다. 화면은 프레임을 뽑아 VLM으로 "무엇이 보이는지" 설명을 얻고, 소리는 오디오 트랙을 Whisper로 변환해 "무슨 말이 나오는지" 자막을 얻는다.
+
+**모든 프레임을 다 볼 수는 없다.** 10분짜리 영상이 초당 30프레임이면 18,000장이라, 전부 VLM에 넣으면 시간도 비용도 감당하기 어렵다. 그래서 프레임을 골라낸다. 단순하게는 1초에 한 장씩 뽑고(일정 간격 샘플링), 더 똑똑하게는 <strong>장면 전환 감지(scene change detection)</strong>로 화면이 바뀔 때만 뽑는다.
+
+![영상은 화면(프레임 일부)과 소리(오디오)로 나눠 처리한 뒤 시간 기준으로 합친다](/posts/what-is-multimodal/video-understanding.svg "영상 다루기 — 화면과 소리, 일부만 골라")
+
+조각내 합치는 방법은 간단하지만 단점이 있다. 프레임을 띄엄띄엄 보니 그 사이의 움직임을 놓치고, 화면 설명과 자막을 나중에 이어 붙이다 보니 시간 흐름이 매끄럽게 담기지 않는다. 그래서 최근에는 **영상 전용(video-native) 모델**이 활발히 연구된다. 프레임을 한 장씩 보는 대신, 처음부터 화면·시간·소리를 통째로 학습해 프레임 사이의 시간 관계까지 직접 다룬다.
+
+![조각내 합치는 방식과 영상 전용 모델로 통째로 이해하는 방식의 비교](/posts/what-is-multimodal/native-video.svg "영상을 보는 두 방식")
+
+영상 전용 모델은 라벨 없이 영상만으로 배운다. 하나는 <strong>대조 학습</strong>으로, 영상 클립과 자막·캡션을 같은 벡터 공간에 가깝게 붙인다(CLIP의 영상판). 다른 하나는 <strong>마스킹 예측</strong>으로, 영상의 일부를 가리고 나머지로 가린 부분을 맞히게 한다. 빈칸 채우기를 영상으로 하는 셈이라, 정답표 없이도 움직임과 시간 흐름을 익힌다.
+
+![대조 학습은 영상과 캡션을 가깝게 붙이고, 마스킹 예측은 가린 부분을 맞히게 한다](/posts/what-is-multimodal/video-train.svg "영상 전용 모델은 이렇게 배운다")
+
+이렇게 학습한 영상 인코더는 영상을 벡터로 바꿀 뿐, 글을 직접 만들지는 못한다. 그래서 앞서 본 입력 구조를 똑같이 쓴다. 인코더가 뽑은 영상 표현을 프로젝터로 변환해 LLM에 넣으면, LLM이 그 영상을 설명하거나 질문에 답한다.
+
+### 출력
+
+텍스트를 만드는 방식은 익숙하다. LLM이 다음에 올 토큰을 하나씩 골라 이어 붙인다. 하지만 이미지·오디오·영상은 이렇게 토큰을 잇는 것만으로는 만들 수 없다. 모달마다 생성하는 방법이 다르다.
+
+**이미지**는 <strong>[확산 모델(diffusion model)](https://arxiv.org/abs/2006.11239)</strong>로 만든다. 토큰을 잇는 LLM과 발상이 다르다. 무작위 노이즈(모래폭풍 같은 화면)에서 시작해 "고양이"라는 텍스트에 맞게 노이즈를 조금씩 걷어내기를 수십 번 반복하면, 흐릿하던 화면이 또렷한 그림이 된다. [Midjourney](https://www.midjourney.com), [DALL·E](https://arxiv.org/abs/2204.06125) 같은 이미지 생성 AI가 이 방식이다.
+
+![무작위 노이즈에서 시작해 텍스트에 맞게 노이즈를 걷어내며 그림을 만든다](/posts/what-is-multimodal/denoise-steps.svg "확산 — 노이즈에서 그림으로")
+
+**오디오**는 1초에 수만 개의 숫자(샘플)로 이뤄진 파형이라 한 번에 만들기엔 너무 많다. 그래서 두 가지 방법을 쓴다. 하나는 신경망 코덱으로 소리를 적은 수의 <strong>오디오 토큰</strong>으로 압축한 뒤 LLM처럼 토큰을 생성하고 디코더로 파형을 되돌리는 방식이다(음악 생성 [Suno](https://suno.com), 음성 합성 [ElevenLabs](https://elevenlabs.io)). 다른 하나는 스펙트로그램을 확산으로 그린 뒤 <strong>보코더(vocoder)</strong>로 소리로 되돌리는 방식이다. 보코더는 스펙트로그램(주파수 그림)을 우리가 실제로 들을 수 있는 소리 파형으로 바꿔 주는 모델이다.
+
+![오디오는 토큰을 차례로 생성하거나 스펙트로그램을 확산으로 그린 뒤 파형으로 되돌린다](/posts/what-is-multimodal/audio-gen.svg "오디오를 만드는 두 방식")
+
+**영상**은 출력에서도 가장 어렵다. 프레임 한 장을 만드는 건 이미지 생성과 같지만, 프레임들 사이의 <strong>시간 일관성</strong>을 맞추기가 어렵다. 1번 프레임의 강아지가 30번 프레임에서도 같은 강아지여야 하고, 움직임이 끊기지 않아야 한다. 그래서 프레임을 한 장씩 따로 만들지 않고, 여러 프레임을 한 덩어리로 놓고 가로·세로뿐 아니라 시간축까지 함께 노이즈를 걷어낸다. 이때 프레임끼리 서로 참조해 앞뒤가 이어지도록 맞춘다. [Sora](https://openai.com/index/sora-2/)·[Runway](https://runwayml.com) 같은 모델이 이 방식이고, 최근에는 화면에 맞는 소리까지 함께 만든다.
+
+![여러 프레임을 시간축까지 함께 확산하고 서로 참조해 움직임이 끊기지 않게 만든다](/posts/what-is-multimodal/video-gen.svg "영상 — 프레임을 시간까지 함께")
+
+## 실습
+
+멀티모달을 더 잘 이해하기 위해, 영상을 입력받아 텍스트로 출력하는 AI를 직접 코드로 만들어 보자. 입력 영상은 [MIT 강의](https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-4-decomposition-abstraction-and-functions/)를 사용한다. 강의 영상을 넣으면 "함수는 몇 분에 설명하나?" 같은 질문에 시각과 함께 답하게 만들어야 한다. 화면은 VLM으로, 소리는 Whisper로 바꾼 뒤 시간순으로 합쳐 타임라인을 만들고, 이를 LLM에 묻는다.
+
+**준비.** 영상에서 화면(프레임)과 소리를 분리하는 [ffmpeg](https://ffmpeg.org)는 항상 필요하다. `OPENAI_API_KEY`가 있으면 품질이 더 좋은 **OpenAI**를 우선 쓰고, 없으면 **로컬**로 돌린다.
+
+- **화면 설명(VLM)**: OpenAI면 gpt-4o, 로컬이면 [qwen2.5vl](https://github.com/QwenLM/Qwen2.5-VL) (대안으로 더 가벼운 [moondream](https://moondream.ai)).
+- **음성 변환([Whisper](https://arxiv.org/abs/2212.04356))**: OpenAI면 whisper-1, 로컬이면 mlx-whisper.
+- **답변(LLM)**: 타임라인을 읽고 질문에 답한다. OpenAI면 gpt-4o, 로컬이면 Llama 3.2.
+
+```bash
+brew install ffmpeg
+pip install openai mlx-whisper      # mlx-whisper는 로컬 백엔드용
+
+# (A) OpenAI를 쓸 경우 — 키만 있으면 된다
+export OPENAI_API_KEY=sk-...
+
+# (B) 로컬을 쓸 경우 — ollama로 모델을 받는다
+brew install ollama
+ollama serve &                      # ollama 백그라운드 실행
+ollama pull qwen2.5vl               # 화면 설명용 VLM
+ollama pull llama3.2                # 답변용 LLM
+```
+
+모델 클라이언트는 `OPENAI_API_KEY` 유무로 자동 전환한다. 로컬(ollama)도 OpenAI 호환 API라, OpenAI SDK 하나로 양쪽을 모두 쓸 수 있다.
+
+```python
+import os
+from openai import OpenAI
+
+if os.getenv("OPENAI_API_KEY"):
+    client = OpenAI()                                                # OpenAI 우선
+    VLM_MODEL = TEXT_MODEL = "gpt-4o"
+else:
+    client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")  # 없으면 로컬 Ollama
+    VLM_MODEL, TEXT_MODEL = "qwen2.5vl", "llama3.2"
+```
+
+영상 처리의 핵심 도구는 **화면 한 장을 글로 바꾸는 함수**다. 프레임 이미지를 base64로 인코딩해 VLM에 보낸다. 영상 이해는 결국 이 함수를 여러 프레임에 반복하는 것이다.
+
+```python
+import base64
+
+def describe_image(path, question="이 화면에 무엇이 보이는지 한 문장으로 설명해줘."):
+    b64 = base64.b64encode(open(path, "rb").read()).decode()
+    resp = client.chat.completions.create(
+        model=VLM_MODEL,
+        messages=[{"role": "user", "content": [
+            {"type": "text", "text": question},
+            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}},
+        ]}],
+    )
+    return resp.choices[0].message.content.strip()
+```
+
+**① 일정 간격으로 프레임 뽑기.** 가장 단순한 방법은 정해진 간격마다 한 장씩 뽑는 것이다. ffmpeg로 10초에 한 장씩 뽑아, 방금 만든 함수로 설명해 본다.
+
+```python
+import subprocess, glob, os
+
+def extract_frames_every(video, interval, out="frames_basic"):
+    os.makedirs(out, exist_ok=True)
+    subprocess.run(["ffmpeg", "-y", "-i", video, "-vf", f"fps=1/{interval}",
+                    f"{out}/f_%03d.png"], check=True, capture_output=True)
+    return sorted(glob.glob(f"{out}/*.png"))
+
+basic_frames = extract_frames_every("lecture.mp4", 10)   # 10초에 한 장
+for i, f in enumerate(basic_frames):
+    print(f"[{i*10}s]", describe_image(f))
+```
+
+강의처럼 화면이 거의 안 바뀌는 영상에서는 "칠판 앞의 강사" 류 설명이 거의 같은 내용으로 계속 반복되고, 모호한 프레임에선 없는 교수 이름 같은 **환각**까지 섞인다. 정해진 간격으로 뽑으니 같은 장면을 몇 번이고 다시 보는 셈이다.
+
+**② 화면이 바뀔 때만 뽑기 (장면 전환 감지).** ffmpeg의 `scene` 점수(앞 프레임과 얼마나 달라졌는지)로 크게 바뀌는 지점만 골라 뽑는다. 슬라이드 전환·화면 컷은 잡고 거의 똑같은 프레임은 버려, 중복과 환각이 크게 준다. `showinfo`로 각 프레임의 실제 시각도 함께 얻고, 오디오는 따로 분리해 둔다.
+
+```python
+import re
+
+def extract_scene_frames(video, threshold=0.3, out="frames"):
+    os.makedirs(out, exist_ok=True)
+    vf = f"select='eq(n\\,0)+gt(scene\\,{threshold})',showinfo"
+    p = subprocess.run(["ffmpeg", "-i", video, "-vf", vf, "-vsync", "vfr",
+                        f"{out}/frame_%03d.png"], capture_output=True, text=True)
+    times = [float(t) for t in re.findall(r"pts_time:([0-9.]+)", p.stderr)]
+    return list(zip(times, sorted(glob.glob(f"{out}/*.png"))))   # [(시각, 경로), ...]
+
+def extract_audio(video, out="audio.m4a"):
+    subprocess.run(["ffmpeg", "-y", "-i", video, "-vn", "-acodec", "aac", out],
+                   check=True, capture_output=True)
+    return out
+
+scene_frames = extract_scene_frames("lecture.mp4")
+audio = extract_audio("lecture.mp4")
+```
+
+**③ 화면과 소리를 각각 텍스트로.** 장면 전환 프레임은 한 장씩 VLM으로 설명을 받고(각 설명에 실제 시각), 오디오는 Whisper로 **타임스탬프와 함께** 변환해 각 문장이 몇 초에 나왔는지 안다. 음성 변환도 백엔드에 맞춰 OpenAI whisper-1 또는 로컬 mlx-whisper를 쓰고, 결과는 `(시각, 텍스트)` 형태로 통일한다.
+
+```python
+frame_caps = [(t, describe_image(f)) for t, f in scene_frames]   # [(시각, 설명), ...]
+
+if os.getenv("OPENAI_API_KEY"):
+    def transcribe(path):
+        with open(path, "rb") as f:
+            r = client.audio.transcriptions.create(
+                model="whisper-1", file=f,
+                response_format="verbose_json", timestamp_granularities=["segment"])
+        return [(s.start, s.text.strip()) for s in r.segments]
+else:
+    import mlx_whisper
+    def transcribe(path):
+        r = mlx_whisper.transcribe(path, path_or_hf_repo="mlx-community/whisper-large-v3-turbo")
+        return [(s["start"], s["text"].strip()) for s in r["segments"]]
+
+transcript = transcribe(audio)   # [(시각, 텍스트), ...]
+```
+
+**④ 시간순으로 합쳐 LLM에 질문.** 화면 설명과 전사를 `(시각, 종류, 내용)`으로 모아 정렬한 뒤, `"[분:초] 화면/전사: 내용"` 한 줄씩 이어 붙여 타임라인 하나로 만든다. 이 타임라인을 질문과 함께 LLM에 주면, 모델이 시각을 보고 "몇 분에"까지 답한다.
+
+```python
+def mmss(t):
+    m, s = divmod(int(t), 60)
+    return f"{m}:{s:02d}"
+
+events  = [(t, "화면", c) for t, c in frame_caps]
+events += [(t, "전사", x) for t, x in transcript]
+events.sort(key=lambda e: e[0])
+timeline = "\n".join(f"[{mmss(t)}] {kind}: {txt}" for t, kind, txt in events)
+
+question = "이 강의 앞부분에서 어떤 개념들을 설명하는지, 각 개념이 대략 몇 분 몇 초에 나오는지 한국어로 정리하고, 강의를 2~3문장으로 요약해줘."
+resp = client.chat.completions.create(
+    model=TEXT_MODEL,
+    messages=[{"role": "user",
+               "content": f"아래는 한 강의 영상의 시간순 타임라인이다.\n\n{timeline}\n\n질문: {question}\n한국어로 답해줘."}],
+)
+print(resp.choices[0].message.content)
+```
+
+화면(슬라이드·코드)과 음성을 시각으로 묶었기 때문에, 둘 중 한쪽에만 나온 정보도 놓치지 않고 "몇 분에"까지 답할 수 있다.
+
+> 이미지·오디오 입력, 생성(텍스트→멀티모달), 옴니 방향까지 직접 실행해 볼 수 있는 전체 코드는 [GitHub 저장소(multimodal-practice)](https://github.com/seojuny95/multimodal-practice)에 있다.
+
+## 마무리
+
+텍스트만 다루던 AI가 이제는 보고 듣게 되기까지의 흐름을 정리해 봤다. 간단한 실습이었지만, 어떤 답이 나올지 알면서도 막상 영상이 글로 정리돼 나오는 걸 보면 신기했다.
+
+처음 GPT가 나왔을 때는 그저 텍스트로만 대화할 수 있었다. 이후 점점 발전하면서 지브리 사진도 만들어 주고, 음성으로 대화도 하고, 심지어 단편 영화까지 만든다. 요즘 자주 들리는 AGI(범용 인공지능)나 피지컬 AI(현실에서 움직이는 AI)도 결국 나오게 될 텐데, 어떨지 너무 기대된다.
+
+---
+
+이 글은 사실관계나 해석에 오류가 있을 수 있습니다. 잘못된 내용이나 질문이 있으면 댓글로 편하게 남겨 주세요.
+
+## Reference
+
+- [Attention Is All You Need (2017)](https://arxiv.org/abs/1706.03762) — Transformer 원논문
+- [An Image is Worth 16x16 Words (2020)](https://arxiv.org/abs/2010.11929) — ViT 논문
+- [Learning Transferable Visual Models From Natural Language Supervision (2021)](https://arxiv.org/abs/2103.00020) — CLIP 논문
+- [Denoising Diffusion Probabilistic Models (2020)](https://arxiv.org/abs/2006.11239) — 확산 모델 기초
+- [VideoPrism (2024)](https://research.google/blog/videoprism-a-foundational-visual-encoder-for-video-understanding/) · [V-JEPA 2 (2025)](https://arxiv.org/abs/2506.09985) · [TwelveLabs 모델 개요](https://www.twelvelabs.io/product/models-overview) — 영상 네이티브 모델
+- [Hello GPT-4o (2024)](https://openai.com/index/hello-gpt-4o/) — 옴니 모델 발표
