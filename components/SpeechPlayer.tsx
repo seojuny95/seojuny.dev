@@ -5,7 +5,8 @@ import { matchable, isHighlightOutOfView } from '@/lib/speech';
 
 const RATES = [1, 1.25, 1.5, 2] as const;
 
-const TOP_INSET = 96;
+// 상단 sticky 헤더(57px)와 그 아래 뜨는 미니플레이어 높이만큼 띄워, 자동 스크롤이 현재 문장을 두 바 아래로 두게 한다
+const TOP_INSET = 104;
 const BOTTOM_INSET = 40;
 
 type Status = 'idle' | 'playing' | 'paused';
@@ -107,6 +108,8 @@ export function SpeechPlayer({
   const segmentsRef = useRef<Segment[] | null>(null);
   const activeRef = useRef(-1);
   const highlightRef = useRef<HighlightLike | null>(null);
+  const suppressYieldUntil = useRef(0);
+  const playPauseRef = useRef<HTMLButtonElement | null>(null);
 
   // 단일 Highlight 객체를 유지하며 clear() 후 현재 range만 add() — 항상 한 구간만 칠해진다.
   // (매번 새 Highlight를 set하면 일부 브라우저에서 이전 range가 안 지워져 잔류가 생긴다.)
@@ -202,8 +205,10 @@ export function SpeechPlayer({
 
   const resumeFollow = useCallback(() => {
     followRef.current = true;
+    suppressYieldUntil.current = Date.now() + 600;
     setFollowSuspended(false);
     scrollToCurrent();
+    playPauseRef.current?.focus({ preventScroll: true });
   }, [scrollToCurrent]);
 
   const cycleRate = useCallback(() => {
@@ -237,12 +242,16 @@ export function SpeechPlayer({
   useEffect(() => {
     if (status === 'idle') return;
     const yield_ = () => {
+      if (Date.now() < suppressYieldUntil.current) return;
       if (!followRef.current) return;
       followRef.current = false;
       setFollowSuspended(true);
     };
     const onKey = (e: KeyboardEvent) => {
       if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) {
+        const el = document.activeElement as HTMLElement | null;
+        const tag = el?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || el?.isContentEditable) return;
         yield_();
       }
     };
@@ -322,6 +331,7 @@ export function SpeechPlayer({
           onPlayPause={handlePlayPause}
           onSkip={skip}
           onCycleRate={cycleRate}
+          playPauseRef={playPauseRef}
         />
       </div>
       {showMini ? (
@@ -357,6 +367,7 @@ function Controls({
   onPlayPause,
   onSkip,
   onCycleRate,
+  playPauseRef,
 }: {
   status: Status;
   time: number;
@@ -365,11 +376,13 @@ function Controls({
   onPlayPause: () => void;
   onSkip: (delta: number) => void;
   onCycleRate: () => void;
+  playPauseRef?: React.Ref<HTMLButtonElement>;
 }) {
   const isPlaying = status === 'playing';
   return (
     <>
       <button
+        ref={playPauseRef}
         type="button"
         onClick={onPlayPause}
         aria-label={isPlaying ? '일시정지' : status === 'paused' ? '이어 듣기' : '글 듣기'}

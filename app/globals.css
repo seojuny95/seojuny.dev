@@ -386,9 +386,9 @@ hr {
 /* 음성 재생 중 상단 인라인 컨트롤이 화면 밖으로 나가면 뜨는 고정 미니플레이어 */
 .speech-mini {
   position: fixed;
-  inset-block-start: 0;
+  inset-block-start: 57px;
   inset-inline: 0;
-  z-index: 40;
+  z-index: 30;
   background-color: color-mix(in srgb, var(--bg) 90%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--rule);
@@ -405,6 +405,9 @@ hr {
   .speech-mini-inner {
     padding-inline: 1.25rem;
   }
+}
+.speech-mini-inner button {
+  min-height: 40px;
 }
 
 /* 자동 추적이 양보된 동안, 현재 읽는 문장으로 되돌아가는 복귀 버튼 */
