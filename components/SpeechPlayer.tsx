@@ -232,8 +232,6 @@ export function SpeechPlayer({
     );
   }
 
-  const isPlaying = status === 'playing';
-
   return (
     <div className="flex items-center gap-4">
       <audio
@@ -256,9 +254,42 @@ export function SpeechPlayer({
         onDurationChange={(e) => setDuration(e.currentTarget.duration || 0)}
         className="hidden"
       />
+      <Controls
+        status={status}
+        time={time}
+        duration={duration}
+        rate={rate}
+        onPlayPause={handlePlayPause}
+        onSkip={skip}
+        onCycleRate={cycleRate}
+      />
+    </div>
+  );
+}
+
+function Controls({
+  status,
+  time,
+  duration,
+  rate,
+  onPlayPause,
+  onSkip,
+  onCycleRate,
+}: {
+  status: Status;
+  time: number;
+  duration: number;
+  rate: (typeof RATES)[number];
+  onPlayPause: () => void;
+  onSkip: (delta: number) => void;
+  onCycleRate: () => void;
+}) {
+  const isPlaying = status === 'playing';
+  return (
+    <>
       <button
         type="button"
-        onClick={handlePlayPause}
+        onClick={onPlayPause}
         aria-label={isPlaying ? '일시정지' : status === 'paused' ? '이어 듣기' : '글 듣기'}
         className="inline-flex items-center gap-1.5 text-[13px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
       >
@@ -272,7 +303,7 @@ export function SpeechPlayer({
           </span>
           <button
             type="button"
-            onClick={() => skip(-15)}
+            onClick={() => onSkip(-15)}
             aria-label="15초 뒤로"
             className="inline-flex items-center gap-0.5 text-[12px] tabular-nums text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
           >
@@ -281,7 +312,7 @@ export function SpeechPlayer({
           </button>
           <button
             type="button"
-            onClick={() => skip(15)}
+            onClick={() => onSkip(15)}
             aria-label="15초 앞으로"
             className="inline-flex items-center gap-0.5 text-[12px] tabular-nums text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
           >
@@ -290,7 +321,7 @@ export function SpeechPlayer({
           </button>
           <button
             type="button"
-            onClick={cycleRate}
+            onClick={onCycleRate}
             aria-label={`재생 속도 ${rate}배속`}
             className="text-[13px] tabular-nums text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
           >
@@ -298,7 +329,7 @@ export function SpeechPlayer({
           </button>
         </>
       ) : null}
-    </div>
+    </>
   );
 }
 
