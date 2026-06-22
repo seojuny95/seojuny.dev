@@ -29,9 +29,9 @@ export function SearchTrigger() {
     <button
       type="button"
       onClick={open}
-      aria-label="Open search"
       className="inline-flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
     >
+      <span className="sr-only sm:hidden">Search</span>
       <svg
         className="sm:hidden"
         width="16"
