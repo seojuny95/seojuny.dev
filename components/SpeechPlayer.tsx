@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { matchable, isHighlightOutOfView } from '@/lib/speech';
 
 const RATES = [1, 1.25, 1.5, 2] as const;
@@ -15,7 +16,7 @@ type Segment = { start: number; end: number; range: Range | null; block: Element
 
 const BLOCK_SELECTOR = 'p, li, h1, h2, h3, h4, h5, h6, blockquote, figcaption, td, th';
 
-// --- CSS Custom Highlight API (미지원 브라우저는 하이라이트만 생략) ----------
+// CSS Custom Highlight API (미지원 브라우저는 하이라이트만 생략)
 interface HighlightLike {
   add(range: Range): void;
   clear(): void;
@@ -110,6 +111,21 @@ export function SpeechPlayer({
   const highlightRef = useRef<HighlightLike | null>(null);
   const suppressYieldUntil = useRef(0);
   const playPauseRef = useRef<HTMLButtonElement | null>(null);
+  const [jumpDir, setJumpDir] = useState<'up' | 'down' | null>(null);
+
+  const recomputeJump = useCallback(() => {
+    const segments = segmentsRef.current;
+    const active = activeRef.current;
+    const range = active >= 0 && segments ? segments[active].range : null;
+    if (!range) {
+      setJumpDir(null);
+      return;
+    }
+    const rect = range.getBoundingClientRect();
+    if (rect.bottom <= TOP_INSET) setJumpDir('up');
+    else if (rect.top >= window.innerHeight - BOTTOM_INSET) setJumpDir('down');
+    else setJumpDir(null);
+  }, []);
 
   // 단일 Highlight 객체를 유지하며 clear() 후 현재 range만 add() — 항상 한 구간만 칠해진다.
   // (매번 새 Highlight를 set하면 일부 브라우저에서 이전 range가 안 지워져 잔류가 생긴다.)
@@ -147,14 +163,14 @@ export function SpeechPlayer({
       if (segments[i].start <= t) idx = i;
       else break;
     }
-    // 현재 문장이 끝났으면, 다음 문장이 같은 문단일 때만 이어서 유지하고(문단 내 깜빡임 방지)
-    // 문단이 바뀌면 즉시 끈다(이전 문단 마지막 문장 잔류 제거).
+    // 문장이 끝나면 같은 문단의 다음 문장으로 미리 옮긴다 — 문장 사이 공백(평균 ~0.3초)
+    // 동안 이미 읽은 문장이 남지 않게 하면서 깜빡임도 막는다. 문단이 바뀌면 즉시 끈다.
     let active = -1;
     if (idx >= 0) {
       const seg = segments[idx];
       const next = segments[idx + 1];
       if (t < seg.end) active = idx;
-      else if (next && seg.block && next.block === seg.block) active = idx;
+      else if (next && seg.block && next.block === seg.block) active = idx + 1;
     }
     if (active === activeRef.current) return;
     activeRef.current = active;
@@ -169,7 +185,8 @@ export function SpeechPlayer({
         });
       }
     }
-  }, [setHighlight]);
+    if (!followRef.current) recomputeJump();
+  }, [setHighlight, recomputeJump]);
 
   const handlePlayPause = useCallback(async () => {
     const audio = audioRef.current;
@@ -207,6 +224,7 @@ export function SpeechPlayer({
     followRef.current = true;
     suppressYieldUntil.current = Date.now() + 600;
     setFollowSuspended(false);
+    setJumpDir(null);
     scrollToCurrent();
     playPauseRef.current?.focus({ preventScroll: true });
   }, [scrollToCurrent]);
@@ -246,6 +264,7 @@ export function SpeechPlayer({
       if (!followRef.current) return;
       followRef.current = false;
       setFollowSuspended(true);
+      recomputeJump();
     };
     const onKey = (e: KeyboardEvent) => {
       if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) {
@@ -263,7 +282,14 @@ export function SpeechPlayer({
       window.removeEventListener('touchmove', yield_);
       window.removeEventListener('keydown', onKey);
     };
-  }, [status]);
+  }, [status, recomputeJump]);
+
+  // 칩 방향은 스크롤마다 갱신(초기값은 yield_, 해제는 onPause·onEnded·resumeFollow).
+  useEffect(() => {
+    if (!followSuspended || status !== 'playing') return;
+    window.addEventListener('scroll', recomputeJump, { passive: true });
+    return () => window.removeEventListener('scroll', recomputeJump);
+  }, [followSuspended, status, recomputeJump]);
 
   // 듣기 세션 중(재생/일시정지)에는 스페이스바로 재생/일시정지 토글.
   // 입력창·버튼 포커스 시에는 가로채지 않아 평소 스크롤·버튼 동작을 보존한다.
@@ -312,11 +338,13 @@ export function SpeechPlayer({
             setStatus((s) => (s === 'idle' ? 'idle' : 'paused'));
             activeRef.current = -1;
             setHighlight(null);
+            setJumpDir(null);
           }}
           onEnded={() => {
             setStatus('idle');
             activeRef.current = -1;
             setHighlight(null);
+            setJumpDir(null);
           }}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
@@ -334,27 +362,40 @@ export function SpeechPlayer({
           playPauseRef={playPauseRef}
         />
       </div>
-      {showMini ? (
-        <div className="speech-mini" role="region" aria-label="음성 재생 컨트롤">
-          <div className="speech-mini-inner">
-            <Controls
-              status={status}
-              time={time}
-              duration={duration}
-              rate={rate}
-              onPlayPause={handlePlayPause}
-              onSkip={skip}
-              onCycleRate={cycleRate}
-            />
-          </div>
-        </div>
-      ) : null}
-      {followSuspended && status === 'playing' ? (
-        <button type="button" onClick={resumeFollow} className="speech-jump">
-          <span aria-hidden>↓</span>
-          <span>지금 읽는 곳으로</span>
-        </button>
-      ) : null}
+      {showMini && typeof document !== 'undefined'
+        ? createPortal(
+            <div className="speech-mini" role="region" aria-label="음성 재생 컨트롤">
+              <div className="speech-mini-inner">
+                <Controls
+                  status={status}
+                  time={time}
+                  duration={duration}
+                  rate={rate}
+                  onPlayPause={handlePlayPause}
+                  onSkip={skip}
+                  onCycleRate={cycleRate}
+                />
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
+      {jumpDir && typeof document !== 'undefined'
+        ? createPortal(
+            <button
+              type="button"
+              onClick={resumeFollow}
+              aria-label="현재 읽는 위치로 이동"
+              className={`speech-jump speech-jump-${jumpDir}`}
+            >
+              <span aria-hidden className="speech-jump-arrow">
+                {jumpDir === 'up' ? '↑' : '↓'}
+              </span>
+              <span>읽는 곳으로</span>
+            </button>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
