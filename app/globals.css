@@ -427,10 +427,10 @@ hr {
   color: var(--bg);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
-.speech-jump-top {
+.speech-jump-up {
   inset-block-start: calc(57px + 3.25rem);
 }
-.speech-jump-bottom {
+.speech-jump-down {
   inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px));
 }
 .speech-jump-arrow {
