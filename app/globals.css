@@ -410,23 +410,33 @@ hr {
   min-height: 40px;
 }
 
-/* 자동 추적이 양보된 동안, 현재 읽는 문장으로 되돌아가는 복귀 버튼 */
+/* 자동 추적이 양보된 동안, 현재 읽는 문장으로 되돌아가는 복귀 버튼.
+   하이라이트가 화면 위면 상단(미니플레이어 아래)에 ↑, 아래면 하단에 ↓로 뜬다. */
 .speech-jump {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px));
   z-index: 41;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.5rem 0.95rem;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
   font-size: 13px;
   border-radius: 999px;
   background-color: var(--fg);
   color: var(--bg);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
-  transition: opacity 200ms ease;
+}
+.speech-jump-top {
+  inset-block-start: calc(57px + 3.25rem);
+}
+.speech-jump-bottom {
+  inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+.speech-jump-arrow {
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 700;
 }
 
 /* 음성 재생 중 현재 읽는 문장 하이라이트 (CSS Custom Highlight API) */
