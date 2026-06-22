@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { splitIntoChunks, matchable } from './speech';
+import { splitIntoChunks, matchable, isHighlightOutOfView } from './speech';
 
 describe('splitIntoChunks', () => {
   it('splits on sentence terminators and keeps them', () => {
@@ -65,5 +65,30 @@ describe('matchable', () => {
 
   it('returns empty string for punctuation/space only', () => {
     expect(matchable('  —  ')).toBe('');
+  });
+});
+
+describe('isHighlightOutOfView', () => {
+  const vh = 800;
+  const insets = { top: 96, bottom: 40 };
+
+  it('화면 중앙에 있으면 false', () => {
+    expect(isHighlightOutOfView({ top: 300, bottom: 360 }, vh, insets)).toBe(false);
+  });
+
+  it('상단 inset 위로 올라가면 true', () => {
+    expect(isHighlightOutOfView({ top: 50, bottom: 90 }, vh, insets)).toBe(true);
+  });
+
+  it('하단 inset 아래로 내려가면 true', () => {
+    expect(isHighlightOutOfView({ top: 700, bottom: 790 }, vh, insets)).toBe(true);
+  });
+
+  it('상단 경계(top === insets.top)는 아직 보이는 것으로 본다(false)', () => {
+    expect(isHighlightOutOfView({ top: 96, bottom: 140 }, vh, insets)).toBe(false);
+  });
+
+  it('하단 경계(bottom === vh - insets.bottom)는 아직 보이는 것으로 본다(false)', () => {
+    expect(isHighlightOutOfView({ top: 700, bottom: 760 }, vh, insets)).toBe(false);
   });
 });
