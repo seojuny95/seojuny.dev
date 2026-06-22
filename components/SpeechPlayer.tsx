@@ -458,7 +458,7 @@ function Controls({
           <button
             type="button"
             onClick={onCycleRate}
-            aria-label={`재생 속도 ${rate}배속`}
+            aria-label={`${rate}x 재생 속도`}
             className="text-[13px] tabular-nums text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
           >
             {rate}x
