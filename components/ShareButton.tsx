@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-// Web Share API가 있으면 네이티브 공유 시트, 없으면 링크 복사로 폴백(복사됨 피드백).
 export function ShareButton() {
   const resetTimer = useRef<number | undefined>(undefined);
   const [copied, setCopied] = useState(false);
