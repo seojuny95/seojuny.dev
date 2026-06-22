@@ -11,7 +11,6 @@ export const BATCH_CHARS = 1500;
 // 영어 용어 발음 교정 (TTS 전용). 이 라이브러리는 SSML을 escape하므로 음성으로 읽을
 // 텍스트 자체를 한글 표기로 치환한다. 화면/하이라이트는 원문을 그대로 쓰므로 영향 없다.
 export const PRONUNCIATION: Record<string, string> = {
-  // 고유명사
   'PI Lab': '파이 랩',
   Sprint2: '스프린트 투',
   Sprint3: '스프린트 쓰리',
@@ -19,7 +18,6 @@ export const PRONUNCIATION: Record<string, string> = {
   Llama: '라마',
   Claude: '클로드',
   React: '리액트',
-  // 약어·모델/기법
   RAG: '래그',
   LLM: '엘엘엠',
   'GPT-4o': '지피티 포 오',
@@ -48,7 +46,6 @@ export const PRONUNCIATION: Record<string, string> = {
   DB: '디비',
   GB: '기가바이트',
   PDF: '피디에프',
-  // 실습 도구·모델 (멀티모달 글)
   ffmpeg: '에프엠펙',
   OPENAI_API_KEY: '오픈에이아이 에이피아이 키',
   'gpt-4o': '지피티 포 오',
