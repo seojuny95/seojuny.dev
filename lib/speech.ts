@@ -50,3 +50,15 @@ function hardWrap(sentence: string, maxLen: number): string[] {
   if (current) out.push(current);
   return out;
 }
+
+/**
+ * 하이라이트 구간이 뷰포트 밖(또는 상/하단 고정 UI에 가려지는 영역)으로
+ * 벗어났는지 판정한다. insets는 상단 미니플레이어 높이·하단 여백을 흡수한다.
+ */
+export function isHighlightOutOfView(
+  rect: { top: number; bottom: number },
+  viewportHeight: number,
+  insets: { top: number; bottom: number },
+): boolean {
+  return rect.top < insets.top || rect.bottom > viewportHeight - insets.bottom;
+}
