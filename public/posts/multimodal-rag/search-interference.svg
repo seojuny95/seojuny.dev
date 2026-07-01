@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 262" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>검색 간섭 — 종류를 섞으면 서로 밀어낸다</title>
+  <desc>표·그림·본문을 한 공간에 함께 넣으면, 그림 캡션 청크가 상위 5개에 끼어 필요한 본문 청크가 밖으로 밀려난다. 질문 의도로 검색 종류를 좁히면 필요한 청크가 상위에 남는다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .body { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.4; }
+      .cap { fill: #fdf1e9; stroke: #f0b48c; stroke-width: 1.4; }
+      .need { fill: #fff3ec; stroke: #f26522; stroke-width: 1.9; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .colh { font-size: 11.5px; font-weight: 600; fill: #8a8a85; text-anchor: middle; }
+      .it { font-size: 11px; font-weight: 600; dominant-baseline: central; }
+      .rk { font-size: 10px; fill: #8a8a85; text-anchor: middle; dominant-baseline: central; }
+      .sub { font-size: 10.5px; fill: #8a8a85; text-anchor: middle; }
+      .cut { stroke: #f26522; stroke-width: 1.2; stroke-dasharray: 5 3; }
+      .divide { stroke: #e5e5e2; stroke-width: 1.4; stroke-dasharray: 5 4; }
+    </style>
+  </defs>
+
+  <text x="340" y="22" class="hdr">검색 간섭 — 종류를 섞으면 서로 밀어낸다</text>
+  <line class="divide" x1="340" y1="42" x2="340" y2="250"/>
+
+  <!-- 필터 없음 -->
+  <text x="164" y="58" class="colh">필터 없음 — 한 공간에서 검색</text>
+  <rect class="body" x="70" y="70"  width="164" height="24" rx="6"/><text class="rk" x="56" y="82">1</text><text class="it" x="80" y="82">본문 청크</text>
+  <rect class="cap"  x="70" y="100" width="164" height="24" rx="6"/><text class="rk" x="56" y="112">2</text><text class="it" x="80" y="112">그림 캡션</text>
+  <rect class="cap"  x="70" y="130" width="164" height="24" rx="6"/><text class="rk" x="56" y="142">3</text><text class="it" x="80" y="142">그림 캡션</text>
+  <rect class="body" x="70" y="160" width="164" height="24" rx="6"/><text class="rk" x="56" y="172">4</text><text class="it" x="80" y="172">본문 청크</text>
+  <rect class="cap"  x="70" y="190" width="164" height="24" rx="6"/><text class="rk" x="56" y="202">5</text><text class="it" x="80" y="202">그림 캡션</text>
+  <line class="cut" x1="48" y1="222" x2="256" y2="222"/>
+  <text x="256" y="220" class="sub" style="text-anchor:end;fill:#f26522;">상위 5</text>
+  <rect class="need" x="70" y="226" width="164" height="24" rx="6" stroke-dasharray="5 3"/><text class="rk" x="56" y="238">6</text><text class="it" x="80" y="238" style="fill:#f26522;">본문 청크 — 필요</text>
+
+  <!-- 타입 필터 -->
+  <text x="512" y="58" class="colh">종류 필터 — 그림+본문만</text>
+  <rect class="body" x="420" y="70"  width="164" height="24" rx="6"/><text class="rk" x="406" y="82">1</text><text class="it" x="430" y="82">본문 청크</text>
+  <rect class="cap"  x="420" y="100" width="164" height="24" rx="6"/><text class="rk" x="406" y="112">2</text><text class="it" x="430" y="112">그림 캡션</text>
+  <rect class="need" x="420" y="130" width="164" height="24" rx="6"/><text class="rk" x="406" y="142">3</text><text class="it" x="430" y="142" style="fill:#f26522;">본문 청크 — 필요</text>
+  <rect class="cap"  x="420" y="160" width="164" height="24" rx="6"/><text class="rk" x="406" y="172">4</text><text class="it" x="430" y="172">그림 캡션</text>
+  <rect class="body" x="420" y="190" width="164" height="24" rx="6"/><text class="rk" x="406" y="202">5</text><text class="it" x="430" y="202">본문 청크</text>
+  <line class="cut" x1="398" y1="222" x2="606" y2="222"/>
+  <text x="606" y="220" class="sub" style="text-anchor:end;fill:#f26522;">상위 5</text>
+  <text x="512" y="242" class="sub">필요한 본문이 상위에 남는다</text>
+</svg>
