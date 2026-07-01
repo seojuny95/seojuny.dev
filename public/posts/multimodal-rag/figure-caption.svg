@@ -1,0 +1,42 @@
+<svg width="100%" viewBox="0 0 680 190" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>그림 읽기 — 그림을 글로 바꿔 넣다</title>
+  <desc>검색할 글자가 없는 벡터 그래픽 페이지를 멀티모달 모델(VLM)에 보여 캡션을 받고, 그 캡션을 텍스트 청크처럼 벡터 DB에 저장한다. 캡션에는 종류와 페이지 메타데이터를 단다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.5; }
+      .vlm { fill: #fff3ec; stroke: #f26522; stroke-width: 1.6; }
+      .db { fill: #fff3ec; stroke: #f26522; stroke-width: 1.6; }
+      .t { font-size: 12.5px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .sub { font-size: 10px; fill: #8a8a85; text-anchor: middle; }
+      .flow { stroke: #171717; stroke-width: 1.6; fill: none; }
+    </style>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="5.5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#171717"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="22" class="hdr">그림 읽기 — 그림을 글로 바꿔 넣다</text>
+
+  <rect class="box" x="20" y="66" width="126" height="54" rx="9"/>
+  <text class="t" x="83" y="87">벡터 그래픽 페이지</text>
+  <text class="sub" x="83" y="104">검색할 글자 0</text>
+  <path class="flow" d="M146,93 H186" marker-end="url(#ah)"/>
+
+  <rect class="vlm" x="186" y="66" width="72" height="54" rx="9"/>
+  <text class="t" x="222" y="93" style="fill:#f26522;">VLM</text>
+  <path class="flow" d="M258,93 H298" marker-end="url(#ah)"/>
+
+  <rect class="box" x="298" y="66" width="176" height="54" rx="9"/>
+  <text class="t" x="386" y="87">캡션 (글)</text>
+  <text class="sub" x="386" y="104">"인코더·디코더로 구성된 구조…"</text>
+  <path class="flow" d="M474,93 H514" marker-end="url(#ah)"/>
+
+  <rect class="db" x="514" y="66" width="146" height="54" rx="9"/>
+  <text class="t" x="587" y="87">벡터 DB 청크</text>
+  <text class="sub" x="587" y="104">type=figure, p.3</text>
+
+  <text class="sub" x="340" y="158" style="font-size:11px;">글자가 없어 검색에 안 걸리는 그림을, 캡션으로 바꿔 텍스트 청크와 같은 공간에 저장한다.</text>
+</svg>
