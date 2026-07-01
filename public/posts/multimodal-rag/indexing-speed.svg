@@ -1,0 +1,33 @@
+<svg width="100%" viewBox="0 0 680 186" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>인덱싱 속도 — 캡션을 병렬로</title>
+  <desc>그림 여덟 장을 한 장씩 차례로 캡션하면 17.6초가 걸린다. 동시에 요청하면 5.1초로 준다. 다만 rate limit에 걸리지 않게 동시 요청 수를 한도 안으로 제한한다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .lab { font-size: 12px; font-weight: 600; text-anchor: end; dominant-baseline: central; }
+      .val { font-size: 12px; font-weight: 600; dominant-baseline: central; }
+      .sub { font-size: 11px; fill: #8a8a85; text-anchor: middle; }
+      .barbg { fill: #ececea; }
+      .baror { fill: #f26522; }
+      .axis { stroke: #d8d8d4; stroke-width: 1.2; }
+    </style>
+  </defs>
+
+  <text x="340" y="24" class="hdr">인덱싱 속도 — 캡션을 병렬로</text>
+
+  <!-- 순차 -->
+  <text x="96" y="64" class="lab">순차</text>
+  <rect class="barbg" x="110" y="50" width="469" height="28" rx="5"/>
+  <text x="590" y="64" class="val" style="fill:#8a8a85;">17.6초</text>
+
+  <!-- 병렬 -->
+  <text x="96" y="110" class="lab">병렬</text>
+  <rect class="baror" x="110" y="96" width="136" height="28" rx="5"/>
+  <text x="256" y="110" class="val" style="fill:#f26522;">5.1초</text>
+
+  <line class="axis" x1="110" y1="134" x2="110" y2="44"/>
+
+  <text x="340" y="160" class="sub">그림 8장을 한 장씩 → 동시에. 단, rate limit에 걸리지 않게 동시 요청 수를 한도 안으로 제한한다.</text>
+</svg>
