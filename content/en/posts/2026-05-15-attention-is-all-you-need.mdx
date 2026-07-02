@@ -1,0 +1,403 @@
+---
+title: "Attention Is All You Need — But What Does That Mean?"
+date: "2026-05-15"
+summary: "The hardest part of studying AI was attention and the Transformer. Here I work through them by following the paper 'Attention Is All You Need'."
+tags: ["AI", "Transformer", "Attention"]
+draft: false
+---
+
+I've been studying how AI models are built.
+
+While studying, I worked through how AI models are built and trained, roughly in the order linear model → MLP → RNN & CNN → Transformer.
+
+Of everything I covered, the concepts I personally found hardest were attention and the Transformer, so I wanted to dig deeper — and this post is my attempt to work through the **"Attention Is All You Need"** paper.
+
+## "Attention Is All You Need" at a Glance
+
+The paper is organized into seven sections.
+
+| Section | Content | Key takeaway |
+| --- | --- | --- |
+| 1. Introduction | RNN's limitations | "Sequential processing is the problem" |
+| 2. Background | Prior approaches | "In the RNN era, attention was just an add-on" |
+| 3. Architecture | Transformer proposal | "Built with attention alone" |
+| 4. Why Self-Attention | Justification | "Superior on three criteria" |
+| 5. Training | Training setup | "12 hours to 3.5 days" |
+| 6. Results | Experimental results | "Achieves SOTA, generalizes too" |
+| 7. Conclusion | Wrap-up | "Will extend to other domains" |
+
+Reading it for the first time, you get hit by unfamiliar terms and gaps in background knowledge. So rather than translating line by line, I'm writing this from a beginner's perspective — pulling out the moments where something finally clicked.
+
+To get there, though, a bit of background knowledge is needed first. Building on what I studied, let me lay the groundwork before moving on to the paper itself.
+
+## AI and Models
+
+**AI (artificial intelligence)** is the broad field of making computers do the kinds of judging and perceiving that people used to do. Within that, **machine learning** is the approach of having a system find patterns on its own by looking at data, and **deep learning** is the subset that stacks multiple layers of neural networks to do it.
+
+![AI ⊃ Machine Learning ⊃ Deep Learning — the containment relationship](/posts/attention-is-all-you-need/en/ai-ml-dl.svg "AI ⊃ Machine Learning ⊃ Deep Learning")
+
+A **model**, simply put, is **a function that takes an input and produces an output**. Feed it a word and it spits out the next word; feed it an image and it says "cat." What makes it different from a hand-written `if-else` is that its behavior is determined by a huge collection of numbers inside it — the **parameters**, or **weights**.
+
+![A diagram of a model: input passes through a function filled with parameters to produce output](/posts/attention-is-all-you-need/en/model.svg "Model = input → function(parameters) → output")
+
+So how do those numbers get determined? That's **training**. The most common form is **supervised learning** — showing the model a large pile of data with the correct answers attached.
+
+But training can also work on data that has no labels at all. For example, you take a sentence from somewhere on the internet and ask the model, "what's the next word in this sentence?" — the correct answer is already inside the data. This is called **self-supervised learning**, and it's how the models we use every day — GPT, Claude — are trained.
+
+![Supervised vs self-supervised learning — the difference is where the labels come from](/posts/attention-is-all-you-need/en/supervised-vs-self-supervised.svg "Supervised vs self-supervised learning")
+
+Beyond those two, there's also **unsupervised learning** (which learns the structure of data without any labels) and **reinforcement learning** (which maximizes reward through trial and error).
+
+Regardless of the approach, training is the repetition of one cycle: `the model produces a prediction → the gap from the correct answer is quantified with a loss function → working backwards to calculate how much each parameter contributed to that gap (backpropagation) → nudging the weights W a little in that direction`.
+
+The mechanics of the loss function and backpropagation are substantial enough to deserve their own treatment — I plan to cover them in [the next post](/en/how-models-learn), so here I'll just keep the overall flow in mind and move on.
+
+![The training loop — parameters are nudged step by step using the gap (loss) between prediction and answer](/posts/attention-is-all-you-need/en/training-loop.svg "Training loop — update W in the direction that reduces loss")
+
+Run this cycle repeatedly and the model gradually learns the pattern: "for this kind of input, this kind of output is most likely."
+
+So when we say two models are different, we really mean **the structure of the function that maps input to output is different**.
+
+## AI Before Attention
+
+Early neural networks were **linear models** — connecting input to output with a single straight line. Simple as that was, the limits were obvious: the patterns in the world are far too complex to be captured by a single line.
+
+![Linear model: connecting input to output with a single straight line](/posts/attention-is-all-you-need/en/linear-model.svg "Linear model — input and output connected by a straight line")
+
+**MLP (Multi-Layer Perceptron)** addressed that. By inserting a nonlinear activation function between layers and stacking several of them, it became possible to learn curved patterns that a linear model never could. But MLP takes its input as a fixed-length vector all at once, so it couldn't handle context across positions in ordered data — **sequences** like words or speech.
+
+![MLP: learns curved patterns through nonlinear activations](/posts/attention-is-all-you-need/en/mlp.svg "MLP — stack layers with nonlinearity to learn curved patterns")
+
+**RNN (Recurrent Neural Network)** solved that. By receiving words one at a time in order while carrying the previous hidden state along, it could handle context naturally. It wasn't perfect, though — over long sentences the earlier information faded (the long-range dependency problem), and because it processed one step at a time sequentially, training was slow.
+
+![RNN: processes inputs in order while carrying a hidden state](/posts/attention-is-all-you-need/en/rnn.svg "RNN — receives inputs in sequence, passing the hidden state along")
+
+Around the same time there were attempts to handle sequences with **CNN (Convolutional Neural Network)**. A filter — a small window that sweeps a few neighboring values at a time — slides across the input to catch patterns between nearby words, and it could be parallelized so training was faster. The catch was that the range it could see at once (its receptive field) was fixed, so to connect words far apart you had to stack many layers.
+
+![CNN: a filter slides across the input to capture local patterns](/posts/attention-is-all-you-need/en/cnn.svg "CNN — sliding filter captures local patterns")
+
+For different reasons — information fading in RNNs, limited reach in CNNs — both shared the same fatal weakness: difficulty connecting words that were far apart.
+
+![Long-range dependency — the farther apart, the more the earlier hidden state fades](/posts/attention-is-all-you-need/en/long-range-dependency.svg "The long-range dependency problem in RNNs")
+
+## The Rise of Attention
+
+As we just saw, RNN and CNN both struggled with relationships between distant words. **Attention** is the concept that emerged to solve this.
+
+Reading the paper, I noticed that attention itself didn't originate here.
+
+Looking further, the paper that first introduced attention was Bahdanau et al., [2014](https://arxiv.org/abs/1409.0473). It was a proposal to attach attention as a **supplementary tool** on the side of an RNN seq2seq model, and it went on to be used in machine translation and similar tasks.
+
+So what changed in "Attention Is All You Need"? **It showed that attention alone — without RNN — could build the whole model.** The model that came out of this is the **Transformer**.
+
+However attention is used, the basic mechanism is the same, so let's start there.
+
+### How Attention Works
+
+Attention in one sentence: **"a function that takes a query and a set of key-value pairs and maps them to a single output."** Query, key, value, and output are all vectors (bundles of numbers lined up in sequence).
+
+Think of these three pieces — query, key, value — as a library:
+
+- **Query (Q)** — "What information do I need?" The search term in the search bar.
+- **Key (K)** — Each candidate's label. The side that gets compared against Q.
+- **Value (V)** — Each candidate's actual content. Gets blended according to the weights to form the result.
+
+![Q as a search query, K as each book's index card, V as the book's actual content](/posts/attention-is-all-you-need/en/qkv-library-metaphor.svg "Q / K / V — the library analogy")
+
+Simply put: **attention is a function that lets the Query decide which candidates to weight, then blends the Values by those weights to produce an answer.**
+
+**Where do Q, K, V actually come from?** Each word has a word embedding — a vector that encodes the word as a meaningful set of numbers. For example: `"I" → [0.1, 0.3, -0.2, ...]`. Q, K, V are produced by multiplying that vector by trained weight matrices $W_Q$, $W_K$, $W_V$.
+
+```
+"I" vector × W_Q → Q for "I"
+"I" vector × W_K → K for "I"
+"I" vector × W_V → V for "I"
+```
+
+$W_Q, W_K, W_V$ start out random, but through training they settle into matrices that serve their respective roles (question / label / content). **These three matrices** are the core parameters attention learns through training — Q, K, and V themselves are recomputed from W each time a new input word arrives; what training fixes are the $W$ matrices.
+
+![Word embedding × W_Q/W_K/W_V → Q/K/V](/posts/attention-is-all-you-need/en/qkv-projection.svg "Embedding × W → Q, K, V")
+
+### Computing Attention
+
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V
+$$
+
+This looks intimidating at first, but it's really just four steps in sequence.
+
+**1. $QK^\top$ — scoring.** The dot product of Q with each K gives a similarity score. ($\top$ is the transpose, there to make the matrix dimensions line up for multiplication.)
+
+![Computing similarity (dot product) between Q and each K](/posts/attention-is-all-you-need/en/qk-transpose.svg "QK⊤ — computing similarity between Q and K")
+
+**2. Dividing by $\sqrt{d_k}$ — smoothing the scores.** When $d_k$ (the Key vector dimension) is large, the scores naturally grow large too; if they get too large, the softmax in the next step collapses onto a single option. Dividing by $\sqrt{d_k}$ is a correction that keeps the scores in check.
+
+![When scores get too large, dividing by √d_k smooths them out](/posts/attention-is-all-you-need/en/sqrt-dk.svg "√d_k — scaling down scores that get too large")
+
+**3. softmax — converting to proportions.** The scores are turned into weights that sum to 1. Example: `[1, 2, 3]` → `[0.09, 0.24, 0.67]`.
+
+![softmax converting scores into proportions that sum to 1](/posts/attention-is-all-you-need/en/softmax-intuition.svg "softmax — turning scores into proportions that sum to 1")
+
+**4. Multiplying by $V$ — weighted average.** Those weights are used to blend the Values together into a single final output.
+
+![Mixing Values according to the weights to form the final output](/posts/attention-is-all-you-need/en/weighted-sum-v.svg "×V — mixing Values by weight to form the final output")
+
+**So what is this output vector?** It's the original word's vector with the surrounding context mixed in. For instance, when "love" runs attention with Q in hand, the result is "love as seen alongside I and you."
+
+![Example — the four steps by which "love" in "I love you" produces a new vector via self-attention](/posts/attention-is-all-you-need/en/attention-example-numeric.svg "Concrete example — score → √d_k → softmax → weighted sum of V")
+
+This output vector flows into the model's next stage. Through several rounds of attention computation, the final desired output — a translated word, the next word in a sequence — is produced.
+
+That's the basic mechanics of attention.
+
+### RNN + Attention
+
+Attention was first used in **sequence-to-sequence (seq2seq)** problems like machine translation. Looking at that setup makes it clear what problem attention was built to solve.
+
+**Encoder/Decoder structure.** Tasks like machine translation are typically split into two pieces.
+
+- **Encoder** — takes the input sentence (e.g., Korean) and converts it into meaning-bearing vectors.
+- **Decoder** — takes those vectors and generates the output language (e.g., English), one word at a time.
+
+Think of it as a translator who reads the original (encode), grasps the meaning, then writes it out in another language (decode).
+
+![Encoder-Decoder — the encoder compresses Korean into meaning vectors, and the decoder unpacks them into English](/posts/attention-is-all-you-need/en/encoder-decoder.svg "Encoder–Decoder structure")
+
+**The problem in the RNN era.** When the Encoder was an RNN, it read Korean words one by one in order and updated a hidden state (a running summary of what it had read so far). After reading the last word, **that single final hidden state** was supposed to contain all the information from the entire Korean sentence, and only that one vector was passed to the decoder. The decoder would then produce English words one at a time from it.
+
+![RNN seq2seq — the entire sentence is compressed into a single final vector](/posts/attention-is-all-you-need/en/rnn-seq2seq.svg "RNN seq2seq — the last hidden state is passed over whole")
+
+The problem: for long sentences, that one vector simply can't hold everything. Early words fade, and the decoder loses track of which part of the original to look at.
+
+To fix this, [Bahdanau et al.](https://arxiv.org/abs/1409.0473) proposed attention as the solution. Each time the decoder produces an English word, it goes back and looks at all the word representations the encoder saw. Which one to focus on is determined by comparing Q and K.
+
+- Q comes from the decoder side (the state of the English word currently being built)
+- K and V come from the encoder side (the Korean word representations)
+
+This form — where Q and K/V come from two different sequences — is called **cross-attention**.
+
+![Cross-attention — Q comes from the decoder, K/V come from the encoder](/posts/attention-is-all-you-need/en/cross-attention.svg "Cross-attention — Q from the decoder, K/V from the encoder")
+
+**Remaining limitation.** Attention helped with distant words, but the RNN itself still processed words one step at a time in sequence. Training remained slow, and attention only kicked in after the hidden state had already been processed by the RNN.
+
+At this point a natural question arises: **could you drop the RNN and run on attention alone?**
+
+## Attention Alone — The Transformer Proposal
+
+That was exactly what "Attention Is All You Need" proposed. Remove the RNN entirely and run the whole model on attention. To do that, a new variant of attention and a few supporting pieces were needed. Let's go through them one at a time.
+
+(At the end of this section I'll put all the pieces together in a single diagram, so don't worry about perfectly understanding each piece as you go — just follow along.)
+
+### Self-Attention and the Masked Variant
+
+The attention form Transformer introduced is **self-attention** — where Q, K, and V all come from within the same sequence. (This is the counterpart to the cross-attention we saw in the RNN + Attention section.)
+
+Say we want to enrich the meaning of "love" in "I love you." "Love" holds the Q, while "I", "love", and "you" from the same sentence provide the K/V.
+
+```
+Q of "love"  ↔  K/V of "I", "love", "you"
+              → new vector for "love"
+```
+
+![Self-attention matrix — every word in the same sentence attends to every other word](/posts/attention-is-all-you-need/en/self-attention-matrix.svg "Self-attention — every word attends to every other word in the same sentence")
+
+**Masked self-attention** — self-attention where you can't see words that come after you.
+
+This is used in the decoder when generating English. At the point of generating "love," peeking at "you" — which hasn't been created yet — would be cheating, so the scores for later words are blocked out (= masked).
+
+```
+Words visible when generating "love":  I, love
+Words hidden when generating "love":   you ← masked
+```
+
+![Masked matrix — words that come later are hidden](/posts/attention-is-all-you-need/en/masked-attention-matrix.svg "Masked self-attention matrix")
+
+All three forms (self / masked self / cross) use the same computation — the only difference is where Q, K, and V come from.
+
+![Self / Masked Self / Cross — the only difference is where Q, K, V come from](/posts/attention-is-all-you-need/en/attention-types.svg "Comparing the three attention types")
+
+### Multi-Head Attention — Multiple Perspectives at Once
+
+What we've seen so far is attention run just once. That means all words look at each other from a single perspective.
+
+Transformer runs attention **multiple times in parallel**. Each head has its own weights $W_Q, W_K, W_V$, so each one looks at the words from a **different perspective**. If we look at "I love you" with 8 heads, for example:
+
+- **head 1** might weight the **verb-subject relationship** ("love" → "I")
+- **head 2** might weight the **verb-object relationship** ("love" → "you")
+- **head 3** might weight **pronoun-neighbor relationships**
+
+Which head ends up doing what isn't decided by the designer — it emerges naturally through training.
+
+![Single vs multi-head — one perspective vs many at once](/posts/attention-is-all-you-need/en/single-vs-multi-head.svg "Single vs multi-head")
+
+![Multi-head Attention — 8 heads look at the same input in parallel, then their outputs are concatenated](/posts/attention-is-all-you-need/en/multi-head-attention.svg "Multi-head Attention — 8 heads in parallel → concat")
+
+$$
+\text{head}_i = \text{Attention}(Q W_i^Q,\; K W_i^K,\; V W_i^V)
+$$
+
+$$
+\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)\, W^O
+$$
+
+**1. Each head runs attention with its own weights.** Head $i$ multiplies the input Q, K, V by its own weight matrices $W_i^Q, W_i^K, W_i^V$ to form that head's Q/K/V, then runs the standard attention $\text{softmax}(QK^\top/\sqrt{d_k})\,V$ to get that head's output vector.
+
+**2. The h heads' outputs are combined and projected one more time.** Running h heads in parallel produces h output vectors. Concatenating them side by side multiplies the vector dimension by h, so a final output weight matrix $W^O$ is applied to project everything back down to a single vector of the original dimension.
+
+![Concatenating the multi-head outputs and projecting back with W^O](/posts/attention-is-all-you-need/en/concat-wo.svg "concat + W^O — h head outputs → long vector → original dimension")
+
+### Transformer Block — FFN + Add & Norm
+
+One layer of the Transformer doesn't end with attention. An additional piece is attached, and both pieces are wrapped in a stabilizing mechanism.
+
+Each layer = **Multi-head Attention** + **FFN (Feed-Forward Network)**, both wrapped in **Add & Norm**
+
+Where attention captures relationships between words, FFN processes each word vector individually.
+
+$$
+\text{FFN}(x) = \max(0,\; x W_1 + b_1)\, W_2 + b_2
+$$
+
+**1. Expand.** For one word vector ($d$=512 numbers), multiply by weight $W_1$ and add bias $b_1$ to expand to a larger vector ($4d$=2048 numbers). The space to hold information is now four times wider.
+
+**2. Clip negatives to zero (ReLU).** Every negative value in the expanded vector is replaced with 0. Simple as it looks, this single step is what lets the model learn curved, nonlinear patterns.
+
+**3. Compress back.** Multiply once more by $W_2$ and add $b_2$ to compress back to the original size ($d$=512). It's the same size as before, but now it's a new vector that has passed through the expansion and back.
+
+(Biases $b_1, b_2$ are constant vectors added to the result of the weight multiplication — parameters determined by training alongside $W$. They shift the result up or down, giving the model more expressive freedom.)
+
+The same transformation is applied separately to each word vector (position-wise), so information doesn't mix between words here — attention already handled that; FFN's job is to refine each word individually as a follow-up step.
+
+![FFN in three steps — expand, clip negatives, compress](/posts/attention-is-all-you-need/en/ffn-pipeline.svg "FFN processes one word vector: d → 4d → ReLU → d")
+
+The **Add & Norm** mentioned earlier is shorthand for a pair — Residual connection and Layer Normalization — bundled together:
+
+- **Residual connection** — adds the original input directly to the output. Even if the layer loses some information during transformation, the original survives alongside it.
+- **Layer normalization** — re-centers the values after passing through a layer to mean 0, variance 1. If values grow too large or too small as layers stack up, training becomes unstable; this resets them every time to prevent that.
+
+Both are worth a deeper look on their own, but for now knowing the name and role is enough to follow the rest.
+
+![Residual adds the input back via a bypass; LayerNorm normalizes the magnitude of the values](/posts/attention-is-all-you-need/en/residual-layernorm.svg "Residual connection + Layer Normalization")
+
+This layer (MHA + FFN + Add & Norm) is **stacked 6 times** to make the encoder. The decoder follows the same pattern, but each layer gets an additional cross-attention block (the same form we saw in the RNN + Attention section).
+
+("6 times" is just the default setting the paper experimented with — it's not fixed into the Transformer architecture itself. Later models use 12, 24, 96, or other layer counts depending on the task and scale.)
+
+![Transformer Block — Multi-head Attention + FFN, wrapped in Add & Norm](/posts/attention-is-all-you-need/en/transformer-block.svg "Transformer Block — MHA + FFN + Add & Norm, ×N=6")
+
+### Positional Encoding — What About Word Order?
+
+One question remains. Self-attention looks at all words simultaneously. So how does it tell word **order** apart? "I love you" and "you love I" mean completely different things, but with attention alone the two sentences would be processed identically.
+
+The solution: encode which position each word is in as a vector and simply add it to the word embedding.
+
+$$
+\text{input}_{pos} = E_{\text{word}} + PE_{pos}
+$$
+
+$E_{\text{word}}$ is the word embedding (encoding **what** the word is); $PE_{pos}$ is the position embedding (encoding **which position** it's in). They're the same dimension, so you just add them.
+
+The position embedding $PE$ is **a fixed, unique set of numbers for each position**. Position 0, 1, 2, … each have their own distinct pattern decided in advance, so when added to the word embedding the model can sense "this word is at position N." (Specifically, they're constructed by combining sine and cosine functions — there's a deep reason for the exact formula — but in this post I'll just capture the intuition; the detailed derivation is in Section 3.5 of the [original paper](https://arxiv.org/abs/1706.03762).)
+
+![Positional Encoding — position embeddings are added to word embeddings to form model input](/posts/attention-is-all-you-need/en/positional-encoding.svg "Positional Encoding — word information + position information combined in one vector")
+
+![Each position has a distinct numeric pattern set in advance — no two positions share the same pattern](/posts/attention-is-all-you-need/en/positional-sin-cos.svg "A unique numeric pattern for each position")
+
+This one line ($E_{\text{word}} + PE_{pos}$) is what lets attention process word order information alongside word meaning.
+
+### The Full Picture — Putting the Parts Together
+
+With the pieces we've covered, here's what they look like combined. Let's trace what happens all at once, using "Ich liebe dich" → "I love you" (German → English) as an example.
+
+![The full Transformer — the Encoder reads German and the Decoder produces English one word at a time. A cross-attention arrow in the middle links the two stacks](/posts/attention-is-all-you-need/en/full-transformer.svg "Full Transformer flow — ① German self-attn · ② FFN · ③ English masked self-attn · ④ English Q ↔ German K/V (cross-attn) · ⑤ FFN")
+
+**Left — Encoder (reading German).** The German sentence "Ich liebe dich" arrives, and vectors are formed by adding word embeddings to position embeddings. Then:
+
+- ① **Self-attention**: the German words attend to each other. The relationship "Ich is the subject of liebe" is captured here.
+- ② **FFN**: each word representation is refined once more.
+
+These two steps (+ Add & Norm) make **one layer**, and the same layer is **stacked 6 times** to build richer German representations. The final layer's output is the German meaning vector — this is passed to the decoder as K and V.
+
+**Right — Decoder (generating English).** The decoder generates English words **one at a time**. The English words generated so far (e.g., `<start> I love`) come in as input:
+
+- ③ **Masked self-attention**: the English words attend only to each other. Words not yet generated are masked (= no cheating).
+- ④ **Cross-attention**: this is the link between the two stacks. **Q comes from the decoder** (the current English state), **K and V come from the encoder** (the German representations). "What do I make after love?" — the English side asks the question, and the most relevant part of the German representations ("dich") comes back as the answer.
+- ⑤ **FFN**: one more pass of refinement.
+
+These three steps make one decoder layer, and again it's **stacked 6 times**. The last layer's output predicts the next English word ("you"). That word is appended to the input and the whole process runs again to get the word after that, repeating until `<end>` appears.
+
+### Why Self-Attention?
+
+Before Transformer, the slot for processing sequences was occupied by RNN or CNN. Transformer puts **self-attention** there instead. Why? Two decisive advantages.
+
+**1. It connects distant words in a single step.**
+
+When you want to connect any two words in a sentence:
+
+- **RNN** has to travel step by step across the distance between them. Connecting two words 100 positions apart requires 100 hidden-state updates, and information fades along the way.
+- **CNN** is limited by a fixed receptive field; reaching far requires stacking many layers.
+- **Self-attention** compares any two words directly in one shot. Whether the distance is 1 or 100, it's always one step.
+
+![The distance to connect two words — O(n) for RNN, O(log n) for CNN, O(1) for Self-attention](/posts/attention-is-all-you-need/en/path-length-comparison.svg "Path length comparison — RNN / CNN / Self-attention")
+
+**2. It processes all words at once.**
+
+- **RNN** has to process words one by one in order. n words means waiting n times.
+- **Self-attention** can process all words in parallel, making training much faster.
+
+![Paper Table 1 — Complexity / Sequential ops / Max path length](/posts/attention-is-all-you-need/en/complexity-table.svg "Complexity comparison by layer type (Paper Table 1)")
+
+## How Much Better?
+
+We've now seen why self-attention is theoretically appealing. Let's take a quick look at what happened when the authors actually trained the Transformer and compared it against existing models.
+
+### Training
+
+The authors validated the Transformer on **machine translation** — the standard benchmark for model comparisons at the time, which allowed direct comparison against the existing SOTA models based on RNN and CNN.
+
+- **Evaluation data**: WMT 2014 — the standard dataset from the annual machine translation conference. Two tasks: English → German and English → French.
+- **Hardware**: 8× NVIDIA P100 GPUs
+- **Training time**: 12 hours for the smaller model (base), 3.5 days for the larger model (big)
+
+Compared to the RNN-based top models of the time, which took anywhere from days to weeks, the Transformer finished in far less time.
+
+### Results
+
+Translation quality is measured with **BLEU** — a score from 0 to 100 reflecting how much overlap there is between the model's translation and a human reference translation. Higher is closer to the reference.
+
+The Transformer set a new **SOTA (State-of-the-Art)** on both WMT 2014 tasks:
+
+| Task | Previous best | Transformer (big) |
+|---|---|---|
+| English → German | 25.16 (ConvS2S, CNN-based) | **28.4** |
+| English → French | 40.46 (ConvS2S) | **41.8** |
+
+![WMT 2014 BLEU comparison — Transformer sets a new SOTA](/posts/attention-is-all-you-need/en/bleu-scores.svg "BLEU comparison — Transformer vs GNMT and ConvS2S")
+
+It outscored the previous best models and trained much faster. And it wasn't just good at translation — it also worked on **English constituency parsing** (breaking a sentence's grammatical structure into a tree), a task with a very different character. A model that generalizes beyond the task it was trained on was a meaningful signal.
+
+### What Came After
+
+The paper's authors closed by writing that they planned to extend Transformer to images, audio, and video. Within a few years:
+
+- **BERT, GPT** (NLP)
+- **Vision Transformer (ViT)** (images)
+- **Whisper** (speech)
+
+All built on the Transformer. ChatGPT, Claude, and Gemini — the models we use every day — are variations on the same core.
+
+![A family tree branching from Transformer to BERT, GPT, ViT, and Whisper](/posts/attention-is-all-you-need/en/transformer-family-tree.svg "After Transformer — expansion across domains")
+
+## Wrapping Up
+
+1. The paper was challenging, but working through it slowly things gradually clicked, and writing it all out let me consolidate what I'd studied.
+2. It was satisfying to get a look at the structure underlying the models we use every day — GPT, Claude, Gemini.
+3. Next, I'd like to implement a small attention-based model in code, even a tiny one.
+
+---
+
+This post may contain factual or interpretive errors. If you spot anything wrong or have a question, feel free to leave a comment.
+
+## Reference
+- https://arxiv.org/abs/1706.03762 — Vaswani et al. 2017, "Attention Is All You Need" (Transformer)
+- https://arxiv.org/abs/1409.0473 — Bahdanau et al. 2014, the original RNN + Attention paper

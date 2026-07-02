@@ -1,0 +1,41 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Paper Table 1 — Complexity / Sequential Ops / Max Path Length per Layer</title>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Complexity / Sequential Ops / Max Path Length per layer</text>
+  <text x="340" y="48" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">n = sequence length, d = representation dim, k = CNN kernel size</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" fill="#000">
+    <rect x="40" y="70" width="600" height="40" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="130" y="93" text-anchor="middle" font-size="12" font-weight="500">Layer type</text>
+    <text x="290" y="93" text-anchor="middle" font-size="12" font-weight="500">Complexity / layer</text>
+    <text x="440" y="93" text-anchor="middle" font-size="12" font-weight="500">Sequential ops</text>
+    <text x="580" y="93" text-anchor="middle" font-size="12" font-weight="500">Max path length</text>
+
+    <rect x="40" y="110" width="600" height="40" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="130" y="133" text-anchor="middle" font-size="12">Self-Attention</text>
+    <text x="290" y="133" text-anchor="middle" font-size="12">O(n²·d)</text>
+    <text x="440" y="133" text-anchor="middle" font-size="12" font-weight="500">O(1)  ✓</text>
+    <text x="580" y="133" text-anchor="middle" font-size="12" font-weight="500">O(1)  ✓</text>
+
+    <rect x="40" y="150" width="600" height="40" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="130" y="173" text-anchor="middle" font-size="12">Recurrent (RNN)</text>
+    <text x="290" y="173" text-anchor="middle" font-size="12" font-weight="500">O(n·d²)  ✓</text>
+    <text x="440" y="173" text-anchor="middle" font-size="12">O(n)</text>
+    <text x="580" y="173" text-anchor="middle" font-size="12">O(n)</text>
+
+    <rect x="40" y="190" width="600" height="40" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="130" y="213" text-anchor="middle" font-size="12">Convolutional</text>
+    <text x="290" y="213" text-anchor="middle" font-size="12">O(k·n·d²)</text>
+    <text x="440" y="213" text-anchor="middle" font-size="12" font-weight="500">O(1)  ✓</text>
+    <text x="580" y="213" text-anchor="middle" font-size="12">O(log_k n)</text>
+
+    <rect x="40" y="230" width="600" height="40" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="130" y="253" text-anchor="middle" font-size="12">Self-Attn (restricted)</text>
+    <text x="290" y="253" text-anchor="middle" font-size="12">O(r·n·d)</text>
+    <text x="440" y="253" text-anchor="middle" font-size="12">O(1)</text>
+    <text x="580" y="253" text-anchor="middle" font-size="12">O(n/r)</text>
+  </g>
+
+  <text x="340" y="295" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.65">Self-Attention excels at both sequential ops and path length — but O(n²) memory for long sequences</text>
+  <text x="340" y="312" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.5">For most translation tasks n &lt; d, so self-attention is even lighter than RNN</text>
+</svg>
