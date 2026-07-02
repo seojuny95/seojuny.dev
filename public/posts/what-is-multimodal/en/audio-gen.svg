@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Two Ways to Generate Audio</title>
+  <desc>Audio can be generated in two ways: audio tokens compressed by a neural codec are generated autoregressively like an LLM and decoded to a waveform by a codec decoder; or a spectrogram is drawn by diffusion and converted to a waveform by a vocoder.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fff; stroke: #171717; stroke-width: 1.7; }
+      .acc { fill: #fff8f4; stroke: #f26522; stroke-width: 2.2; }
+      .lbl { font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+      .sub { font-size: 9.5px; fill: #8a8a85; text-anchor: middle; }
+      .tag { font-size: 11.5px; font-weight: 700; text-anchor: start; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .cap { font-size: 11.5px; fill: #8a8a85; text-anchor: middle; }
+    </style>
+    <marker id="ag-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="24" class="hdr">Two Ways to Generate Audio</text>
+
+  <!-- ① Token sequence -->
+  <text x="30" y="54" class="tag">① Token Sequence</text>
+  <rect class="box" x="30" y="62" width="140" height="50" rx="7"/>
+  <text x="100" y="81" class="lbl" dominant-baseline="central">Audio Tokens</text>
+  <text x="100" y="98" class="sub">LLM generates in sequence</text>
+  <path d="M 170 87 L 196 87" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ag-arr)"/>
+  <rect class="box" x="198" y="62" width="110" height="50" rx="7"/>
+  <text x="253" y="87" class="lbl" dominant-baseline="central">Codec Decoder</text>
+
+  <!-- ② Via spectrogram -->
+  <text x="30" y="160" class="tag">② Via Spectrogram</text>
+  <rect class="box" x="30" y="168" width="140" height="50" rx="7"/>
+  <text x="100" y="187" class="lbl" dominant-baseline="central">Spectrogram</text>
+  <text x="100" y="204" class="sub">drawn by diffusion</text>
+  <path d="M 170 193 L 196 193" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ag-arr)"/>
+  <rect class="box" x="198" y="168" width="110" height="50" rx="7"/>
+  <text x="253" y="193" class="lbl" dominant-baseline="central">Vocoder</text>
+
+  <!-- Merge → waveform -->
+  <path d="M 308 87 C 360 87 384 132 438 136" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ag-arr)"/>
+  <path d="M 308 193 C 360 193 384 148 438 144" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ag-arr)"/>
+
+  <rect class="acc" x="440" y="110" width="160" height="60" rx="8"/>
+  <polyline points="456,140 462,130 468,150 474,132 480,148 486,128 492,152 498,138 504,140" fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="556" y="140" class="lbl" font-size="11" dominant-baseline="central">Waveform</text>
+
+  <text x="340" y="258" class="cap">Tokens fed to a codec decoder, or a spectrogram drawn by diffusion then decoded to waveform</text>
+</svg>

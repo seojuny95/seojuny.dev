@@ -1,0 +1,44 @@
+<svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Switching Models — Regression-Testing with an Evaluation Set</title>
+  <desc>Embedding models and generation LLMs release new versions often and fast. After replacing a model, score the pipeline against the same evaluation set and compare with the prior score — adopt if better, roll back if worse. Even a one-line swap needs regression-testing.</desc>
+
+  <defs>
+    <marker id="eg-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Switching Models — Regression-Testing with an Evaluation Set</text>
+
+  <!-- Replace with new model -->
+  <rect x="22" y="92" width="132" height="60" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="88" y="115" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Swap in new model</text>
+  <text x="88" y="133" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">Embedding · Gen LLM</text>
+
+  <path d="M 154 122 L 186 122" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#eg-arr)"/>
+
+  <!-- Run eval set -->
+  <rect x="188" y="92" width="132" height="60" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="254" y="115" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Score against</text>
+  <text x="254" y="133" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">eval set</text>
+
+  <path d="M 320 122 L 352 122" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#eg-arr)"/>
+
+  <!-- Compare scores -->
+  <rect x="354" y="92" width="132" height="60" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="420" y="115" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Compare against</text>
+  <text x="420" y="133" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">prior score</text>
+
+  <!-- Branch -->
+  <path d="M 486 110 Q 512 96 528 88" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#eg-arr)"/>
+  <path d="M 486 134 Q 512 148 528 156" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#eg-arr)"/>
+
+  <rect x="530" y="64" width="128" height="44" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="594" y="86" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">Improved → adopt</text>
+
+  <rect x="530" y="136" width="128" height="44" rx="6" fill="#fff" stroke="#000" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="594" y="158" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">Worse → roll back</text>
+
+  <text x="340" y="212" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">Models change often and fast. Swapping is easy, but confirm there's no regression.</text>
+  <text x="340" y="234" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.6">With an eval set, the swap decision is a number, not a guess</text>
+</svg>

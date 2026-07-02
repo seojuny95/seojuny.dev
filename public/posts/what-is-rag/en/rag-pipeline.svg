@@ -1,0 +1,47 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>RAG Pipeline — Retrieve Documents and Generate an Answer</title>
+  <desc>When a user question arrives, the Retriever finds relevant documents from the external document store. Those documents are passed together with the question to the Generator (LLM), which produces an answer grounded in the retrieved evidence.</desc>
+
+  <defs>
+    <marker id="rp-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">RAG Pipeline — Retrieve Docs and Generate an Answer</text>
+
+  <!-- Question -->
+  <rect x="28" y="92" width="96" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="76" y="121" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Question</text>
+
+  <path d="M 126 117 L 162 117" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#rp-arr)"/>
+
+  <!-- Retriever -->
+  <rect x="164" y="86" width="126" height="62" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="227" y="111" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Retriever</text>
+  <text x="227" y="129" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">finds relevant docs</text>
+
+  <!-- External document store (below) + bidirectional -->
+  <path d="M 227 196 L 227 150" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-start="url(#rp-arr)" marker-end="url(#rp-arr)"/>
+  <rect x="158" y="198" width="138" height="52" rx="6" fill="#fff" stroke="#000" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="227" y="220" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">External</text>
+  <text x="227" y="237" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">doc store</text>
+
+  <!-- Retriever -> Generator -->
+  <path d="M 292 117 L 356 117" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#rp-arr)"/>
+  <text x="324" y="105" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="600" fill="#000">+ docs</text>
+
+  <!-- Generator -->
+  <rect x="358" y="86" width="126" height="62" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="421" y="111" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Generator</text>
+  <text x="421" y="129" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">writes the answer</text>
+
+  <path d="M 486 117 L 524 117" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#rp-arr)"/>
+
+  <!-- Answer -->
+  <rect x="526" y="92" width="126" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="589" y="121" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Answer</text>
+
+  <!-- caption -->
+  <text x="340" y="284" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">Retrieve relevant docs for the question (retrieval), then feed them with the question to generate an answer (generation)</text>
+</svg>

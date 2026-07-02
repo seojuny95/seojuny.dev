@@ -1,0 +1,86 @@
+<svg width="100%" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Training loop — one batch goes through four steps</title>
+  <desc>When one batch of data arrives, it cycles through forward pass → loss → backward pass → update. This repeats for the next batch. One full pass through all the data is 1 epoch; training typically runs many epochs.</desc>
+
+  <defs>
+    <marker id="lp-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Training loop — one batch goes through four steps</text>
+
+  <!-- Input batch (top-left) -->
+  <g transform="rotate(-3 38 95)">
+    <path d="M 10 75 Q 10 72 13 72 L 66 73 Q 69 73 69 76 L 69 115 Q 69 118 66 118 L 12 117 Q 9 117 9 114 Z"
+          fill="none" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/>
+    <text x="39" y="92" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="500" fill="#000">batch</text>
+    <text x="39" y="107" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#000" opacity="0.65">(x, y)</text>
+  </g>
+
+  <!-- batch → box1 arrow -->
+  <path d="M 73 105 Q 90 110 102 130" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lp-arr)"/>
+
+  <!-- ============ 4 boxes horizontal (each 100w, gap 50) ============ -->
+  <!-- Box 1: Forward (x=90..190) -->
+  <rect x="90" y="130" width="100" height="80" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="140" y="150" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">①</text>
+  <text x="140" y="170" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Forward</text>
+  <text x="140" y="190" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.7">x → ŷ</text>
+
+  <!-- Arrow 1 → 2 with label (gap 190..240) -->
+  <path d="M 192 180 L 238 180" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lp-arr)"/>
+  <text x="215" y="165" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">pred.</text>
+
+  <!-- Box 2: Loss (x=240..340) -->
+  <rect x="240" y="130" width="100" height="80" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="290" y="150" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">②</text>
+  <text x="290" y="170" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Loss</text>
+  <text x="290" y="190" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.7">L(y, ŷ)</text>
+
+  <!-- Arrow 2 → 3 (gap 340..390) -->
+  <path d="M 342 180 L 388 180" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lp-arr)"/>
+  <text x="365" y="165" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">loss</text>
+
+  <!-- Box 3: Backward (x=390..490) -->
+  <rect x="390" y="130" width="100" height="80" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="440" y="150" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">③</text>
+  <text x="440" y="170" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Backward</text>
+  <text x="440" y="190" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#000" opacity="0.7">∂L/∂w</text>
+
+  <!-- Arrow 3 → 4 (gap 490..540) -->
+  <path d="M 492 180 L 538 180" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lp-arr)"/>
+  <text x="515" y="165" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">grad.</text>
+
+  <!-- Box 4: Update (x=540..640) -->
+  <rect x="540" y="130" width="100" height="80" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="590" y="150" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">④</text>
+  <text x="590" y="170" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Update</text>
+  <text x="590" y="190" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#000" opacity="0.7">w ← w − η∇</text>
+
+  <!-- 1 step label (brace above 4 boxes) -->
+  <path d="M 90 122 Q 90 112 100 112 L 356 112 Q 366 112 366 102" fill="none" stroke="#000" stroke-width="0.9" opacity="0.55"/>
+  <path d="M 366 102 Q 366 112 376 112 L 630 112 Q 640 112 640 122" fill="none" stroke="#000" stroke-width="0.9" opacity="0.55"/>
+  <rect x="326" y="80" width="80" height="22" rx="3" fill="#fff" stroke="#000" stroke-width="1.2"/>
+  <text x="366" y="92" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">1 step</text>
+
+  <!-- After update → next batch (loop back) -->
+  <path d="M 590 215 Q 590 260 340 260 Q 40 260 40 130" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="5 4" marker-end="url(#lp-arr)" opacity="0.75"/>
+  <text x="340" y="252" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">next batch, updated params</text>
+
+  <!-- ============ Epoch explanation box ============ -->
+  <rect x="60" y="295" width="560" height="80" rx="6" fill="#fff" stroke="#000" stroke-width="1.3" stroke-dasharray="5 4" opacity="0.85"/>
+
+  <text x="340" y="318" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Step and Epoch</text>
+
+  <text x="78" y="342" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">
+    <tspan font-weight="600">1 step</tspan>
+    <tspan opacity="0.8"> = one batch through all four steps above</tspan>
+  </text>
+  <text x="78" y="360" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">
+    <tspan font-weight="600">1 epoch</tspan>
+    <tspan opacity="0.8"> = one full pass over the training data (tens to 10k+ steps)</tspan>
+  </text>
+
+  <text x="340" y="392" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.7">Running many epochs, the model's predictions gradually approach the correct answer</text>
+</svg>

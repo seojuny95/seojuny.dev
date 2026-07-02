@@ -1,0 +1,57 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Loss function — two values (true, predicted) into one number</title>
+  <desc>True label y and prediction ŷ enter the loss function L; one positive number comes out. The closer the two values, the smaller the output; the farther apart, the larger.</desc>
+
+  <defs>
+    <marker id="lf-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Loss function — two values (true, predicted) into one number</text>
+
+  <!-- ============ Input boxes ============ -->
+  <!-- True label y -->
+  <rect x="50" y="85" width="120" height="56" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="110" y="106" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">True label  y</text>
+  <text x="110" y="128" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="14" font-weight="600" fill="#000">5.0</text>
+
+  <!-- Prediction ŷ -->
+  <rect x="50" y="170" width="120" height="56" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="110" y="191" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Prediction  ŷ</text>
+  <text x="110" y="213" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="14" font-weight="600" fill="#000">5.2</text>
+
+  <!-- Input arrows → loss function -->
+  <path d="M 172 113 Q 215 113 248 145" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lf-arr)"/>
+  <path d="M 172 198 Q 215 198 248 168" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lf-arr)"/>
+
+  <!-- ============ Loss function box ============ -->
+  <rect x="250" y="115" width="180" height="90" rx="8" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="340" y="140" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="600" fill="#000">Loss function  L(y, ŷ)</text>
+  <text x="340" y="165" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000" opacity="0.75">e.g. (y − ŷ)²</text>
+  <text x="340" y="187" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000" opacity="0.75">= (5.0 − 5.2)²</text>
+
+  <!-- Loss function → output arrow -->
+  <path d="M 432 160 L 518 160" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#lf-arr)"/>
+
+  <!-- ============ Output box ============ -->
+  <rect x="520" y="130" width="110" height="60" rx="6" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="575" y="152" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="500" fill="#000">Loss L</text>
+  <text x="575" y="176" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="15" font-weight="700" fill="#000">0.04</text>
+
+  <!-- ============ Bottom: intuition (small ↔ large) ============ -->
+  <line x1="40" y1="245" x2="640" y2="245" stroke="#000" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.4"/>
+
+  <!-- Left: close values → small loss -->
+  <text x="170" y="270" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">When values are close</text>
+  <text x="170" y="290" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000">y=5.0,  ŷ=5.2 → L = 0.04</text>
+  <text x="170" y="307" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">Low loss (good pred.)</text>
+
+  <!-- Center divider -->
+  <line x1="340" y1="260" x2="340" y2="312" stroke="#000" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.4"/>
+
+  <!-- Right: far values → large loss -->
+  <text x="510" y="270" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">When values are far</text>
+  <text x="510" y="290" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000">y=5.0,  ŷ=8.0 → L = 9.00</text>
+  <text x="510" y="307" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">High loss (bad pred.)</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Paged Optimizer — Offload Overflow to CPU Memory Temporarily</title>
+  <desc>When GPU memory overflows momentarily during training, the overflow is moved to CPU memory temporarily. This prevents the GPU from crashing (OOM).</desc>
+
+  <defs>
+    <pattern id="po-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="0.7" opacity="0.32"/>
+    </pattern>
+    <marker id="po-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Paged Optimizer — Offload Overflow to CPU Temporarily</text>
+
+  <!-- overflow (spills above GPU) -->
+  <text x="160" y="64" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.75">Overflow</text>
+  <rect x="122" y="70" width="76" height="22" rx="3" fill="url(#po-hatch)" stroke="#000" stroke-width="1.6"/>
+
+  <!-- GPU memory (full) -->
+  <rect x="112" y="96" width="96" height="108" rx="4" fill="#000" fill-opacity="0.05" stroke="#000" stroke-width="1.7"/>
+  <text x="160" y="150" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.6">Full</text>
+  <text x="160" y="224" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">GPU Memory</text>
+
+  <!-- offload arrow -->
+  <path d="M 206 81 C 300 81 320 150 408 150" fill="none" stroke="#000" stroke-width="1.6" marker-end="url(#po-arr)"/>
+  <text x="318" y="72" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.8">temporarily moved</text>
+
+  <!-- CPU memory (has room) -->
+  <rect x="430" y="110" width="150" height="94" rx="4" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <rect x="448" y="156" width="76" height="22" rx="3" fill="url(#po-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="486" y="171" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#000" opacity="0.7">overflow</text>
+  <text x="505" y="135" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.55">has room</text>
+  <text x="505" y="224" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">CPU Memory</text>
+
+  <!-- caption -->
+  <line x1="40" y1="240" x2="640" y2="240" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="261" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">Only the overflow moves to CPU memory temporarily, preventing GPU OOM crashes</text>
+</svg>

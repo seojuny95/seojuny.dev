@@ -1,0 +1,33 @@
+<svg width="100%" viewBox="0 0 680 186" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Indexing Speed — Parallel Captioning</title>
+  <desc>Captioning 8 figures one by one takes 17.6 seconds. Sending them all at once takes 5.1 seconds. Request concurrency is capped to avoid hitting the rate limit.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .lab { font-size: 12px; font-weight: 600; text-anchor: end; dominant-baseline: central; }
+      .val { font-size: 12px; font-weight: 600; dominant-baseline: central; }
+      .sub { font-size: 11px; fill: #8a8a85; text-anchor: middle; }
+      .barbg { fill: #ececea; }
+      .baror { fill: #f26522; }
+      .axis { stroke: #d8d8d4; stroke-width: 1.2; }
+    </style>
+  </defs>
+
+  <text x="340" y="24" class="hdr">Indexing Speed — Parallel Captioning</text>
+
+  <!-- Sequential -->
+  <text x="96" y="64" class="lab">Sequential</text>
+  <rect class="barbg" x="110" y="50" width="469" height="28" rx="5"/>
+  <text x="590" y="64" class="val" style="fill:#8a8a85;">17.6 s</text>
+
+  <!-- Parallel -->
+  <text x="96" y="110" class="lab">Parallel</text>
+  <rect class="baror" x="110" y="96" width="136" height="28" rx="5"/>
+  <text x="256" y="110" class="val" style="fill:#f26522;">5.1 s</text>
+
+  <line class="axis" x1="110" y1="134" x2="110" y2="44"/>
+
+  <text x="340" y="160" class="sub">8 figures one by one → all at once. Concurrency is capped to stay within the rate limit.</text>
+</svg>
