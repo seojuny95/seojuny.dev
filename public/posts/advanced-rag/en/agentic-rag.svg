@@ -1,0 +1,41 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Agentic RAG — Iterative Retrieval with Judgment</title>
+  <desc>Instead of a single linear retrieval pass, an agent examines the retrieved results and judges whether they are sufficient. If not, it revises the query or searches a different source and loops back. If sufficient, it generates the answer. Judgment and iteration are built into the retrieval loop.</desc>
+
+  <defs>
+    <marker id="ag-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Agentic RAG — Iterative Retrieval with Judgment</text>
+
+  <!-- Query -->
+  <rect x="28" y="98" width="96" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="76" y="123" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Query</text>
+
+  <path d="M 124 123 L 156 123" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ag-arr)"/>
+
+  <!-- Retrieve -->
+  <rect x="158" y="98" width="110" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="213" y="123" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Retrieve</text>
+
+  <path d="M 268 123 L 300 123" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ag-arr)"/>
+
+  <!-- Judge -->
+  <rect x="302" y="92" width="148" height="62" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="376" y="115" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Enough?</text>
+  <text x="376" y="133" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">Agent decides</text>
+
+  <!-- Sufficient -> Answer -->
+  <path d="M 450 123 L 486 123" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ag-arr)"/>
+  <text x="468" y="113" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="600" fill="#000">Yes</text>
+  <rect x="488" y="98" width="120" height="50" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="548" y="123" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Answer</text>
+
+  <!-- Not enough -> loop back -->
+  <path d="M 376 154 L 376 210 L 213 210 L 213 150" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="5 3" marker-end="url(#ag-arr)"/>
+  <text x="294" y="228" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.8">Not enough: revise query or try another source</text>
+
+  <text x="340" y="262" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">Complex questions are solved across multiple retrieval rounds</text>
+</svg>
