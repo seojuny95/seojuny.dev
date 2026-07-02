@@ -1,0 +1,63 @@
+<svg width="100%" viewBox="0 0 680 235" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Basic RAG Pipeline — Indexing and Answering</title>
+  <desc>Indexing extracts text from a PDF, chunks and embeds it, and stores it in a vector DB. Answering embeds the question, searches for the nearest chunks, and feeds those as evidence to the LLM.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.5; }
+      .db { fill: #fff3ec; stroke: #f26522; stroke-width: 1.6; }
+      .t { font-size: 12.5px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .row { font-size: 11px; font-weight: 600; fill: #8a8a85; }
+      .note { font-size: 10.5px; fill: #f26522; text-anchor: middle; }
+      .flow { stroke: #171717; stroke-width: 1.6; fill: none; }
+      .dash { stroke: #f26522; stroke-width: 1.4; fill: none; stroke-dasharray: 4 3; }
+    </style>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="5.5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#171717"/>
+    </marker>
+    <marker id="aho" markerWidth="8" markerHeight="8" refX="5.5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#f26522"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="22" class="hdr">Basic RAG Pipeline</text>
+
+  <!-- Indexing -->
+  <text x="64" y="60" class="row">Indexing — store in advance</text>
+  <rect class="box" x="64"  y="73" width="92" height="38" rx="9"/>
+  <rect class="box" x="174" y="73" width="92" height="38" rx="9"/>
+  <rect class="box" x="284" y="73" width="92" height="38" rx="9"/>
+  <rect class="box" x="394" y="73" width="92" height="38" rx="9"/>
+  <rect class="db"  x="504" y="73" width="92" height="38" rx="9"/>
+  <text class="t" x="110" y="92">PDF</text>
+  <text class="t" x="220" y="92">Text</text>
+  <text class="t" x="330" y="92">Chunking</text>
+  <text class="t" x="440" y="92">Embedding</text>
+  <text class="t" x="550" y="92">Vector DB</text>
+  <path class="flow" d="M156,92 H172" marker-end="url(#ah)"/>
+  <path class="flow" d="M266,92 H282" marker-end="url(#ah)"/>
+  <path class="flow" d="M376,92 H392" marker-end="url(#ah)"/>
+  <path class="flow" d="M486,92 H502" marker-end="url(#ah)"/>
+
+  <!-- Answering -->
+  <text x="64" y="156" class="row">Answering — on each question</text>
+  <rect class="box" x="64"  y="169" width="92" height="38" rx="9"/>
+  <rect class="box" x="174" y="169" width="92" height="38" rx="9"/>
+  <rect class="box" x="284" y="169" width="92" height="38" rx="9"/>
+  <rect class="box" x="394" y="169" width="92" height="38" rx="9"/>
+  <text class="t" x="110" y="188">Question</text>
+  <text class="t" x="220" y="188">Embedding</text>
+  <text class="t" x="330" y="188">Retrieval</text>
+  <text class="t" x="440" y="188">LLM Answer</text>
+  <path class="flow" d="M156,188 H172" marker-end="url(#ah)"/>
+  <path class="flow" d="M266,188 H282" marker-end="url(#ah)"/>
+  <path class="flow" d="M376,188 H392" marker-end="url(#ah)"/>
+  <path class="flow" d="M486,188 H536" marker-end="url(#ah)"/>
+  <text class="t" x="556" y="188" style="font-size:11.5px;">Answer</text>
+
+  <!-- Retrieval queries the vector DB -->
+  <path class="dash" d="M330,169 L548,113" marker-end="url(#aho)"/>
+  <text x="476" y="160" class="note">Query Vector DB</text>
+</svg>
