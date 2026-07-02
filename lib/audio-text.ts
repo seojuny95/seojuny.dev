@@ -94,7 +94,12 @@ export function stripParens(text: string): string {
     .trim();
 }
 
-export function toSpeechText(text: string): string {
+export type SpeechLocale = 'ko' | 'en';
+
+// 영어 본문은 영어 보이스가 직접 읽으므로 한글 발음 교정을 적용하지 않는다.
+// (PRONUNCIATION은 한국어 보이스가 영어 용어를 읽게 하려는 것이라 영어에는 역효과.)
+export function toSpeechText(text: string, locale: SpeechLocale = 'ko'): string {
+  if (locale === 'en') return text.replace(/\s{2,}/g, ' ').trim();
   let t = stripParens(text);
   for (const [en, ko] of Object.entries(PRONUNCIATION)) {
     t = t.replace(new RegExp(`\\b${escapeRegExp(en)}\\b`, 'g'), ko);
