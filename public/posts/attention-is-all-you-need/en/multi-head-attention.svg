@@ -1,0 +1,61 @@
+<svg width="100%" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Multi-head Attention — parallel across multiple views</title>
+
+  <defs>
+    <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Multi-head Attention — 8 heads look at one input at once</text>
+
+  <rect x="290" y="55" width="100" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="340" y="80" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000">Input X</text>
+
+  <g stroke="#000" stroke-width="1.1" fill="none" opacity="0.5">
+    <line x1="340" y1="95" x2="95" y2="140"/>
+    <line x1="340" y1="95" x2="200" y2="140"/>
+    <line x1="340" y1="95" x2="305" y2="140"/>
+    <line x1="340" y1="95" x2="485" y2="140"/>
+  </g>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">
+    <rect x="55" y="140" width="80" height="80" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="95" y="160" text-anchor="middle" font-weight="500">head 1</text>
+    <text x="95" y="180" text-anchor="middle" font-size="10" opacity="0.6">W_Q¹ W_K¹ W_V¹</text>
+    <text x="95" y="200" text-anchor="middle" font-size="10" opacity="0.6">attention</text>
+
+    <rect x="160" y="140" width="80" height="80" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="200" y="160" text-anchor="middle" font-weight="500">head 2</text>
+    <text x="200" y="180" text-anchor="middle" font-size="10" opacity="0.6">W_Q² W_K² W_V²</text>
+    <text x="200" y="200" text-anchor="middle" font-size="10" opacity="0.6">attention</text>
+
+    <rect x="265" y="140" width="80" height="80" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="305" y="160" text-anchor="middle" font-weight="500">head 3</text>
+    <text x="305" y="180" text-anchor="middle" font-size="10" opacity="0.6">W_Q³ W_K³ W_V³</text>
+    <text x="305" y="200" text-anchor="middle" font-size="10" opacity="0.6">attention</text>
+
+    <text x="385" y="185" text-anchor="middle" font-size="18" opacity="0.5">···</text>
+
+    <rect x="425" y="140" width="120" height="80" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="485" y="160" text-anchor="middle" font-weight="500">head 8</text>
+    <text x="485" y="180" text-anchor="middle" font-size="10" opacity="0.6">W_Q⁸ W_K⁸ W_V⁸</text>
+    <text x="485" y="200" text-anchor="middle" font-size="10" opacity="0.6">attention</text>
+  </g>
+
+  <g stroke="#000" stroke-width="1.1" fill="none" opacity="0.5">
+    <line x1="95" y1="220" x2="340" y2="265"/>
+    <line x1="200" y1="220" x2="340" y2="265"/>
+    <line x1="305" y1="220" x2="340" y2="265"/>
+    <line x1="485" y1="220" x2="340" y2="265"/>
+  </g>
+
+  <rect x="240" y="265" width="200" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="340" y="290" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#000">concat + W_O</text>
+
+  <line x1="340" y1="305" x2="340" y2="325" stroke="#000" stroke-width="1.4" marker-end="url(#ar2)"/>
+
+  <text x="340" y="350" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="500" fill="#000">Final output</text>
+
+  <text x="340" y="372" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">Each head sees a different view via its own W → combined into a richer representation</text>
+</svg>
