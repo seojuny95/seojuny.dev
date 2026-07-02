@@ -7,7 +7,6 @@ import { localePath, type Locale } from '@/lib/i18n';
 
 export function NavLinks({ locale }: { locale: Locale }) {
   const pathname = usePathname();
-  const homePath = localePath(locale);
   const aboutPath = localePath(locale, '/about');
   const isAbout = pathname === aboutPath || pathname.startsWith(`${aboutPath}/`);
   return (
