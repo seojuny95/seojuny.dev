@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 184" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Text Chunking</title>
+  <desc>A long text is split into multiple small chunks. Adjacent chunks overlap slightly at their edges to preserve context, so the middle chunk overlaps on both sides.</desc>
+  <defs>
+    <marker id="ch-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <text x="340" y="24" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Text Chunking — Split with Overlapping Edges</text>
+
+  <!-- long text -->
+  <rect x="24" y="62" width="130" height="72" rx="6" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="89" y="80" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">Long text</text>
+  <line x1="42" y1="94" x2="136" y2="94" stroke="#000" stroke-width="1" opacity="0.3"/>
+  <line x1="42" y1="104" x2="136" y2="104" stroke="#000" stroke-width="1" opacity="0.3"/>
+  <line x1="42" y1="114" x2="136" y2="114" stroke="#000" stroke-width="1" opacity="0.3"/>
+  <line x1="42" y1="124" x2="112" y2="124" stroke="#000" stroke-width="1" opacity="0.3"/>
+
+  <path d="M 156 98 L 196 98" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ch-arr)"/>
+
+  <!-- overlap guide dashed lines -->
+  <line x1="362" y1="56" x2="362" y2="124" stroke="#000" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.45"/>
+  <line x1="392" y1="56" x2="392" y2="124" stroke="#000" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.45"/>
+  <line x1="512" y1="92" x2="512" y2="160" stroke="#000" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.45"/>
+  <line x1="542" y1="92" x2="542" y2="160" stroke="#000" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.45"/>
+
+  <!-- Chunk 1 -->
+  <rect x="212" y="58" width="180" height="28" rx="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="362" y="58" width="30" height="28" rx="0" fill="#000" fill-opacity="0.13"/>
+  <text x="287" y="72" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">Chunk 1</text>
+
+  <!-- Chunk 2 (overlaps on both sides) -->
+  <rect x="362" y="94" width="180" height="28" rx="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="362" y="94" width="30" height="28" fill="#000" fill-opacity="0.13"/>
+  <rect x="512" y="94" width="30" height="28" fill="#000" fill-opacity="0.13"/>
+  <text x="452" y="108" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">Chunk 2</text>
+
+  <!-- Chunk 3 -->
+  <rect x="512" y="130" width="150" height="28" rx="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="512" y="130" width="30" height="28" fill="#000" fill-opacity="0.13"/>
+  <text x="601" y="144" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">Chunk 3</text>
+
+  <!-- caption -->
+  <text x="340" y="178" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.8">Shaded region = overlap — the middle chunk overlaps on both sides</text>
+</svg>

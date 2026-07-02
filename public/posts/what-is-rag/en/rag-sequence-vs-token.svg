@@ -1,0 +1,68 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>RAG-Sequence vs RAG-Token — When to Select the Document</title>
+  <desc>RAG-Sequence generates the entire answer from a single retrieved document. RAG-Token selects from multiple documents at each token generation step, so a single answer can draw from several documents.</desc>
+
+  <defs>
+    <marker id="rt-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- divider -->
+  <line x1="340" y1="50" x2="340" y2="262" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+
+  <!-- ===== Left: RAG-Sequence ===== -->
+  <text x="170" y="34" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#000">RAG-Sequence</text>
+  <text x="170" y="52" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">One doc for the full answer</text>
+
+  <!-- doc z -->
+  <rect x="123" y="74" width="94" height="30" rx="5" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="170" y="89" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">doc z</text>
+
+  <!-- single arrow to full answer -->
+  <path d="M 170 104 L 170 156" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" marker-end="url(#rt-arr)"/>
+
+  <!-- answer tokens (all from same doc) -->
+  <rect x="58" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="80" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₁</text>
+  <rect x="106" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="128" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₂</text>
+  <rect x="154" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="176" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₃</text>
+  <rect x="202" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="224" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₄</text>
+
+  <text x="170" y="222" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">All tokens from the same document</text>
+  <text x="170" y="250" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">Pick a doc, generate the full answer</text>
+
+  <!-- ===== Right: RAG-Token ===== -->
+  <text x="510" y="34" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#000">RAG-Token</text>
+  <text x="510" y="52" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">Different doc per token</text>
+
+  <!-- doc z1 z2 z3 -->
+  <rect x="392" y="74" width="56" height="28" rx="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="420" y="88" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">z₁</text>
+  <rect x="482" y="74" width="56" height="28" rx="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="510" y="88" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">z₂</text>
+  <rect x="572" y="74" width="56" height="28" rx="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="600" y="88" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">z₃</text>
+
+  <!-- arrows from each doc to tokens -->
+  <path d="M 420 102 L 426 156" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" marker-end="url(#rt-arr)"/>
+  <path d="M 600 102 L 484 156" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" marker-end="url(#rt-arr)"/>
+  <path d="M 510 102 L 540 156" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" marker-end="url(#rt-arr)"/>
+  <path d="M 420 102 L 598 156" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" marker-end="url(#rt-arr)" opacity="0.85"/>
+
+  <!-- answer tokens -->
+  <rect x="398" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="420" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₁</text>
+  <rect x="446" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="468" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₂</text>
+  <rect x="494" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="516" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₃</text>
+  <rect x="572" y="162" width="44" height="30" rx="5" fill="#000" fill-opacity="0.07" stroke="#000" stroke-width="1.3"/>
+  <text x="594" y="177" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">token₄</text>
+
+  <text x="510" y="222" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">Each token references a different doc</text>
+  <text x="510" y="250" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">Mix multiple docs in one answer</text>
+</svg>
