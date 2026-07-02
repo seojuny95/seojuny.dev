@@ -1,0 +1,447 @@
+---
+title: "How Models Learn"
+date: "2026-05-27"
+summary: "A walkthrough of the inner loop — forward pass, loss function, backpropagation, update — with a small Python demo to train a model from scratch."
+tags: ["AI", "Backpropagation", "Loss Function", "Gradient Descent"]
+draft: false
+---
+
+In the [previous post](/en/attention-is-all-you-need) I covered what AI is and how it developed. This one goes a step further into how models actually learn — and in particular, two concepts I personally found confusing for a long time: the loss function and backpropagation.
+
+## What learning is
+
+In AI, a model is a function that takes input and produces output. What that function does depends entirely on the numbers packed inside it — the parameters, weights $W$ and biases $b$.
+
+![A model is a function full of parameters — it takes input, passes it through the function, and produces output](/posts/how-models-learn/en/model-as-function.svg "Model = input → function(parameters) → output")
+
+Learning is the process of nudging those numbers, over and over, until the model's output gets close to the right answer. When the output is a **number** (regression — say, house prices), you look at how far off the prediction is. When it's a **category** (classification — say, cat vs. dog), you look at how close to 1 the model's probability for the correct category is. Either way, you adjust the numbers to shrink that gap, and you keep repeating.
+
+![Learning — predictions moving closer to the true answer, probabilities concentrating on the right category](/posts/how-models-learn/en/learning-intuition.svg "Learning — nudging predictions and probabilities toward the right answer")
+
+The one-line version: **learning means repeatedly adjusting the parameters by a small amount in the direction that reduces the gap between prediction and ground truth, one batch of data at a time.**
+
+Each batch goes through four steps.
+
+- ① **Forward pass** — the model takes input and produces a prediction
+- ② **Loss** — the difference between prediction and ground truth is distilled into a single number
+- ③ **Backward pass** — "which direction should each parameter move to reduce the loss?" is computed for all parameters at once (= gradient)
+- ④ **Update** — the parameters are moved in that direction by a step proportional to the learning rate
+
+![One training loop cycle — a single batch goes through forward → loss → backward → update, and one full pass over the dataset is one epoch](/posts/how-models-learn/en/training-loop.svg "The training loop — one step and one epoch")
+
+What actually happens inside a single step: every data point in the batch (say, 32) is fed through the model at once, producing 32 predictions. The loss for each is computed separately, then averaged into one number — the batch loss — and the parameters are updated **once** based on that average. That means 32 updates don't happen; just one step, based on the mean loss.
+
+Run this cycle over the full dataset multiple times (one full pass is called an epoch) and the model's predictions gradually converge on the right answers.
+
+## Preparing the data
+
+Before you can run the training cycle, you need to get the data into a form the model can accept. The usual steps look like this.
+
+1. **Collect and clean** — gather data, remove corrupted values and duplicates
+2. **Split** — divide into train (70%) / validation (15%) / test (15%)
+3. **Normalize** — align the numeric scale across features
+4. **Encode** — convert text and categories into numeric vectors
+5. **Batch** — divide into fixed-size batches
+
+In real projects, getting the data ready takes more effort than writing the model code. That said, when you're studying or need to iterate quickly, Hugging Face's [`datasets`](https://huggingface.co/docs/datasets) library lets you pull public datasets and get straight to experimenting.
+
+```python
+from datasets import load_dataset
+
+# California housing dataset (1990 census, regression task)
+ds = load_dataset("gvlassis/california_housing")
+
+print(ds)
+# DatasetDict({
+#     train:      Dataset({ features: [...], num_rows: 16640 }),
+#     validation: Dataset({ features: [...], num_rows: 2000 }),
+#     test:       Dataset({ features: [...], num_rows: 2000 }),
+# })
+
+print(ds["train"][0])
+# {'MedInc': 8.3252, 'HouseAge': 41.0, ..., 'MedHouseVal': 4.526}
+```
+
+## Forward pass
+
+The forward pass is the step where **you compute what answer the model gives with its current parameters**. Input flows in one direction toward the output — hence the name.
+
+For the simplest linear model:
+
+$$
+\hat{y} = w x + b
+$$
+
+Multiply the input $x$ by $w$ and add $b$, and you're done. Two parameters — $w$ and $b$ — determine everything the model does.
+
+```python
+import numpy as np
+
+w, b = 2.0, 1.0                    # parameters
+x    = np.array([1.0, 2.0, 3.0])   # 3 inputs
+
+y_hat = w * x + b                  # forward pass
+print(y_hat)                       # [3. 5. 7.]
+```
+
+A neural network stacks this transformation across multiple layers with a nonlinearity (like ReLU) between each pair. That's what lets it learn curved patterns, not just straight lines.
+
+For the simplest two-layer network:
+
+$$
+\hat{y} = W_2 \, \text{ReLU}(W_1 x + b_1) + b_2
+$$
+
+**linear transform → nonlinearity (ReLU) → linear transform**, in sequence. To add more layers, just repeat the same pattern (linear → nonlinearity).
+
+![Neural network forward pass — input x flows through multiple layers to reach prediction ŷ](/posts/how-models-learn/en/forward-neural-network.svg "Neural network forward pass — data flows forward")
+
+```python
+import numpy as np
+
+# 2-layer network: x → ReLU(W1·x + b1) → W2·a1 + b2 = ŷ
+x  = np.array([1.0, 2.0])
+
+W1 = np.array([[0.5, -0.3],         # layer 1 weights (3 × 2)
+               [0.8,  0.2],
+               [-0.1, 0.4]])
+b1 = np.array([0.1, -0.2, 0.05])
+
+W2 = np.array([0.7, -0.5, 0.3])     # layer 2 weights (1 × 3)
+b2 = 0.1
+
+z1    = W1 @ x + b1                 # layer 1 linear
+a1    = np.maximum(0, z1)           # ReLU (nonlinearity)
+y_hat = W2 @ a1 + b2                # layer 2 linear → output
+
+print(y_hat)                        # -0.175
+```
+
+> Before training begins, $W$ and $b$ are random numbers. So the first forward pass usually produces a prediction that's way off. As training progresses and $W$ and $b$ are gradually adjusted, the output finally starts to converge on the right answer.
+
+## Loss function
+
+The forward pass has produced a prediction $\hat{y}$. The ground truth is $y$. The job of the **loss function** is to express how far apart those two values are as **a single number**.
+
+![The loss function — it compresses the ground truth y and the prediction ŷ into one number](/posts/how-models-learn/en/loss-as-scalar.svg "Loss function — two values into one number")
+
+Two inputs (ground truth, prediction), one positive output. The closer the two values, the smaller the output; the further apart, the larger. The function you use depends on the task. Here are the two most common.
+
+### Regression — MSE (Mean Squared Error)
+
+For tasks that predict a **continuous number** — like house prices — you use **mean squared error (MSE)**.
+
+$$
+\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2
+$$
+
+For each data point, you square the difference between the true value and the prediction, then average everything. Squaring serves two purposes: it removes the sign so positive and negative errors don't cancel each other out, and it penalizes large errors more heavily. An error of 2 becomes 4, but an error of 10 becomes 100. A five-fold difference in error balloons into a twenty-five-fold difference in the loss — big mistakes matter a lot more.
+
+![MSE — the vertical distances between data points and the prediction line are squared and averaged](/posts/how-models-learn/en/loss-mse.svg "MSE — squared average distance between data points and the prediction line")
+
+```python
+import numpy as np
+
+y     = np.array([3.0, 5.0, 7.0])
+y_hat = np.array([2.5, 5.5, 8.0])
+
+mse = np.mean((y - y_hat) ** 2)
+print(mse)  # 0.5
+```
+
+### Classification — Cross-Entropy
+
+For tasks that predict a **category** — like "cat or dog" — you use **cross-entropy**.
+
+A classification model's output is typically a probability distribution over categories — e.g., `[cat 0.7, dog 0.2, bird 0.1]`. The ground truth is represented as a **one-hot vector** with a 1 in the correct position and 0s everywhere else — e.g., `[1, 0, 0]` (correct answer: cat). Cross-entropy measures how different those two distributions are.
+
+![Cross-Entropy — the difference between the ground-truth one-hot distribution and the predicted probability distribution](/posts/how-models-learn/en/loss-cross-entropy.svg "Cross-Entropy — the difference between two probability distributions")
+
+$$
+\text{CE} = -\sum_{i} y_i \log \hat{y}_i
+$$
+
+Here $y_i$ is the $i$-th value of the one-hot ground truth, and $\hat{y}_i$ is the probability the model assigned to that position.
+
+Compute it by hand once and you'll see how simple it is. With ground truth `[1, 0, 0]` and prediction `[0.7, 0.2, 0.1]`:
+
+$$
+\text{CE} = -(1 \cdot \log 0.7 + 0 \cdot \log 0.2 + 0 \cdot \log 0.1) = -\log 0.7 \approx 0.36
+$$
+
+Because $y_i$ is 0 everywhere except the correct position, all the other terms vanish. Only the correct position survives. In the end, cross-entropy collapses to **$-\log$ applied to the probability the model assigned to the correct answer** — it measures nothing but "how confident was the model about the right class?"
+
+When the model's confidence in the correct answer is close to 1, the loss is close to 0. As that confidence drops toward 0, the loss explodes. **Confident and right gets a small penalty; confident and wrong gets a huge one.**
+
+![−log(ŷ_correct) — near 0 when the correct-class probability is close to 1, exploding as it approaches 0](/posts/how-models-learn/en/neg-log-curve.svg "The −log(ŷ_correct) curve")
+
+```python
+import numpy as np
+
+y_hat = np.array([0.7, 0.2, 0.1])  # model probabilities
+y     = np.array([1.0, 0.0, 0.0])  # ground truth: class 0
+
+ce = -np.sum(y * np.log(y_hat))
+print(ce)  # 0.3567
+```
+
+### Choosing a loss function is straightforward
+
+- Output is a **continuous value** → MSE family (regression)
+- Output is a **category** → Cross-entropy (classification)
+- For both — **the function must be differentiable**.
+
+Why differentiability matters is explained in the next two sections on backpropagation and the update step.
+
+## Backpropagation
+
+To reduce the loss, you need to know **which direction to move each parameter, and by how much, so that the loss goes down**. The value that carries that information is the **gradient**.
+
+The gradient of the loss with respect to a single parameter $w$, written $\frac{\partial L}{\partial w}$, is a single number that tells you: "if I nudge $w$ up slightly right now, how much does the loss change?"
+
+![The gradient — the slope of the tangent at a point on the curve. Sign gives direction; magnitude gives steepness](/posts/how-models-learn/en/gradient-intuition.svg "The gradient — slope of the tangent at a point on the curve")
+
+- **Sign** encodes direction — positive means increasing $w$ increases the loss; negative means the opposite.
+- **Magnitude** encodes steepness — a large value means the loss changes a lot in that direction; near zero means it's nearly flat.
+
+Together they tell you exactly which way to move and how much of a difference it'll make.
+
+The problem is that a model has far more than one parameter. A single step update requires **a separate gradient for every parameter** — $\frac{\partial L}{\partial w_1}, \frac{\partial L}{\partial w_2}, \dots$.
+
+A real neural network has hundreds of millions of parameters, and each one influences the loss through multiple layers. Computing gradients one by one from scratch is essentially impossible.
+
+That's where the **chain rule** — a basic rule of calculus — and the algorithm that exploits it, **backpropagation**, come in.
+
+### The chain rule
+
+Suppose a function is composed of two steps. For example, $L(w) = g(w)^2$ with $g(w) = 3w + 1$.
+
+A change in $w$ causes a change in $g$, which causes a change in $L$. It's a **chain of dominoes**.
+
+![The chain rule](/posts/how-models-learn/en/chain-rule.svg "The chain rule")
+
+The key insight is simple — the effect of $w$ on $L$ equals **the product of the rates of change at each step**.
+
+$$
+\frac{\partial L}{\partial w} = \frac{\partial L}{\partial g} \cdot \frac{\partial g}{\partial w}
+$$
+
+Working it out directly:
+
+- $\frac{\partial L}{\partial g} = 2g$ (derivative of $L = g^2$)
+- $\frac{\partial g}{\partial w} = 3$ (derivative of $g = 3w+1$)
+- Multiply: $2g \cdot 3 = 6g = 6(3w+1)$
+
+Neural networks work exactly the same way — the chain just gets longer, one link per layer. The total effect of a weight $w$ on the loss $L$ is found by multiplying the derivatives **all the way to the end**.
+
+### Why compute backward?
+
+The chain is established. Now — which direction should we traverse it for efficiency?
+
+The key observation is that **multiple parameters share the tail end of the chain** (the $L$ side). The question is whether you recompute that shared tail every time, or compute it once and reuse it.
+
+A small analogy: suppose you need to compute $2 \times 3 \times 5$, $3 \times 5$, and $5$ all at once. Going left to right, you redo the same multiplications. Going right to left ($5 \rightarrow 3 \times 5 = 15 \rightarrow 2 \times 15 = 30$), each step reuses what came before.
+
+Neural networks work the same way.
+
+- **Forward (parameter → loss)** — for each weight, you'd follow the chain from that weight all the way to $L$ from scratch. With hundreds of millions of weights, you'd repeat the same tail **hundreds of millions of times**.
+- **Backward (loss → parameters)** — you compute the gradient near $L$ once, then carry it backward one layer at a time. The shared tail is reused naturally, so **a single backward pass yields gradients for all parameters at once**.
+
+That's why it's called "back" propagation. Data flows forward; gradients flow backward.
+
+![Forward vs Backward — data flows forward, gradients flow backward](/posts/how-models-learn/en/forward-vs-backward.svg "Forward vs Backward")
+
+The efficiency difference is enormous. Computing gradients parameter by parameter would scale with the square of the number of layers; backpropagation is just one forward pass plus one backward pass, scaling linearly. **That efficiency is what makes training huge neural networks possible.**
+
+### How it works in a neural network
+
+Let's trace the flow through a small two-layer network. In the **forward pass**, input $x$ flows in one direction through $W_1$, ReLU, and $W_2$ all the way to the loss $L$.
+
+![Two-layer network forward pass — one direction from x to L](/posts/how-models-learn/en/two-layer-forward.svg "Two-layer network forward pass")
+
+In the **backward pass**, you start at $L$ and send gradients backward one step at a time.
+
+![Two-layer network backward pass — from L back to each parameter](/posts/how-models-learn/en/two-layer-backward.svg "Two-layer network backward pass")
+
+Each step does the same thing: **the gradient from the previous step × the local derivative at this step**. As the backward pass moves through each layer, the gradient of the loss with respect to that layer's weights — $\frac{\partial L}{\partial W_i}$ — **drops out**, and the gradient to pass to the next layer is formed simultaneously. By the time it reaches the end, every layer's weight gradients are in hand.
+
+```python
+# assumes x, z1, a1, z2, y, W1, W2 from the forward pass above
+# backprop: starting from L, one step at a time
+
+dL_dz2 = -2 * (y - z2)         # start: ∂L/∂z₂
+dL_dW2 = dL_dz2 * a1           # × a₁  → gradient of W₂
+dL_da1 = dL_dz2 * W2           # × W₂  (passed to next step)
+dL_dz1 = dL_da1 * (z1 > 0)     # × ReLU′  (1 if z₁>0, else 0)
+dL_dW1 = np.outer(dL_dz1, x)   # × x   → gradient of W₁
+```
+
+Every line follows the same pattern: **gradient from the previous step × local derivative at this step**. `dL_dW2` is the gradient for the second layer's weights; `dL_dW1` is for the first — one drops out each time the backward pass crosses a layer. Once all the weight gradients are collected, they're handed to the update step and one training step is complete.
+
+## Update
+
+Backpropagation has computed the gradient $\frac{\partial L}{\partial W}$ for every parameter at once. Now you take those gradients and **decide how to move each parameter** — and one step is done.
+
+### Gradient descent
+
+**When the parameter value changes, so does the loss.** For the same data, a different $w$ means a different prediction, which means a different loss. If you plot every $(w, \text{loss})$ pair for one parameter, you get a U-shaped curve — a **loss curve**. With more than one parameter it becomes a surface, but the idea is the same.
+
+![The loss surface over parameters — the lowest point is where we want to be](/posts/how-models-learn/en/loss-surface.svg "The loss surface — heading for the lowest point")
+
+We want to reach the bottom of that surface. But we don't know the whole curve in advance and can't jump to the answer in one shot. Instead, starting from some $w$ (usually random), we look at **only the gradient at the current position and take one step at a time**. It's exactly like descending a mountain in fog — you can't see far ahead, but you can feel the slope underfoot, so you follow it downhill one step at a time.
+
+![Stepping downhill in the steepest direction, one step at a time, on a foggy mountain](/posts/how-models-learn/en/foggy-mountain.svg "The intuition behind gradient descent — descending a foggy mountain one step at a time")
+
+The sign of the gradient tells you which way is downhill.
+
+- Gradient **positive** → increasing $w$ increases the loss → **decrease** $w$ to reduce the loss
+- Gradient **negative** → increasing $w$ decreases the loss → **increase** $w$ to reduce the loss
+
+In both cases, moving **opposite** to the gradient reduces the loss. Condensed into one line, that's the update rule of **gradient descent**.
+
+$$
+w \leftarrow w - \eta \, \frac{\partial L}{\partial w}
+$$
+
+- $\frac{\partial L}{\partial w}$ — the gradient itself (what backpropagation gave us)
+- $-$ (minus) — we want to go in the **opposite direction** of the gradient
+- $\eta$ (eta) — the **learning rate**, a step size controlling how far we move
+
+![1D loss curve — moving by the learning rate in the direction opposite to the gradient](/posts/how-models-learn/en/gradient-step-1d.svg "One step opposite to the gradient")
+
+A large $\eta$ means big steps; a small $\eta$ means tiny steps. Too large and you overshoot the minimum and bounce up the other side (divergence). Too small and you barely move after many steps. Typical values range from 0.001 to 0.1.
+
+![Learning rate comparison — too large / just right / too small](/posts/how-models-learn/en/learning-rate-comparison.svg "Learning rate comparison")
+
+### A small demo
+
+Let's say the loss is $L(w) = (w - 3)^2$ and the optimal value is $w = 3$. Wherever $w$ starts, it should converge to 3.
+
+First, let's find the gradient by hand. Differentiating $L(w) = (w-3)^2$ with respect to $w$ gives **$\frac{\partial L}{\partial w} = 2(w - 3)$**.
+
+> If differentiation isn't familiar: when you differentiate a squared expression, the exponent 2 comes down in front, and $(w-3)$ stays once. That's where the 2 comes from — it's the derivative coefficient. The learning rate $\eta$ appears separately as `lr = 0.1` in the code below.
+
+At each step, we compute this gradient and move $w$ by the learning rate in the opposite direction.
+
+```python
+w  = 0.0   # initial value
+lr = 0.1   # learning rate
+
+for step in range(20):
+    grad = 2 * (w - 3)        # gradient dL/dw
+    w    = w - lr * grad      # step in the opposite direction of the gradient
+    loss = (w - 3) ** 2
+    print(f"step {step:2d}  w={w:.4f}  loss={loss:.4f}")
+```
+
+Output (first few and last):
+
+```
+step  0  w=0.6000  loss=5.7600
+step  1  w=1.0800  loss=3.6864
+step  2  w=1.4640  loss=2.3593
+...
+step 19  w=2.9654  loss=0.0012
+```
+
+![L(w) = (w−3)² — w converging to 3](/posts/how-models-learn/en/quadratic-descent.svg "1D demo — w converging to the correct value of 3")
+
+Twenty steps and we're nearly at the answer. All we did at each step was look at the gradient and move 0.1 in the opposite direction — and it naturally converged to the minimum. This example had one parameter, so we could differentiate by hand. A real neural network has hundreds of millions, and that's exactly why backpropagation was needed to get all the gradients at once.
+
+### Optimizer
+
+Backpropagation has already computed the gradient $\frac{\partial L}{\partial w_i}$ for every parameter. How do you apply the 1D rule above to hundreds of millions of $w_1, w_2, \dots, w_n$?
+
+The answer is simple — **apply the same rule to each parameter independently**. Each one moves by its own gradient, no more.
+
+$$
+\begin{aligned}
+w_1 &\leftarrow w_1 - \eta \, \frac{\partial L}{\partial w_1} \\
+w_2 &\leftarrow w_2 - \eta \, \frac{\partial L}{\partial w_2} \\
+&\vdots \\
+w_n &\leftarrow w_n - \eta \, \frac{\partial L}{\partial w_n}
+\end{aligned}
+$$
+
+Writing out hundreds of millions of lines is unwieldy, so in practice you bundle all parameters into $W$ and write it as one line.
+
+$$
+W \leftarrow W - \eta \, \frac{\partial L}{\partial W}
+$$
+
+"All parameters simultaneously" means they're **all updated in one step** — not that they all move by the same amount. Each parameter has its own gradient, so each one moves in its own direction by its own amount.
+
+The algorithm that performs this update step is called the **optimizer**. Call it once and every parameter in the model is updated according to the rule above.
+
+![The update step — the optimizer updates all parameters at once](/posts/how-models-learn/en/optimizer-flow.svg "Update — the optimizer")
+
+The simplest form we've been using is **SGD (Stochastic Gradient Descent)**. There are also smarter optimizers like **Adam and RMSprop** that adapt the learning rate or add momentum — all variations on gradient descent that apply small corrections to the formula above. In practice, **Adam is the default most people reach for**.
+
+## Putting it all together — training a model with PyTorch
+
+Now let's tie all four steps into **a single training loop** using [PyTorch](https://docs.pytorch.org/docs/2.12/index.html). In the earlier sections I wrote each step out by hand to make the mechanics visible, but in practice PyTorch provides handy abstractions (`nn.Linear`, `nn.MSELoss`, `optim.SGD`, `loss.backward()`) that handle all of it.
+
+Let's train a model to discover the ground truth ($w=2$, $b=1$) from 100 data points drawn from $y = 2x + 1$.
+
+![Linear regression setup — the true line and noisy data](/posts/how-models-learn/en/linreg-setup.svg "Linear regression demo setup")
+
+```python
+import torch
+import torch.nn as nn
+
+# data — true: y = 2x + 1 (+ small noise)
+x = torch.linspace(-3, 3, 100).unsqueeze(1)
+y = 2 * x + 1 + torch.randn(100, 1) * 0.3
+
+# model · loss · optimizer
+model     = nn.Linear(1, 1)         # trainable w, b built in
+loss_fn   = nn.MSELoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=0.05)
+
+# training loop — the four-step skeleton
+for epoch in range(200):
+    y_hat = model(x)                # ① forward
+    loss  = loss_fn(y_hat, y)       # ② loss
+
+    optimizer.zero_grad()           # clear previous gradients
+    loss.backward()                 # ③ backprop (autograd computes automatically)
+    optimizer.step()                # ④ update
+
+w, b = model.weight.item(), model.bias.item()
+print(f"After training: w={w:.2f}, b={b:.2f}")
+# After training: w≈2.00, b≈1.00  (slight variation due to noise)
+```
+
+### Key methods
+
+- `nn.Linear(in, out)` — a linear transform layer with learnable $w$ and $b$ built in
+- `model.parameters()` — the learnable parameters to hand to the optimizer
+- `nn.MSELoss()` — mean squared error (regression loss)
+- `torch.optim.SGD(params, lr)` — gradient descent optimizer
+- `model(x)` — runs the forward pass (internally calls `forward(x)`)
+- `loss.backward()` — autograd traverses the forward graph in reverse and computes gradients for all parameters automatically
+- `optimizer.step()` — updates all parameters at once using the computed gradients
+- `optimizer.zero_grad()` — clears the gradients from the previous step (without this they accumulate)
+
+![Training progress — the prediction line gradually fitting the data](/posts/how-models-learn/en/linreg-progression.svg "Linear regression training progress")
+
+After 200 epochs, the model has converged to within a whisker of the true answer.
+
+## Wrapping up
+
+The four steps in this post form the shared skeleton of every neural network training run.
+
+1. **Forward pass** — compute what answer the model gives with its current parameters
+2. **Loss function** — express how far that answer is from the ground truth as a single number
+3. **Backpropagation** — compute the direction of improvement (gradients) for all parameters at once, efficiently
+4. **Update** — move all parameters in that direction by the learning rate (gradient descent)
+
+![Four-step cheatsheet](/posts/how-models-learn/en/training-cheatsheet.svg "Four-step cheatsheet")
+
+No matter how deep the network or how complex the task, the training loop stays anchored to these four steps. Some architectures add or modify steps, but transformers, GPT, ViT — most of the models you'll encounter run on exactly this skeleton.
+
+Writing this post gave me a chance to look at each step a lot more closely. Concepts like gradient descent and the loss function that I'd had a vague sense of for a long time finally clicked once I slowed down to research them carefully and explain them in my own words.
+
+---
+
+This post may contain factual or interpretive errors. If you spot anything wrong or have a question, feel free to leave a comment.
