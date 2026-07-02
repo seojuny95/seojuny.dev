@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
+import { defaultLocale, type Locale } from '@/lib/i18n';
 
 export type Post = {
   slug: string;
@@ -21,16 +22,15 @@ const LATIN_WPM = 220;
 const CODE_WPM = 100;
 const SECONDS_PER_IMAGE = 12;
 
-const DATE_FORMATTER = new Intl.DateTimeFormat('ko-KR', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const DATE_FORMATTERS: Record<Locale, Intl.DateTimeFormat> = {
+  ko: new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }),
+  en: new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+};
 
-export function formatDate(isoDate: string): string {
+export function formatDate(isoDate: string, locale: Locale = defaultLocale): string {
   const d = new Date(isoDate);
   if (Number.isNaN(d.getTime())) return isoDate;
-  return DATE_FORMATTER.format(d);
+  return DATE_FORMATTERS[locale].format(d);
 }
 
 export function readingTime(content: string): number {
@@ -57,8 +57,10 @@ export function readingTime(content: string): number {
   return Math.max(1, Math.ceil(textMinutes + codeMinutes + imageMinutes));
 }
 
-function postsDir(): string {
-  return path.join(process.cwd(), 'content', 'posts');
+function postsDir(locale: Locale): string {
+  return locale === 'ko'
+    ? path.join(process.cwd(), 'content', 'posts')
+    : path.join(process.cwd(), 'content', locale, 'posts');
 }
 
 function slugFromFilename(filename: string): string {
@@ -66,8 +68,8 @@ function slugFromFilename(filename: string): string {
   return base.replace(/^\d{4}-\d{2}-\d{2}-/, '');
 }
 
-function readAllRaw(): RawPost[] {
-  const dir = postsDir();
+function readAllRaw(locale: Locale): RawPost[] {
+  const dir = postsDir(locale);
   if (!fs.existsSync(dir)) return [];
   const files = fs.readdirSync(dir).filter((f) => /\.mdx?$/.test(f));
   return files.map((filename) => {
@@ -89,21 +91,28 @@ function readAllRaw(): RawPost[] {
   });
 }
 
-export function getAllPosts(): Post[] {
-  return readAllRaw()
+export function getAllPosts(locale: Locale = defaultLocale): Post[] {
+  return readAllRaw(locale)
     .filter((p) => !p.draft)
     .sort((a, b) => (a.date < b.date ? 1 : -1))
     .map(({ draft: _draft, ...post }) => post);
 }
 
-export function getPostBySlug(slug: string): Post {
-  const post = getAllPosts().find((p) => p.slug === slug);
-  if (!post) throw new Error(`Post not found: ${slug}`);
+export function getPostBySlug(slug: string, locale: Locale = defaultLocale): Post {
+  const post = getAllPosts(locale).find((p) => p.slug === slug);
+  if (!post) throw new Error(`Post not found: ${slug} (${locale})`);
   return post;
 }
 
-export function getAdjacentPosts(slug: string): { prev?: Post; next?: Post } {
-  const posts = getAllPosts();
+export function hasPost(slug: string, locale: Locale): boolean {
+  return getAllPosts(locale).some((p) => p.slug === slug);
+}
+
+export function getAdjacentPosts(
+  slug: string,
+  locale: Locale = defaultLocale,
+): { prev?: Post; next?: Post } {
+  const posts = getAllPosts(locale);
   const i = posts.findIndex((p) => p.slug === slug);
   if (i === -1) return {};
   return {
@@ -112,8 +121,8 @@ export function getAdjacentPosts(slug: string): { prev?: Post; next?: Post } {
   };
 }
 
-export function getSearchIndex(): SearchEntry[] {
-  return getAllPosts().map(({ slug, title, summary, tags }) => ({
+export function getSearchIndex(locale: Locale = defaultLocale): SearchEntry[] {
+  return getAllPosts(locale).map(({ slug, title, summary, tags }) => ({
     slug,
     title,
     summary,

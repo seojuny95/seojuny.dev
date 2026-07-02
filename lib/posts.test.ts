@@ -5,6 +5,7 @@ import os from 'node:os';
 
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'posts-test-'));
 const POSTS_TMP = path.join(TMP, 'content', 'posts');
+const POSTS_EN_TMP = path.join(TMP, 'content', 'en', 'posts');
 
 beforeAll(() => {
   fs.mkdirSync(POSTS_TMP, { recursive: true });
@@ -19,6 +20,11 @@ beforeAll(() => {
   fs.writeFileSync(
     path.join(POSTS_TMP, '2026-04-20-draft.mdx'),
     `---\ntitle: "초안"\ndate: "2026-04-20"\ndraft: true\n---\n\n미완성\n`,
+  );
+  fs.mkdirSync(POSTS_EN_TMP, { recursive: true });
+  fs.writeFileSync(
+    path.join(POSTS_EN_TMP, '2026-04-10-first.mdx'),
+    `---\ntitle: "First post"\ndate: "2026-04-10"\nsummary: "Hello"\ntags: ["diary"]\n---\n\nBody 1\n`,
   );
   vi.spyOn(process, 'cwd').mockReturnValue(TMP);
 });
@@ -127,5 +133,38 @@ describe('readingTime', () => {
       expect(typeof p.readingTime).toBe('number');
       expect(p.readingTime).toBeGreaterThanOrEqual(1);
     }
+  });
+});
+
+describe('locale', () => {
+  it('defaults to ko and keeps existing behavior', () => {
+    expect(posts.getAllPosts().map((p) => p.slug)).toEqual(['second', 'first']);
+  });
+
+  it('reads content/en/posts for en', () => {
+    expect(posts.getAllPosts('en').map((p) => p.slug)).toEqual(['first']);
+    expect(posts.getPostBySlug('first', 'en').title).toBe('First post');
+  });
+
+  it('does not fall back across locales', () => {
+    expect(() => posts.getPostBySlug('second', 'en')).toThrow();
+    expect(posts.getSearchIndex('en')).toHaveLength(1);
+  });
+
+  it('hasPost reports per-locale existence', () => {
+    expect(posts.hasPost('first', 'ko')).toBe(true);
+    expect(posts.hasPost('first', 'en')).toBe(true);
+    expect(posts.hasPost('second', 'en')).toBe(false);
+    expect(posts.hasPost('draft', 'ko')).toBe(false);
+  });
+});
+
+describe('formatDate locale', () => {
+  it('formats ko by default', () => {
+    expect(posts.formatDate('2026-04-10')).toBe('2026년 4월 10일');
+  });
+
+  it('formats en as Month D, YYYY', () => {
+    expect(posts.formatDate('2026-04-10', 'en')).toBe('April 10, 2026');
   });
 });

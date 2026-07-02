@@ -2,19 +2,20 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NAV_ITEMS } from '@/lib/nav';
+import { navItems } from '@/lib/nav';
+import { localePath, type Locale } from '@/lib/i18n';
 
-export function NavLinks() {
+export function NavLinks({ locale }: { locale: Locale }) {
   const pathname = usePathname();
+  const aboutPath = localePath(locale, '/about');
+  const isAbout = pathname === aboutPath || pathname.startsWith(`${aboutPath}/`);
   return (
     <nav
       aria-label="Primary"
       className="hidden md:flex items-center gap-6 ml-8 text-[14px] font-medium"
     >
-      {NAV_ITEMS.map((item) => {
-        const active = item.match.some(
-          (m) => pathname === m || pathname.startsWith(`${m}/`),
-        );
+      {navItems(locale).map((item) => {
+        const active = item.href === aboutPath ? isAbout : !isAbout;
         return (
           <Link
             key={item.href}
