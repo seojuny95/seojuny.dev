@@ -1,0 +1,47 @@
+<svg width="100%" viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Types of Fine-Tuning — How Many Weights Are Trained</title>
+  <desc>Methods for adapting a pretrained model, arranged by the fraction of weights trained: from feature extraction (~0%) through PEFT (~0.x%) to full fine-tuning (100%). For most practitioners, PEFT is the most realistic option.</desc>
+
+  <text x="340" y="30" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Types of Fine-Tuning — How Many Weights Are Trained</text>
+
+  <!-- spectrum axis -->
+  <line x1="70" y1="150" x2="610" y2="150" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="150" cy="150" r="4" fill="#000"/>
+  <circle cx="340" cy="150" r="4" fill="#000"/>
+  <circle cx="530" cy="150" r="4" fill="#000"/>
+
+  <!-- Feature Extraction -->
+  <rect x="78" y="92" width="144" height="34" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="150" y="108" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Feature Extraction</text>
+  <text x="150" y="121" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.6">head-only learning</text>
+  <line x1="150" y1="126" x2="150" y2="146" stroke="#000" stroke-width="1" opacity="0.5"/>
+  <text x="150" y="178" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">backbone frozen</text>
+  <text x="150" y="193" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">head only</text>
+  <text x="150" y="212" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11.5" font-weight="600" fill="#000">&#8776; 0%</text>
+
+  <!-- PEFT (highlighted) -->
+  <rect x="266" y="88" width="148" height="38" rx="6" fill="#fff" stroke="#000" stroke-width="2.4"/>
+  <text x="340" y="106" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="700" fill="#000">PEFT</text>
+  <text x="340" y="120" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.6">LoRA · QLoRA</text>
+  <line x1="340" y1="126" x2="340" y2="146" stroke="#000" stroke-width="1" opacity="0.5"/>
+  <text x="340" y="178" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">backbone frozen</text>
+  <text x="340" y="193" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">adapter only</text>
+  <text x="340" y="212" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11.5" font-weight="600" fill="#000">~ 0.x%</text>
+
+  <!-- Full Fine-Tuning -->
+  <rect x="456" y="92" width="148" height="34" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="530" y="108" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Full Fine-Tuning</text>
+  <text x="530" y="121" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.6">all layers</text>
+  <line x1="530" y1="126" x2="530" y2="146" stroke="#000" stroke-width="1" opacity="0.5"/>
+  <text x="530" y="178" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">all layers updated</text>
+  <text x="530" y="212" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11.5" font-weight="600" fill="#000">100%</text>
+
+  <!-- axis end labels -->
+  <text x="70" y="240" text-anchor="start" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">&#8592; less modified</text>
+  <text x="610" y="240" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">more modified &#8594;</text>
+
+  <!-- divider + conclusion -->
+  <line x1="60" y1="262" x2="620" y2="262" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="286" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">Full fine-tuning demands too many resources; feature extraction doesn't suit generative models</text>
+  <text x="340" y="306" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">&#8594; For us, PEFT is the most practical choice</text>
+</svg>

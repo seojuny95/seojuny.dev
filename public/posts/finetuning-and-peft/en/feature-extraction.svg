@@ -1,0 +1,41 @@
+<svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Feature Extraction — Backbone Frozen, Head Trained</title>
+  <desc>All pretrained backbone layers are frozen; only the newly attached output layer (head) is trained. The backbone is used as a fixed feature extractor; the head produces the final answer.</desc>
+
+  <defs>
+    <pattern id="fx-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="0.6" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Feature Extraction — Backbone Frozen, Head Trained</text>
+
+  <!-- head (newly attached, trained) -->
+  <rect x="195" y="58" width="120" height="26" rx="5" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="2.4"/>
+  <text x="255" y="75" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">head</text>
+  <text x="326" y="69" font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#000">&#8592; attached &amp; trained</text>
+
+  <!-- backbone layers (frozen) -->
+  <rect x="180" y="92" width="150" height="26" rx="5" fill="url(#fx-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="255" y="109" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">layer &#9312;</text>
+  <rect x="180" y="125" width="150" height="26" rx="5" fill="url(#fx-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="255" y="142" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">layer &#9313;</text>
+  <rect x="180" y="158" width="150" height="26" rx="5" fill="url(#fx-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="255" y="175" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">layer &#9314;</text>
+  <rect x="180" y="191" width="150" height="26" rx="5" fill="url(#fx-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="255" y="208" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">layer &#9315;</text>
+
+  <!-- bracket: backbone frozen -->
+  <path d="M 344 92 L 352 92 L 352 217 L 344 217" fill="none" stroke="#000" stroke-width="1.3"/>
+  <text x="362" y="150" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Backbone frozen</text>
+  <text x="362" y="167" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">not trained</text>
+
+  <!-- caption -->
+  <text x="340" y="252" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">Backbone unchanged; only the newly attached head is trained — suits classification-like tasks</text>
+
+  <!-- legend -->
+  <rect x="206" y="270" width="16" height="12" rx="2" fill="url(#fx-hatch)" stroke="#000" stroke-width="1.4"/>
+  <text x="228" y="280" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.75">Frozen</text>
+  <rect x="350" y="270" width="16" height="12" rx="2" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="1.8"/>
+  <text x="372" y="280" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.75">Trained</text>
+</svg>

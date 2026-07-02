@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Chain rule — multiply the derivatives along the chain</title>
+  <desc>In the chain w → g → L, a change in one variable propagates to the next. Multiplying the derivatives at each step (×3, ×2g) gives the total effect of w on L (∂L/∂w = 6g).</desc>
+
+  <defs>
+    <marker id="cr-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Chain rule — multiply derivatives along the chain</text>
+
+  <!-- ============ 3 nodes: w → g → L ============ -->
+  <!-- Node w -->
+  <circle cx="110" cy="140" r="32" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="110" y="147" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="18" font-weight="600" fill="#000">w</text>
+
+  <!-- Node g -->
+  <circle cx="340" cy="140" r="32" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="340" y="147" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="18" font-weight="600" fill="#000">g</text>
+
+  <!-- Node L -->
+  <circle cx="570" cy="140" r="32" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="570" y="147" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="18" font-weight="600" fill="#000">L</text>
+
+  <!-- ============ Arrows + transform labels ============ -->
+  <!-- w → g -->
+  <path d="M 144 140 L 305 140" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" marker-end="url(#cr-arr)"/>
+  <text x="225" y="118" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="600" fill="#000">g = 3w + 1</text>
+  <text x="225" y="170" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="700" fill="#000">∂g/∂w = 3</text>
+
+  <!-- g → L -->
+  <path d="M 374 140 L 535 140" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" marker-end="url(#cr-arr)"/>
+  <text x="455" y="118" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="600" fill="#000">L = g²</text>
+  <text x="455" y="170" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="700" fill="#000">∂L/∂g = 2g</text>
+
+  <!-- ============ Bottom: chain rule formula + result ============ -->
+  <line x1="60" y1="215" x2="620" y2="215" stroke="#000" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.4"/>
+
+  <text x="340" y="240" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">Multiply the two derivatives to get how w affects L</text>
+
+  <text x="340" y="270" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="14" font-weight="700" fill="#000">∂L/∂w  =  ∂L/∂g  ×  ∂g/∂w  =  2g × 3  =  6g</text>
+
+  <text x="340" y="296" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">A neural network is just a longer chain — the same rule applies</text>
+</svg>

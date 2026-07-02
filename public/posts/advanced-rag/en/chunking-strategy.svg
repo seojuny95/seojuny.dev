@@ -1,0 +1,31 @@
+<svg width="100%" viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Chunking Strategy — Where to Split</title>
+  <desc>The same text split three ways. Character count splits at a fixed length and may cut mid-sentence. Recursive split prioritizes paragraph and sentence boundaries to avoid cutting sentences. Semantic split cuts where meaning shifts so each chunk holds one topic.</desc>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Chunking Strategy — Where to Split</text>
+
+  <!-- Row 1: Character count -->
+  <text x="24" y="86" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Character count</text>
+  <text x="24" y="102" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">basic</text>
+  <rect x="150" y="70" width="156" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="310" y="70" width="156" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="470" y="70" width="160" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="150" y="120" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">Fixed-length cuts may split a sentence across two chunks</text>
+
+  <!-- Row 2: Recursive split -->
+  <text x="24" y="161" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Recursive split</text>
+  <text x="24" y="177" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">recursive</text>
+  <rect x="150" y="145" width="120" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="274" y="145" width="184" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="462" y="145" width="168" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="150" y="195" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">Paragraph/sentence boundaries prevent mid-sentence cuts</text>
+
+  <!-- Row 3: Semantic split -->
+  <text x="24" y="236" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Semantic split</text>
+  <text x="24" y="252" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.6">semantic</text>
+  <rect x="150" y="220" width="230" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <rect x="384" y="220" width="246" height="30" rx="4" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="150" y="270" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">Splits where meaning shifts — one topic per chunk</text>
+
+  <text x="340" y="298" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">How you split directly affects the quality of what gets retrieved</text>
+</svg>

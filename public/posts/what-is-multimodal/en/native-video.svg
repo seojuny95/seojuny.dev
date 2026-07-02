@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Two Approaches to Video — Slice &amp; Merge vs Native Video</title>
+  <desc>One approach slices video into frames and audio, processes them through multiple models, then merges results. The other, like TwelveLabs, uses a single video-native model that understands frames, time, and audio all at once.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fff; stroke: #171717; stroke-width: 1.7; }
+      .acc { fill: #fff8f4; stroke: #f26522; stroke-width: 2.2; }
+      .lbl { font-size: 11px; font-weight: 600; text-anchor: middle; }
+      .sub { font-size: 9.5px; fill: #8a8a85; text-anchor: middle; }
+      .tag { font-size: 11.5px; font-weight: 700; text-anchor: start; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .cap { font-size: 11.5px; fill: #8a8a85; text-anchor: middle; }
+    </style>
+    <marker id="nv-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="24" class="hdr">Two Approaches to Video</text>
+
+  <!-- ① Slice & Merge -->
+  <text x="30" y="54" class="tag">① Slice &amp; Merge</text>
+  <rect class="box" x="30" y="66" width="64" height="40" rx="6"/>
+  <text x="62" y="86" class="lbl" dominant-baseline="central">Video</text>
+  <path d="M 94 86 L 114 86" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#nv-arr)"/>
+  <rect class="box" x="116" y="66" width="106" height="40" rx="6"/>
+  <text x="169" y="86" class="lbl" font-size="10" dominant-baseline="central">Split frames·audio</text>
+  <path d="M 222 86 L 242 86" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#nv-arr)"/>
+  <rect class="box" x="244" y="66" width="100" height="40" rx="6"/>
+  <text x="294" y="86" class="lbl" font-size="10" dominant-baseline="central">Multiple models</text>
+  <path d="M 344 86 L 364 86" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#nv-arr)"/>
+  <rect class="box" x="366" y="66" width="84" height="40" rx="6"/>
+  <text x="408" y="86" class="lbl" dominant-baseline="central">Merge</text>
+
+  <!-- ② Native video model -->
+  <text x="30" y="146" class="tag">② Native Video Model</text>
+  <rect class="box" x="30" y="156" width="64" height="44" rx="6"/>
+  <text x="62" y="178" class="lbl" dominant-baseline="central">Video</text>
+  <path d="M 94 178 L 114 178" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#nv-arr)"/>
+  <rect class="acc" x="116" y="156" width="200" height="44" rx="7"/>
+  <text x="216" y="173" class="lbl" dominant-baseline="central">Video-native model</text>
+  <text x="216" y="190" class="sub">frame, time &amp; audio as one</text>
+  <path d="M 316 178 L 336 178" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#nv-arr)"/>
+  <rect class="box" x="338" y="156" width="92" height="44" rx="6"/>
+  <text x="384" y="178" class="lbl" dominant-baseline="central">Video Analysis</text>
+
+  <text x="340" y="226" class="cap">Rather than slicing and merging, a native video model understands frame, time, and audio at once</text>
+</svg>

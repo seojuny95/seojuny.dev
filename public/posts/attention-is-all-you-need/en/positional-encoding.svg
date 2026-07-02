@@ -1,0 +1,55 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Positional Encoding — word embedding + positional embedding = input vector</title>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Word info + Position info → Model input</text>
+
+  <text x="120" y="68" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">Word embedding</text>
+  <text x="360" y="68" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">Positional embedding</text>
+  <text x="585" y="68" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">Model input</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">
+    <rect x="60" y="85" width="120" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="80" y="108" text-anchor="middle" font-size="12">"I"</text>
+    <text x="140" y="108" text-anchor="middle" font-size="10" opacity="0.6">[0.1, 0.3, …]</text>
+
+    <rect x="60" y="135" width="120" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="80" y="158" text-anchor="middle" font-size="12">"love"</text>
+    <text x="143" y="158" text-anchor="middle" font-size="10" opacity="0.6">[0.5, 1.2, …]</text>
+
+    <rect x="60" y="185" width="120" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="80" y="208" text-anchor="middle" font-size="12">"you"</text>
+    <text x="143" y="208" text-anchor="middle" font-size="10" opacity="0.6">[0.3, 0.6, …]</text>
+  </g>
+
+  <text x="220" y="158" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="24" font-weight="300" fill="#000">+</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">
+    <rect x="260" y="85" width="200" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="290" y="108" text-anchor="middle" font-size="11" opacity="0.7">Position 0</text>
+    <text x="395" y="108" text-anchor="middle" font-size="10" opacity="0.6">[unique pattern values…]</text>
+
+    <rect x="260" y="135" width="200" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="290" y="158" text-anchor="middle" font-size="11" opacity="0.7">Position 1</text>
+    <text x="395" y="158" text-anchor="middle" font-size="10" opacity="0.6">[unique pattern values…]</text>
+
+    <rect x="260" y="185" width="200" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="290" y="208" text-anchor="middle" font-size="11" opacity="0.7">Position 2</text>
+    <text x="395" y="208" text-anchor="middle" font-size="10" opacity="0.6">[unique pattern values…]</text>
+  </g>
+
+  <text x="500" y="158" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="24" font-weight="300" fill="#000">=</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">
+    <rect x="540" y="85" width="100" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <text x="590" y="108" text-anchor="middle" font-size="11">"I" + pos₀</text>
+
+    <rect x="540" y="135" width="100" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <text x="590" y="158" text-anchor="middle" font-size="11">"love" + pos₁</text>
+
+    <rect x="540" y="185" width="100" height="40" rx="4" fill="#fff" stroke="#000" stroke-width="1.8"/>
+    <text x="590" y="208" text-anchor="middle" font-size="11">"you" + pos₂</text>
+  </g>
+
+  <text x="340" y="265" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000" opacity="0.75">This vector becomes the model's input</text>
+  <text x="340" y="290" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.55">What the word is + its position — merged into one vector</text>
+</svg>

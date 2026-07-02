@@ -1,0 +1,46 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Full Fine-Tuning Memory — ~16 Bytes per Parameter</title>
+  <desc>Full fine-tuning requires not just the weights (2 bytes) but also gradients (2 bytes) and optimizer state plus a master copy (~12 bytes) in memory — about 16 bytes per parameter. A 7B-parameter model needs ~112 GB, far beyond a personal GPU's 16–24 GB.</desc>
+
+  <defs>
+    <pattern id="fm-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="0.6" opacity="0.2"/>
+    </pattern>
+    <marker id="fm-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Full Fine-Tuning Memory — ~16 Bytes per Parameter</text>
+
+  <!-- 16-byte stack bar -->
+  <!-- optimizer state 12B -->
+  <rect x="110" y="64" width="64" height="132" fill="url(#fm-hatch)" stroke="#000" stroke-width="1.5"/>
+  <text x="184" y="126" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">Optimizer + copy</text>
+  <text x="184" y="142" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#000" opacity="0.7">≈ 12 B</text>
+  <!-- gradient 2B -->
+  <rect x="110" y="196" width="64" height="22" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="1.5"/>
+  <text x="184" y="211" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">Gradient <tspan font-family="ui-monospace, Menlo, monospace" font-size="10.5" opacity="0.7">2 B</tspan></text>
+  <!-- weights 2B -->
+  <rect x="110" y="218" width="64" height="22" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="184" y="233" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">Weights <tspan font-family="ui-monospace, Menlo, monospace" font-size="10.5" opacity="0.7">2 B</tspan></text>
+
+  <text x="142" y="258" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.7">≈ 16 B each</text>
+
+  <!-- × 7B = 112GB -->
+  <path d="M 305 150 L 345 150" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#fm-arr)"/>
+  <text x="352" y="143" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#000">× 7B params</text>
+  <text x="352" y="166" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="700" fill="#000">≈ 112 GB</text>
+
+  <!-- comparison bar -->
+  <rect x="520" y="70" width="40" height="170" fill="#000" fill-opacity="0.06" stroke="#000" stroke-width="1.6"/>
+  <text x="540" y="62" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" font-weight="600" fill="#000">112GB</text>
+  <text x="540" y="256" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.7">needed</text>
+
+  <rect x="582" y="204" width="40" height="36" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="602" y="196" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="#000" opacity="0.85">~24GB</text>
+  <text x="602" y="256" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.7">My GPU</text>
+
+  <!-- caption -->
+  <text x="340" y="286" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000" opacity="0.75">Training overhead (gradients · optimizer state) occupies most of memory, dwarfing the weights</text>
+</svg>

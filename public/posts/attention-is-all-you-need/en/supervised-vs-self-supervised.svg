@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Supervised vs Self-supervised learning — where does the label come from?</title>
+
+  <defs>
+    <marker id="ar-sv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Supervised vs Self-supervised — who creates the labels?</text>
+
+  <g font-family="-apple-system, system-ui, sans-serif" fill="#000">
+    <rect x="30" y="55" width="290" height="205" rx="6" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="175" y="78" text-anchor="middle" font-size="13" font-weight="500">Supervised Learning</text>
+
+    <rect x="55" y="100" width="100" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="105" y="123" text-anchor="middle" font-size="11">cat photo</text>
+
+    <line x1="155" y1="118" x2="190" y2="118" stroke="#000" stroke-width="1.2" marker-end="url(#ar-sv)"/>
+
+    <rect x="195" y="100" width="100" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="245" y="123" text-anchor="middle" font-size="11" font-weight="500">"cat"</text>
+
+    <text x="175" y="160" text-anchor="middle" font-size="11" opacity="0.7">human-labeled ground truth</text>
+    <text x="175" y="180" text-anchor="middle" font-size="10" opacity="0.55">→ high quality, expensive</text>
+
+    <text x="175" y="220" text-anchor="middle" font-size="10" opacity="0.55">e.g. ImageNet, translation datasets</text>
+
+    <rect x="360" y="55" width="290" height="205" rx="6" fill="#fff" stroke="#000" stroke-width="1.4"/>
+    <text x="505" y="78" text-anchor="middle" font-size="13" font-weight="500">Self-supervised Learning</text>
+
+    <rect x="385" y="100" width="130" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="450" y="123" text-anchor="middle" font-size="11">"I love ___"</text>
+
+    <line x1="515" y1="118" x2="540" y2="118" stroke="#000" stroke-width="1.2" marker-end="url(#ar-sv)"/>
+
+    <rect x="545" y="100" width="80" height="36" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+    <text x="585" y="123" text-anchor="middle" font-size="11" font-weight="500">"you"</text>
+
+    <text x="505" y="160" text-anchor="middle" font-size="11" opacity="0.7">the label is already in the data</text>
+    <text x="505" y="180" text-anchor="middle" font-size="10" opacity="0.55">→ use all internet text freely</text>
+
+    <text x="505" y="220" text-anchor="middle" font-size="10" opacity="0.55">e.g. GPT, Claude — "next word prediction"</text>
+  </g>
+</svg>

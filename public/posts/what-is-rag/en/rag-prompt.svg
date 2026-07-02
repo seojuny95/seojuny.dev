@@ -1,0 +1,33 @@
+<svg width="100%" viewBox="0 0 680 180" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Assemble Prompt</title>
+  <desc>The retrieved chunks are used as context and assembled with the question into a prompt. The answering rules go in the system message; the context and question go in the user message.</desc>
+  <defs>
+    <marker id="pr-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <text x="340" y="24" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Assemble Prompt — Combine Context and Question</text>
+
+  <!-- two inputs -->
+  <rect x="34" y="54" width="150" height="40" rx="6" fill="#000" fill-opacity="0.05" stroke="#000" stroke-width="1.5"/>
+  <text x="109" y="74" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">Retrieved chunks (context)</text>
+  <rect x="34" y="104" width="150" height="40" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="109" y="124" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#000">Question</text>
+
+  <path d="M 186 74 C 230 74, 230 96, 268 96" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#pr-arr)"/>
+  <path d="M 186 124 C 230 124, 230 110, 268 110" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#pr-arr)"/>
+
+  <!-- prompt -->
+  <rect x="270" y="48" width="240" height="108" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
+  <text x="390" y="64" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">Prompt</text>
+  <rect x="284" y="74" width="212" height="32" rx="4" fill="#000" fill-opacity="0.04" stroke="#000" stroke-width="1.2"/>
+  <text x="294" y="86" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="600" fill="#000">system</text>
+  <text x="294" y="99" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.7">Answer using the documents (instruction)</text>
+  <rect x="284" y="112" width="212" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
+  <text x="294" y="124" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="600" fill="#000">user</text>
+  <text x="294" y="137" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.7">Context + question</text>
+
+  <path d="M 512 102 L 552 102" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#pr-arr)"/>
+  <rect x="554" y="80" width="98" height="44" rx="6" fill="#fff" stroke="#000" stroke-width="1.6"/>
+  <text x="603" y="102" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">To LLM</text>
+</svg>

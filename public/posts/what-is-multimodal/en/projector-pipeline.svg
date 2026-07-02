@@ -1,0 +1,65 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Multiple Modalities into a Single Token Sequence</title>
+  <desc>Image, audio, and video each pass through a dedicated encoder and then a projector to become tokens. Text passes through a tokenizer. The LLM receives modal tokens and text tokens concatenated in one sequence, and predicts the next token to produce text output.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fff; stroke: #171717; stroke-width: 1.7; }
+      .acc { fill: #fff8f4; stroke: #f26522; stroke-width: 2.2; }
+      .lbl { font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+      .sub { font-size: 10px; fill: #8a8a85; text-anchor: middle; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .albl { font-size: 10px; font-weight: 600; text-anchor: middle; }
+      .cap { font-size: 11.5px; fill: #8a8a85; text-anchor: middle; }
+    </style>
+    <marker id="pp-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="26" class="hdr">Multiple Modalities into One Token Sequence</text>
+
+  <!-- Modal inputs -->
+  <rect class="box" x="22" y="64" width="72" height="38" rx="6"/>
+  <text x="58" y="83" class="lbl" dominant-baseline="central">Image</text>
+  <rect class="box" x="22" y="116" width="72" height="38" rx="6"/>
+  <text x="58" y="135" class="lbl" dominant-baseline="central">Audio</text>
+  <rect class="box" x="22" y="168" width="72" height="38" rx="6"/>
+  <text x="58" y="187" class="lbl" dominant-baseline="central">Video</text>
+
+  <path d="M 94 83 L 138 122" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+  <path d="M 94 135 L 138 135" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+  <path d="M 94 187 L 138 148" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+
+  <rect class="box" x="140" y="98" width="100" height="74" rx="7"/>
+  <text x="190" y="127" class="lbl" dominant-baseline="central">Modality</text>
+  <text x="190" y="145" class="lbl" dominant-baseline="central">Encoder</text>
+
+  <path d="M 240 135 L 264 135" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+  <rect class="acc" x="266" y="108" width="86" height="54" rx="6"/>
+  <text x="309" y="135" class="lbl" dominant-baseline="central">Projector</text>
+
+  <!-- Text path -->
+  <rect class="box" x="22" y="252" width="72" height="38" rx="6"/>
+  <text x="58" y="271" class="lbl" dominant-baseline="central">Text</text>
+  <path d="M 94 271 L 138 271" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+  <rect class="box" x="140" y="252" width="100" height="38" rx="6"/>
+  <text x="190" y="271" class="lbl" dominant-baseline="central">Tokenizer</text>
+
+  <!-- Merge → LLM -->
+  <path d="M 352 135 C 388 135 392 150 416 152" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+  <text x="388" y="120" class="albl">Modal tokens</text>
+  <path d="M 240 271 C 320 271 340 198 416 188" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+  <text x="330" y="250" class="albl">Text tokens</text>
+
+  <rect class="box" x="418" y="122" width="102" height="92" rx="7"/>
+  <text x="469" y="160" class="lbl" dominant-baseline="central">LLM</text>
+  <text x="469" y="180" class="sub">next-token pred.</text>
+
+  <path d="M 520 168 L 552 168" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#pp-arr)"/>
+  <rect class="box" x="554" y="146" width="106" height="44" rx="6"/>
+  <text x="607" y="168" class="lbl" dominant-baseline="central">Text Output</text>
+
+  <text x="340" y="306" class="cap">Image/audio/video go through encoders; text through a tokenizer — all become tokens fed into the LLM</text>
+</svg>
