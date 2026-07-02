@@ -58,7 +58,7 @@
   <path d="M 392 220 L 408 220" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ov-arr)"/>
 
   <rect x="408" y="200" width="84" height="40" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
-  <text x="450" y="220" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="500" fill="#000">Assemble prompt</text>
+  <text x="450" y="220" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="500" fill="#000">Build prompt</text>
   <path d="M 492 220 L 508 220" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ov-arr)"/>
 
   <rect x="508" y="200" width="84" height="40" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>

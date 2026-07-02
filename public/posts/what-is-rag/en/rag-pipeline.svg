@@ -19,7 +19,7 @@
   <!-- Retriever -->
   <rect x="164" y="86" width="126" height="62" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
   <text x="227" y="111" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Retriever</text>
-  <text x="227" y="129" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">Retriever</text>
+  <text x="227" y="129" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">finds relevant docs</text>
 
   <!-- External document store (below) + bidirectional -->
   <path d="M 227 196 L 227 150" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-start="url(#rp-arr)" marker-end="url(#rp-arr)"/>
@@ -29,12 +29,12 @@
 
   <!-- Retriever -> Generator -->
   <path d="M 292 117 L 356 117" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#rp-arr)"/>
-  <text x="324" y="105" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="600" fill="#000">Question + docs</text>
+  <text x="324" y="105" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" font-weight="600" fill="#000">+ docs</text>
 
   <!-- Generator -->
   <rect x="358" y="86" width="126" height="62" rx="6" fill="#fff" stroke="#000" stroke-width="1.7"/>
   <text x="421" y="111" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12.5" font-weight="600" fill="#000">Generator</text>
-  <text x="421" y="129" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">Generator · LLM</text>
+  <text x="421" y="129" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">writes the answer</text>
 
   <path d="M 486 117 L 524 117" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" marker-end="url(#rp-arr)"/>
 
