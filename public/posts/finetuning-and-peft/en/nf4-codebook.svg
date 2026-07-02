@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>NF4 Codebook — Each 4-Bit Code Maps to a Fixed Real Value</title>
+  <desc>4-bit can represent codes from 0000 to 1111 — just 16. What real value each code stands for is set by the codebook. NF4 places values densely near zero (0, 0.02, 0.04…) and sparsely at the extremes. Weight 0.03 maps to the nearest table entry 0.04, which is stored as code 1001 (4-bit).</desc>
+
+  <text x="340" y="32" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">NF4 Codebook — Each 4-Bit Code Maps to a Fixed Real Value</text>
+
+  <!-- column headers -->
+  <text x="210" y="70" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">4-bit code</text>
+  <text x="370" y="70" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#000">Real value</text>
+  <line x1="120" y1="78" x2="470" y2="78" stroke="#000" stroke-width="0.8" opacity="0.4"/>
+  <line x1="290" y1="84" x2="290" y2="318" stroke="#000" stroke-width="0.6" opacity="0.3"/>
+
+  <!-- highlighted row background (1001 → 0.04) -->
+  <rect x="118" y="230" width="354" height="26" rx="3" fill="#000" fill-opacity="0.07"/>
+
+  <!-- rows -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="14" fill="#000">
+    <text x="210" y="111" text-anchor="middle">0000</text>  <text x="370" y="111" text-anchor="middle">-1.0</text>
+    <text x="210" y="141" text-anchor="middle" opacity="0.5">&#8942;</text> <text x="370" y="141" text-anchor="middle" opacity="0.5">&#8942;</text>
+    <text x="210" y="171" text-anchor="middle">0111</text>  <text x="370" y="171" text-anchor="middle">0.00</text>
+    <text x="210" y="201" text-anchor="middle">1000</text>  <text x="370" y="201" text-anchor="middle">0.02</text>
+    <text x="210" y="249" text-anchor="middle" font-weight="700">1001</text>  <text x="370" y="249" text-anchor="middle" font-weight="700">0.04</text>
+    <text x="210" y="279" text-anchor="middle">1010</text>  <text x="370" y="279" text-anchor="middle">0.07</text>
+    <text x="210" y="309" text-anchor="middle" opacity="0.5">&#8942;</text> <text x="370" y="309" text-anchor="middle" opacity="0.5">&#8942;</text>
+  </g>
+
+  <!-- right annotations -->
+  <text x="500" y="186" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000">Near 0: dense</text>
+  <text x="500" y="201" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="#000" opacity="0.6">(steps of 0.02)</text>
+  <text x="500" y="111" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">Extremes: sparse</text>
+
+  <!-- 0.03 callout -->
+  <text x="118" y="249" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.85">0.03 &#8594;</text>
+
+  <!-- caption -->
+  <line x1="40" y1="332" x2="640" y2="332" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="352" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">Weight 0.03 &#8594; nearest table value 0.04 &#8594; only code 1001 (4-bit) is stored</text>
+</svg>

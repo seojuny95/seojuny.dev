@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Bit Width Determines How Many Values Can Be Represented</title>
+  <desc>One bit is either 0 or 1. Each additional bit doubles the number of possibilities. So 4 bits give 2×2×2×2=16 values, and 16 bits give 2 multiplied 16 times = 65,536 values.</desc>
+
+  <text x="340" y="30" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">Each Bit Is 0 or 1 — Every Added Bit Doubles the Count</text>
+
+  <!-- 4-bit -->
+  <text x="66" y="100" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">4-bit</text>
+  <g fill="#fff" stroke="#000" stroke-width="1.4">
+    <rect x="116" y="84" width="28" height="28" rx="3"/>
+    <rect x="150" y="84" width="28" height="28" rx="3"/>
+    <rect x="184" y="84" width="28" height="28" rx="3"/>
+    <rect x="218" y="84" width="28" height="28" rx="3"/>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#000" opacity="0.7" text-anchor="middle">
+    <text x="130" y="102">0/1</text><text x="164" y="102">0/1</text><text x="198" y="102">0/1</text><text x="232" y="102">0/1</text>
+  </g>
+  <text x="286" y="103" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000">2×2×2×2 = <tspan font-weight="700">16 values</tspan></text>
+
+  <!-- 16-bit -->
+  <text x="66" y="172" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">16-bit</text>
+  <g fill="#fff" stroke="#000" stroke-width="1.1">
+    <rect x="116" y="158" width="11" height="24" rx="2"/>
+    <rect x="131" y="158" width="11" height="24" rx="2"/>
+    <rect x="146" y="158" width="11" height="24" rx="2"/>
+    <rect x="161" y="158" width="11" height="24" rx="2"/>
+    <rect x="176" y="158" width="11" height="24" rx="2"/>
+    <rect x="191" y="158" width="11" height="24" rx="2"/>
+    <rect x="206" y="158" width="11" height="24" rx="2"/>
+    <rect x="221" y="158" width="11" height="24" rx="2"/>
+    <rect x="236" y="158" width="11" height="24" rx="2"/>
+    <rect x="251" y="158" width="11" height="24" rx="2"/>
+    <rect x="266" y="158" width="11" height="24" rx="2"/>
+    <rect x="281" y="158" width="11" height="24" rx="2"/>
+    <rect x="296" y="158" width="11" height="24" rx="2"/>
+    <rect x="311" y="158" width="11" height="24" rx="2"/>
+    <rect x="326" y="158" width="11" height="24" rx="2"/>
+    <rect x="341" y="158" width="11" height="24" rx="2"/>
+  </g>
+  <text x="370" y="174" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#000">2&#x00B9;&#x2076; = <tspan font-weight="700">65,536 values</tspan></text>
+
+  <!-- caption -->
+  <line x1="40" y1="210" x2="640" y2="210" stroke="#000" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="340" y="232" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000">Each added bit doubles the count: 4-bit gives 16, 16-bit gives 65,536</text>
+</svg>
