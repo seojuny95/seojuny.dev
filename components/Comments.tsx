@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Giscus from '@giscus/react';
+import type { Locale } from '@/lib/i18n';
 
-export function Comments() {
+export function Comments({ locale }: { locale: Locale }) {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
@@ -47,7 +48,7 @@ export function Comments() {
           emitMetadata="0"
           inputPosition="bottom"
           theme="light"
-          lang="ko"
+          lang={locale}
           loading="lazy"
         />
       ) : null}

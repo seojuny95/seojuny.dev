@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ui, type Locale } from '@/lib/i18n';
 
-export function ShareButton() {
+export function ShareButton({ locale }: { locale: Locale }) {
   const resetTimer = useRef<number | undefined>(undefined);
   const [copied, setCopied] = useState(false);
+  const t = ui[locale];
 
   useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
@@ -32,7 +34,7 @@ export function ShareButton() {
     <button
       type="button"
       onClick={share}
-      aria-label={copied ? '링크 복사됨' : '공유'}
+      aria-label={copied ? t.linkCopiedAria : t.share}
       data-copied={copied || undefined}
       className="inline-flex items-center gap-1.5 text-[13px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
     >
@@ -65,7 +67,7 @@ export function ShareButton() {
           <line x1="15.4" y1="6.5" x2="8.6" y2="10.5" />
         </svg>
       )}
-      <span>{copied ? '복사됨' : '공유'}</span>
+      <span>{copied ? t.copied : t.share}</span>
     </button>
   );
 }

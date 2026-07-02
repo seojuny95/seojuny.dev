@@ -12,14 +12,16 @@ import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Fuse from 'fuse.js';
 import type { SearchEntry } from '@/lib/posts';
+import { localePath, ui, type Locale } from '@/lib/i18n';
 
-export function SearchModal({ index }: { index: SearchEntry[] }) {
+export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: Locale }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [activeIdx, setActiveIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const router = useRouter();
+  const t = ui[locale];
 
   const fuse = useMemo(
     () =>
@@ -96,7 +98,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
       const pick = results[activeIdx];
       if (pick) {
         e.preventDefault();
-        router.push(`/${pick.slug}`);
+        router.push(localePath(locale, `/${pick.slug}`));
         closeSearch();
       }
     }
@@ -122,7 +124,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
           <input
             ref={inputRef}
             type="text"
-            placeholder="검색어를 입력하세요"
+            placeholder={t.searchPlaceholder}
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             onKeyDown={onInputKey}
@@ -172,11 +174,11 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
         >
           {!trimmed ? (
             <li className="py-10 text-center text-[14px] text-[var(--muted)]">
-              검색어를 입력하세요
+              {t.searchPlaceholder}
             </li>
           ) : results.length === 0 ? (
             <li className="py-10 text-center text-[14px] text-[var(--muted)]">
-              결과 없음
+              {t.searchNoResults}
             </li>
           ) : (
             results.map((r, i) => (
@@ -186,7 +188,7 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
                   role="option"
                   aria-selected={activeIdx === i}
                   onClick={() => {
-                    router.push(`/${r.slug}`);
+                    router.push(localePath(locale, `/${r.slug}`));
                     closeSearch();
                   }}
                   onMouseEnter={() => setActiveIdx(i)}
@@ -225,16 +227,16 @@ export function SearchModal({ index }: { index: SearchEntry[] }) {
             <span className="flex items-center gap-1">
               <kbd className="kbd">↑</kbd>
               <kbd className="kbd">↓</kbd>
-              <span className="ml-1">이동</span>
+              <span className="ml-1">{t.searchMove}</span>
             </span>
             <span className="flex items-center gap-1">
               <kbd className="kbd">↵</kbd>
-              <span className="ml-1">열기</span>
+              <span className="ml-1">{t.searchOpen}</span>
             </span>
           </div>
           <span className="flex items-center gap-1">
             <kbd className="kbd">ESC</kbd>
-            <span className="ml-1">닫기</span>
+            <span className="ml-1">{t.searchClose}</span>
           </span>
         </div>
       </div>
