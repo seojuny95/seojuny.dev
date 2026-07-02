@@ -6,7 +6,7 @@ tags: ["AI", "RAG", "Embedding", "Vector Search", "LLM"]
 draft: false
 ---
 
-I recently wrapped up Sprint 2 at [PI Lab](https://paaa.ai/). Sprint 2 was a deep dive into RAG with plenty of hands-on practice, and along the way a fair number of things left me wanting to dig deeper. This post pulls together what I learned in the sprint and what I went on to study on my own afterward.
+I've recently been studying RAG in depth, with plenty of hands-on practice, and along the way a fair number of things left me wanting to dig deeper. This post pulls together what I learned and what I went on to study on my own afterward.
 
 A general-purpose LLM only knows what it saw during training. My company's internal documents and the latest material aren't in the model. The simplest way to fill that gap is to **paste the relevant text straight into the prompt**, but then you have to hunt down the right material by hand every time, and how much you can add is capped by the context window.
 
@@ -269,8 +269,6 @@ That's why real services mix these methods — **RAG to supply up-to-date knowle
 ## Wrapping up
 
 This post covered what RAG is and why it's needed, how it works across the two stages of indexing and answer generation, and a hands-on exercise building RAG from a PDF. Answering by retrieving external documents without touching the weights makes RAG a practical choice when you have to deal with fast-changing knowledge or your own documents. What I built here is just the basic form — there's plenty of room to advance it with chunking, hybrid search, reranking, and more. It's widely used wherever you have to deal with "my data that the model doesn't know" — internal document chatbots, product-manual-based customer support, search-style AI assistants.
-
-[PI Lab](https://paaa.ai/) runs everything as pair programming. For this Sprint 2 RAG work, the three of us went through it together — looking things up whenever a question came up, explaining and researching for each other where our understanding was thin. It was genuinely great to fill in even the parts I'd have missed on my own.
 
 ---
 
