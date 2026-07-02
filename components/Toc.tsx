@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
+import { ui, type Locale } from '@/lib/i18n';
 
 type Heading = {
   id: string;
@@ -9,9 +10,10 @@ type Heading = {
   level: 2 | 3;
 };
 
-export function Toc() {
+export function Toc({ locale }: { locale: Locale }) {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState('');
+  const tocLabel = ui[locale].toc;
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
@@ -70,11 +72,11 @@ export function Toc() {
 
   return createPortal(
     <nav
-      aria-label="목차"
+      aria-label={tocLabel}
       className="toc hidden xl:block fixed top-[130px] left-[calc(50%_+_372px)] w-[200px] max-h-[calc(100vh_-_190px)] overflow-y-auto"
     >
       <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)] mb-3">
-        목차
+        {tocLabel}
       </p>
       <ul className="list-none p-0 m-0 flex flex-col text-[12.5px] leading-snug border-l border-[var(--rule)]">
         {headings.map((h) => (
