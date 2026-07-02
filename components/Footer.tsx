@@ -1,7 +1,14 @@
 import Link from 'next/link';
 import { localePath, type Locale } from '@/lib/i18n';
+import { LocaleSwitcher } from './LocaleSwitcher';
 
-export function Footer({ locale }: { locale: Locale }) {
+export function Footer({
+  locale,
+  otherSlugs,
+}: {
+  locale: Locale;
+  otherSlugs: string[];
+}) {
   const year = new Date().getFullYear();
   return (
     <footer className="border-t border-[var(--rule)] mt-20 sm:mt-28">
@@ -15,11 +22,10 @@ export function Footer({ locale }: { locale: Locale }) {
             <span className="font-normal text-[var(--muted)]">.dev</span>
           </Link>
           <span>© {year}</span>
+          <span aria-hidden className="w-px h-3.5 bg-[var(--rule)] mx-1" />
+          <LocaleSwitcher locale={locale} otherSlugs={otherSlugs} />
         </div>
-        <nav
-          aria-label="Footer"
-          className="flex items-center gap-5 text-[14px]"
-        >
+        <nav aria-label="Footer" className="flex items-center gap-5 text-[14px]">
           <Link
             href={localePath(locale)}
             className="hover:text-[var(--fg)] transition-colors duration-200"

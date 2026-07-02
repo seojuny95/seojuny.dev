@@ -25,7 +25,7 @@ export function SiteShell({
         </script>
         <a href="#main" className="skip-link">{ui[locale].skipLink}</a>
         <div className="min-h-screen flex flex-col">
-          <Header locale={locale} otherSlugs={otherSlugs} />
+          <Header locale={locale} />
           <main
             id="main"
             tabIndex={-1}
@@ -33,7 +33,7 @@ export function SiteShell({
           >
             {children}
           </main>
-          <Footer locale={locale} />
+          <Footer locale={locale} otherSlugs={otherSlugs} />
         </div>
         <SearchModal index={searchIndex} locale={locale} />
         <Analytics />
