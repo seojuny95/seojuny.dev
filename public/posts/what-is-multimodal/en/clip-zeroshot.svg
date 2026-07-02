@@ -1,0 +1,57 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>CLIP Zero-Shot Classification</title>
+  <desc>A photo and candidate sentences are each encoded into the same vector space; the candidate nearest the photo is selected. Classification works without training a separate classifier — just swap the candidate sentences.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fff; stroke: #171717; stroke-width: 1.7; }
+      .space { fill: #fafaf9; stroke: #ececea; stroke-width: 1.5; }
+      .lbl { font-size: 12px; font-weight: 600; text-anchor: middle; }
+      .dotl { font-size: 11px; font-weight: 600; text-anchor: middle; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .note { font-size: 10px; fill: #8a8a85; text-anchor: middle; }
+      .cap { font-size: 11.5px; fill: #8a8a85; text-anchor: middle; }
+      .win { font-size: 10.5px; font-weight: 700; fill: #f26522; text-anchor: middle; }
+    </style>
+    <marker id="cz-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" class="hdr">Zero-Shot Classification</text>
+
+  <!-- Input + encoders -->
+  <rect class="box" x="20" y="72" width="84" height="42" rx="6"/>
+  <text x="62" y="93" class="lbl" dominant-baseline="central">Photo</text>
+  <path d="M 104 93 L 124 93" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cz-arr)"/>
+  <rect class="box" x="124" y="66" width="104" height="54" rx="6"/>
+  <text x="176" y="93" class="lbl" dominant-baseline="central">Image Encoder</text>
+
+  <rect class="box" x="20" y="198" width="84" height="42" rx="6"/>
+  <text x="62" y="219" class="lbl" dominant-baseline="central">Candidates</text>
+  <path d="M 104 219 L 124 219" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#cz-arr)"/>
+  <rect class="box" x="124" y="192" width="104" height="54" rx="6"/>
+  <text x="176" y="219" class="lbl" dominant-baseline="central">Text Encoder</text>
+
+  <!-- Shared vector space -->
+  <rect class="space" x="300" y="64" width="360" height="184" rx="10"/>
+  <text x="480" y="84" class="note">Shared vector space</text>
+
+  <path d="M 228 93 C 262 93 268 120 298 124" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cz-arr)"/>
+  <path d="M 228 219 C 262 219 268 192 298 188" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" marker-end="url(#cz-arr)"/>
+
+  <!-- Nearest pair -->
+  <line x1="430" y1="150" x2="486" y2="132" stroke="#f26522" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <circle cx="430" cy="150" r="7" fill="#f26522"/>
+  <text x="430" y="170" class="dotl">Photo</text>
+  <circle cx="486" cy="132" r="5" fill="#171717"/>
+  <text x="500" y="120" class="dotl" text-anchor="start">"dog"</text>
+  <text x="455" y="108" class="win">Nearest → correct</text>
+
+  <!-- Distant pair -->
+  <circle cx="600" cy="216" r="5" fill="#8a8a85"/>
+  <text x="600" y="234" class="dotl" fill="#8a8a85">"cat"</text>
+
+  <text x="340" y="288" class="cap">Embed the photo in the same space and pick the nearest candidate — no classifier training needed</text>
+</svg>
