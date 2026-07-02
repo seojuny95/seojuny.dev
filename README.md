@@ -10,9 +10,6 @@ Live at **[seojuny.dev](https://seojuny.dev)**.
 
 I'm a software engineer with 4 years of experience, working mainly with **Next.js, React, and TypeScript**.
 
-- **Freelance** — designing and building corporate websites for a range of clients.
-- **Lendit** — one of Korea's largest peer-to-peer lending marketplaces, connecting retail and institutional investors with individual borrowers.
-
 Two things pull my attention. First, **frontend** — building interfaces that feel fast and considered. Second, **AI engineering**, where I'm drawn to the practical craft of making language models genuinely useful: RAG, prompt engineering, agent design, and the harness and tooling that hold it all together. I'm most interested in roles where those two meet — building the product surface for AI-powered experiences.
 
 > Email: [sytwoyou@gmail.com](mailto:sytwoyou@gmail.com) / Tel: +82 10 2677 2535
