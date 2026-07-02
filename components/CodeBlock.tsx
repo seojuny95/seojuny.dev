@@ -1,13 +1,19 @@
 'use client';
 
 import { useEffect, useRef, useState, type ComponentPropsWithoutRef } from 'react';
+import { ui, type Locale } from '@/lib/i18n';
 
 const UNLABELED_LANGS = new Set(['plaintext', 'text', 'txt']);
 
-export function CodeBlock({ children, ...props }: ComponentPropsWithoutRef<'pre'>) {
+export function CodeBlock({
+  locale,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<'pre'> & { locale: Locale }) {
   const preRef = useRef<HTMLPreElement>(null);
   const resetTimer = useRef<number | undefined>(undefined);
   const [copied, setCopied] = useState(false);
+  const t = ui[locale];
 
   useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
@@ -41,7 +47,7 @@ export function CodeBlock({ children, ...props }: ComponentPropsWithoutRef<'pre'
         <button
           type="button"
           onClick={copy}
-          aria-label={copied ? '복사됨' : '코드 복사'}
+          aria-label={copied ? t.copied : t.codeCopyAria}
           data-copied={copied || undefined}
           className="code-copy"
         >

@@ -41,6 +41,7 @@ type UiDict = {
   toc: string;
   share: string;
   copied: string;
+  codeCopyAria: string;
   linkCopiedAria: string;
   searchPlaceholder: string;
   searchNoResults: string;
@@ -84,6 +85,7 @@ export const ui: Record<Locale, UiDict> = {
     toc: '목차',
     share: '공유',
     copied: '복사됨',
+    codeCopyAria: '코드 복사',
     linkCopiedAria: '링크 복사됨',
     searchPlaceholder: '검색어를 입력하세요',
     searchNoResults: '결과 없음',
@@ -125,6 +127,7 @@ export const ui: Record<Locale, UiDict> = {
     toc: 'Contents',
     share: 'Share',
     copied: 'Copied',
+    codeCopyAria: 'Copy code',
     linkCopiedAria: 'Link copied',
     searchPlaceholder: 'Type to search',
     searchNoResults: 'No results',

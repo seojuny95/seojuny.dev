@@ -16,15 +16,16 @@ import { PostImage } from '@/components/PostImage';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { Toc } from '@/components/Toc';
 
-const mdxComponents = {
-  img: PostImage,
-  pre: CodeBlock,
-  table: (props: ComponentPropsWithoutRef<'table'>) => (
-    <div className="table-wrap">
-      <table {...props} />
-    </div>
-  ),
-} as MDXRemoteProps['components'];
+const mdxComponents = (locale: Locale) =>
+  ({
+    img: PostImage,
+    pre: (props: ComponentPropsWithoutRef<'pre'>) => <CodeBlock {...props} locale={locale} />,
+    table: (props: ComponentPropsWithoutRef<'table'>) => (
+      <div className="table-wrap">
+        <table {...props} />
+      </div>
+    ),
+  }) as MDXRemoteProps['components'];
 
 export function postStaticParams(locale: Locale) {
   return getAllPosts(locale).map((p) => ({ slug: p.slug }));
@@ -86,7 +87,7 @@ export function PostView({ locale, slug }: { locale: Locale; slug: string }) {
       <ArticleActions audioSrc={audioSrc} timingSrc={timingSrc} locale={locale} />
 
       <div className="prose-blog">
-        <MDXRemote source={post.content} components={mdxComponents} options={mdxOptions} />
+        <MDXRemote source={post.content} components={mdxComponents(locale)} options={mdxOptions} />
       </div>
 
       <hr className="mt-16 mb-8 sm:mt-20 sm:mb-10" />
