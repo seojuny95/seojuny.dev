@@ -1,23 +1,76 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { ImageResponse } from 'next/og';
-import { getAllPosts, getPostBySlug, formatDate } from '@/lib/posts';
+import { getPostBySlug, formatDate } from '@/lib/posts';
+import { ui, type Locale } from '@/lib/i18n';
 
-export const alt = 'seojuny.dev';
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
+export const ogSize = { width: 1200, height: 630 };
+export const ogContentType = 'image/png';
 
 const PRETENDARD_DIR = 'node_modules/pretendard/dist/public/static';
 
-export function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
+const ogSubtitle: Record<Locale, string> = {
+  ko: '소프트웨어 개발과 AI 학습 기록',
+  en: 'Notes on software development and AI learning',
+};
+
+export async function renderSiteOgImage(locale: Locale): Promise<ImageResponse> {
+  const [bold, regular] = await Promise.all([
+    fs.readFile(path.join(process.cwd(), PRETENDARD_DIR, 'Pretendard-Bold.otf')),
+    fs.readFile(path.join(process.cwd(), PRETENDARD_DIR, 'Pretendard-Regular.otf')),
+  ]);
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#fafaf9',
+          color: '#171717',
+          fontFamily: 'Pretendard',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            fontSize: 120,
+            fontWeight: 700,
+            letterSpacing: '-0.025em',
+          }}
+        >
+          <span>seojuny</span>
+          <span style={{ color: '#8a8a85', fontWeight: 400 }}>.dev</span>
+        </div>
+        <div
+          style={{
+            marginTop: 28,
+            fontSize: 32,
+            color: '#8a8a85',
+            letterSpacing: '-0.01em',
+          }}
+        >
+          {ogSubtitle[locale]}
+        </div>
+      </div>
+    ),
+    {
+      ...ogSize,
+      fonts: [
+        { name: 'Pretendard', data: bold, weight: 700, style: 'normal' },
+        { name: 'Pretendard', data: regular, weight: 400, style: 'normal' },
+      ],
+    },
+  );
 }
 
-type Props = { params: Promise<{ slug: string }> };
-
-export default async function Image({ params }: Props) {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
+export async function renderPostOgImage(locale: Locale, slug: string): Promise<ImageResponse> {
+  const post = getPostBySlug(slug, locale);
 
   const [bold, regular] = await Promise.all([
     fs.readFile(path.join(process.cwd(), PRETENDARD_DIR, 'Pretendard-Bold.otf')),
@@ -25,9 +78,9 @@ export default async function Image({ params }: Props) {
   ]);
 
   const metaParts = [
-    formatDate(post.date),
+    formatDate(post.date, locale),
     ...post.tags.map((t) => `#${t}`),
-    `${post.readingTime}분`,
+    ui[locale].minRead(post.readingTime),
   ];
 
   return new ImageResponse(
@@ -115,7 +168,7 @@ export default async function Image({ params }: Props) {
       </div>
     ),
     {
-      ...size,
+      ...ogSize,
       fonts: [
         { name: 'Pretendard', data: bold, weight: 700, style: 'normal' },
         { name: 'Pretendard', data: regular, weight: 400, style: 'normal' },
