@@ -1,0 +1,67 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>ViT — Image as Patch Sequence</title>
+  <desc>Text is a sequence of word tokens. ViT slices an image into patches and lines them up as a patch sequence. Both sequences share the same structure, so the same Transformer can process them.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fff; stroke: #171717; stroke-width: 1.7; }
+      .patch { fill: #fff8f4; stroke: #f26522; stroke-width: 1.4; }
+      .cell { fill: #fff; stroke: #171717; stroke-width: 1.2; }
+      .tok { font-size: 12px; font-weight: 600; text-anchor: middle; }
+      .pp { font-size: 8px; font-weight: 600; text-anchor: middle; fill: #f26522; }
+      .row { font-size: 12.5px; font-weight: 700; text-anchor: start; }
+      .seq { font-size: 11px; fill: #8a8a85; text-anchor: middle; }
+      .hdr { font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .cap { font-size: 11.5px; fill: #8a8a85; text-anchor: middle; }
+    </style>
+    <marker id="vp-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" class="hdr">ViT — Image as a Token Sequence</text>
+
+  <!-- Text row -->
+  <text x="36" y="86" class="row">Text</text>
+  <rect class="box" x="112" y="68" width="62" height="36" rx="6"/>
+  <text x="143" y="86" class="tok" dominant-baseline="central">The</text>
+  <rect class="box" x="178" y="68" width="50" height="36" rx="6"/>
+  <text x="203" y="86" class="tok" dominant-baseline="central">cat</text>
+  <rect class="box" x="232" y="68" width="62" height="36" rx="6"/>
+  <text x="263" y="86" class="tok" dominant-baseline="central">runs</text>
+  <text x="430" y="86" class="seq">word token sequence</text>
+
+  <!-- Image row -->
+  <text x="36" y="206" class="row">Image</text>
+
+  <!-- 3x3 grid -->
+  <g>
+    <rect class="cell" x="104" y="176" width="20" height="20"/>
+    <rect class="cell" x="124" y="176" width="20" height="20"/>
+    <rect class="cell" x="144" y="176" width="20" height="20"/>
+    <rect class="cell" x="104" y="196" width="20" height="20"/>
+    <rect class="cell" x="124" y="196" width="20" height="20"/>
+    <rect class="cell" x="144" y="196" width="20" height="20"/>
+    <rect class="cell" x="104" y="216" width="20" height="20"/>
+    <rect class="cell" x="124" y="216" width="20" height="20"/>
+    <rect class="cell" x="144" y="216" width="20" height="20"/>
+  </g>
+  <path d="M 172 206 L 196 206" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" marker-end="url(#vp-arr)"/>
+
+  <!-- Patch sequence -->
+  <g>
+    <rect class="patch" x="206" y="192" width="26" height="26" rx="3"/><text x="219" y="206" class="pp" dominant-baseline="central">P1</text>
+    <rect class="patch" x="234" y="192" width="26" height="26" rx="3"/><text x="247" y="206" class="pp" dominant-baseline="central">P2</text>
+    <rect class="patch" x="262" y="192" width="26" height="26" rx="3"/><text x="275" y="206" class="pp" dominant-baseline="central">P3</text>
+    <rect class="patch" x="290" y="192" width="26" height="26" rx="3"/><text x="303" y="206" class="pp" dominant-baseline="central">P4</text>
+    <rect class="patch" x="318" y="192" width="26" height="26" rx="3"/><text x="331" y="206" class="pp" dominant-baseline="central">P5</text>
+    <rect class="patch" x="346" y="192" width="26" height="26" rx="3"/><text x="359" y="206" class="pp" dominant-baseline="central">P6</text>
+    <rect class="patch" x="374" y="192" width="26" height="26" rx="3"/><text x="387" y="206" class="pp" dominant-baseline="central">P7</text>
+    <rect class="patch" x="402" y="192" width="26" height="26" rx="3"/><text x="415" y="206" class="pp" dominant-baseline="central">P8</text>
+    <rect class="patch" x="430" y="192" width="26" height="26" rx="3"/><text x="443" y="206" class="pp" dominant-baseline="central">P9</text>
+  </g>
+  <text x="560" y="206" class="seq">patch sequence</text>
+
+  <text x="340" y="278" class="cap">Cut the image into patches and line them up — same structure as text tokens → same Transformer</text>
+</svg>
