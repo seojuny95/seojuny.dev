@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NAV_ITEMS } from '@/lib/nav';
+import { navItems } from '@/lib/nav';
+import { localePath, type Locale } from '@/lib/i18n';
 
-export function MobileMenu() {
+export function MobileMenu({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const [lastPath, setLastPath] = useState(pathname);
@@ -31,6 +32,9 @@ export function MobileMenu() {
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  const aboutPath = localePath(locale, '/about');
+  const isAbout = pathname === aboutPath || pathname.startsWith(`${aboutPath}/`);
 
   return (
     <>
@@ -67,7 +71,7 @@ export function MobileMenu() {
           <div className="shrink-0 border-b border-[var(--rule)]">
             <div className="mx-auto w-full max-w-[680px] px-4 sm:px-5 h-[57px] flex items-center">
               <Link
-                href="/"
+                href={localePath(locale)}
                 onClick={() => setOpen(false)}
                 className="shrink-0 font-semibold text-[15px] tracking-[-0.012em]"
               >
@@ -98,10 +102,8 @@ export function MobileMenu() {
             </div>
           </div>
           <nav className="mobile-menu-stagger flex flex-col px-5 pt-4 pb-6 text-[24px] font-semibold tracking-[-0.012em]">
-            {NAV_ITEMS.map((item, i) => {
-              const active = item.match.some(
-                (m) => pathname === m || pathname.startsWith(`${m}/`),
-              );
+            {navItems(locale).map((item, i) => {
+              const active = item.href === aboutPath ? isAbout : !isAbout;
               return (
                 <Link
                   key={item.href}

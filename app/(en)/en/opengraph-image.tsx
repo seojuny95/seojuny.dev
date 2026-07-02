@@ -5,5 +5,5 @@ export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function Image() {
-  return renderSiteOgImage('ko');
+  return renderSiteOgImage('en');
 }

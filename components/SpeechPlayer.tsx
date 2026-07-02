@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { matchable, isHighlightOutOfView } from '@/lib/speech';
+import { ui, type Locale } from '@/lib/i18n';
 
 const RATES = [1, 1.25, 1.5, 2] as const;
 
@@ -92,10 +93,13 @@ function buildSegments(timings: Timing[]): Segment[] {
 export function SpeechPlayer({
   audioSrc,
   timingSrc,
+  locale,
 }: {
   audioSrc?: string;
   timingSrc?: string;
+  locale: Locale;
 }) {
+  const t = ui[locale];
   const [status, setStatus] = useState<Status>('idle');
   const [rate, setRate] = useState<(typeof RATES)[number]>(1);
   const [time, setTime] = useState(0);
@@ -315,11 +319,11 @@ export function SpeechPlayer({
         type="button"
         disabled
         aria-disabled
-        title="이 글은 아직 음성이 준비되지 않았어요"
+        title={t.audioNotReady}
         className="inline-flex items-center gap-1.5 text-[13px] text-[var(--muted)] opacity-50 cursor-not-allowed"
       >
         <PlayIcon />
-        <span>듣기</span>
+        <span>{t.listen}</span>
       </button>
     );
   }
@@ -356,6 +360,7 @@ export function SpeechPlayer({
           time={time}
           duration={duration}
           rate={rate}
+          locale={locale}
           onPlayPause={handlePlayPause}
           onSkip={skip}
           onCycleRate={cycleRate}
@@ -364,13 +369,14 @@ export function SpeechPlayer({
       </div>
       {showMini && typeof document !== 'undefined'
         ? createPortal(
-            <div className="speech-mini" role="region" aria-label="음성 재생 컨트롤">
+            <div className="speech-mini" role="region" aria-label={t.playerAria}>
               <div className="speech-mini-inner">
                 <Controls
                   status={status}
                   time={time}
                   duration={duration}
                   rate={rate}
+                  locale={locale}
                   onPlayPause={handlePlayPause}
                   onSkip={skip}
                   onCycleRate={cycleRate}
@@ -385,13 +391,13 @@ export function SpeechPlayer({
             <button
               type="button"
               onClick={resumeFollow}
-              aria-label="현재 읽는 위치로 이동"
+              aria-label={t.jumpToCurrentAria}
               className={`speech-jump speech-jump-${jumpDir}`}
             >
               <span aria-hidden className="speech-jump-arrow">
                 {jumpDir === 'up' ? '↑' : '↓'}
               </span>
-              <span>읽는 곳으로</span>
+              <span>{t.jumpToCurrent}</span>
             </button>,
             document.body,
           )
@@ -405,6 +411,7 @@ function Controls({
   time,
   duration,
   rate,
+  locale,
   onPlayPause,
   onSkip,
   onCycleRate,
@@ -414,11 +421,13 @@ function Controls({
   time: number;
   duration: number;
   rate: (typeof RATES)[number];
+  locale: Locale;
   onPlayPause: () => void;
   onSkip: (delta: number) => void;
   onCycleRate: () => void;
   playPauseRef?: React.Ref<HTMLButtonElement>;
 }) {
+  const t = ui[locale];
   const isPlaying = status === 'playing';
   return (
     <>
@@ -426,11 +435,11 @@ function Controls({
         ref={playPauseRef}
         type="button"
         onClick={onPlayPause}
-        aria-label={isPlaying ? '일시정지' : status === 'paused' ? '이어 듣기' : '글 듣기'}
+        aria-label={isPlaying ? t.pause : status === 'paused' ? t.resume : t.listenPostAria}
         className="inline-flex items-center gap-1.5 text-[13px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
       >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        <span>{isPlaying ? '일시정지' : status === 'paused' ? '이어 듣기' : '듣기'}</span>
+        <span>{isPlaying ? t.pause : status === 'paused' ? t.resume : t.listen}</span>
       </button>
       {status !== 'idle' ? (
         <>
@@ -440,7 +449,7 @@ function Controls({
           <button
             type="button"
             onClick={() => onSkip(-15)}
-            aria-label="15초 뒤로"
+            aria-label={t.back15}
             className="inline-flex items-center gap-0.5 text-[12px] tabular-nums text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
           >
             <RewindIcon />
@@ -449,7 +458,7 @@ function Controls({
           <button
             type="button"
             onClick={() => onSkip(15)}
-            aria-label="15초 앞으로"
+            aria-label={t.forward15}
             className="inline-flex items-center gap-0.5 text-[12px] tabular-nums text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
           >
             <span>15</span>
@@ -458,7 +467,7 @@ function Controls({
           <button
             type="button"
             onClick={onCycleRate}
-            aria-label={`${rate}x 재생 속도`}
+            aria-label={t.rateAria(rate)}
             className="text-[13px] tabular-nums text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
           >
             {rate}x

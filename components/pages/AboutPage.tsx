@@ -1,13 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { mdxOptions } from '@/lib/mdx';
+import { localePath, type Locale } from '@/lib/i18n';
 
-export const metadata = { title: 'About — seojuny.dev' };
+export function aboutMetadata(locale: Locale): Metadata {
+  return {
+    title: 'About — seojuny.dev',
+    alternates: {
+      canonical: localePath(locale, '/about'),
+      languages: { ko: '/about', en: '/en/about', 'x-default': '/about' },
+    },
+  };
+}
 
-export default function AboutPage() {
+export function AboutView({ locale }: { locale: Locale }) {
   const source = fs.readFileSync(
-    path.join(process.cwd(), 'content', 'about.mdx'),
+    path.join(process.cwd(), 'content', ...(locale === 'ko' ? ['about.mdx'] : [locale, 'about.mdx'])),
     'utf8',
   );
   return (

@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { getAllPosts, formatDate } from '@/lib/posts';
+import { localePath, ui, type Locale } from '@/lib/i18n';
 
-export default function HomePage() {
-  const posts = getAllPosts();
+export function PostList({ locale }: { locale: Locale }) {
+  const posts = getAllPosts(locale);
   const byYear = new Map<string, typeof posts>();
   for (const p of posts) {
     const year = p.date.slice(0, 4);
@@ -19,7 +20,7 @@ export default function HomePage() {
       <h1 className="sr-only">Posts</h1>
 
       {years.length === 0 ? (
-        <p className="text-sm text-[var(--muted)]">글이 아직 없습니다.</p>
+        <p className="text-sm text-[var(--muted)]">{ui[locale].noPosts}</p>
       ) : (
         <div className="stagger flex flex-col gap-10">
           {years.map((year) => {
@@ -41,18 +42,18 @@ export default function HomePage() {
                     >
                       <article>
                         <Link
-                          href={`/${p.slug}`}
+                          href={localePath(locale, `/${p.slug}`)}
                           className="block py-4 row-nudge"
                         >
                           <h3 className="font-medium leading-snug text-[18px] m-0">
                             <span className="link">{p.title}</span>
                           </h3>
                           <div className="flex items-baseline gap-2 text-[13px] text-[var(--muted)] mt-1 tabular-nums tracking-wide transition-colors duration-300 group-hover:text-[var(--fg)]">
-                            <time dateTime={p.date}>{formatDate(p.date)}</time>
+                            <time dateTime={p.date}>{formatDate(p.date, locale)}</time>
                             <span aria-hidden className="opacity-60">
                               ·
                             </span>
-                            <span>{p.readingTime}분</span>
+                            <span>{ui[locale].minRead(p.readingTime)}</span>
                           </div>
                           {p.summary ? (
                             <p className="text-[14px] text-[var(--muted)] mt-1.5 leading-relaxed">
