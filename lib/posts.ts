@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { defaultLocale, type Locale } from './i18n';
+import { defaultLocale, type Locale } from '@/lib/i18n';
 
 export type Post = {
   slug: string;
