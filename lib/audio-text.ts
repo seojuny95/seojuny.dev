@@ -6,11 +6,11 @@ import matter from "gray-matter";
 export type Sentence = { text: string; start: number; end: number };
 
 // Edge TTS 단일 요청은 약 600초(10분)에서 잘린다. 그보다 짧게 배치로 나눈다.
-export const BATCH_CHARS = 1500;
+const BATCH_CHARS = 1500;
 
 // 영어 용어 발음 교정 (TTS 전용). 이 라이브러리는 SSML을 escape하므로 음성으로 읽을
 // 텍스트 자체를 한글 표기로 치환한다. 화면/하이라이트는 원문을 그대로 쓰므로 영향 없다.
-export const PRONUNCIATION: Record<string, string> = {
+const PRONUNCIATION: Record<string, string> = {
   "PI Lab": "파이 랩",
   // 구절 먼저(개별 단어보다 앞) — 논문 제목·복합어
   "Attention Is All You Need": "어텐션 이즈 올 유 니드",
