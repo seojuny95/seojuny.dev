@@ -1,0 +1,145 @@
+---
+title: "How Much Can You Trust AI-Written Code?"
+date: "2026-07-18"
+summary: "Since AI showed up, I write a lot less code by hand. So how much can I actually trust the code AI writes? A few practical devices I've come to rely on for building that trust, and the cost problem that comes with running them."
+tags: ["AI", "Coding Agent", "AGENTS.md", "LLM"]
+draft: false
+---
+
+These days, anyone can build a simple web app with AI through what people call <strong>vibe coding</strong>. I write a lot less code by hand myself, too. I used to type out every function by hand, one at a time — now AI writes a whole feature at once and I just review it. It's convenient, but that convenience comes with a nagging worry: is it really okay to hand over this much?
+
+When a project is small, it's easy to see what AI built. The trouble starts once it grows — there's too much code to check everything. I started using AI to save time writing code, and now I'm spending more time reviewing it instead. So here's what I've come to rely on whenever I start a new project.
+
+## AGENTS.md
+
+The first thing I do when starting a project is create a file called [AGENTS.md](https://agents.md/). I write down what the project does, the principles that must never be broken, what commands run the server and tests, what the folder structure looks like, and how to write commit messages. Something like this:
+
+```markdown
+# AGENTS.md
+
+## Project
+A personal hobby-project tracker. FastAPI backend + React frontend.
+
+## Never break these rules
+- Always handle user data inside a transaction.
+- Never hardcode external API keys. Environment variables only.
+
+## Development commands
+- Backend: `cd backend && uv run uvicorn app.main:app --reload`
+- Frontend: `cd frontend && pnpm dev`
+- Tests: `uv run pytest` / `pnpm test`
+
+## Folder structure
+- `backend/app/` — API routes, services, models
+- `frontend/src/` — components, pages, hooks
+
+## Commit convention
+Conventional Commits, English. Example: `feat(auth): add refresh token rotation`
+```
+
+Without this file, I'd have to repeat the same instructions every time I open a new session. Do that enough times and eventually you skip it, and that's where mistakes creep in. Writing it down once means I never have to explain it again.
+
+Most tools — Cursor, Copilot, Codex — read this same AGENTS.md. Claude Code is the exception: it reads [CLAUDE.md](https://code.claude.com/docs/en/memory) instead of AGENTS.md. If you're using several AI tools and want to manage context in one place, you can keep AGENTS.md as the source of truth and symlink CLAUDE.md to it.
+
+Once a project grows, though, a single file stops being enough. A giant AGENTS.md fails in a predictable way: the longer it gets, the easier it is for the agent to miss the rules that actually matter, and if everything is marked important, nothing really is. So I keep this file to around 100 lines and move the real detail into a `docs/` folder instead. Something like:
+
+```text
+docs/
+├── architecture.md        # overall structure, how domains are split
+├── decisions/              # why things were decided this way
+│   ├── 2026-03-auth-strategy.md
+│   └── 2026-05-db-choice.md
+└── tech-debt.md            # known issues not yet fixed
+```
+
+In AGENTS.md I just leave a pointer like "see `docs/decisions/2026-03-auth-strategy.md` for the auth approach," and let the agent go read the actual context there.
+
+Even so, this file is ultimately a request written in plain language. Writing "never break this" doesn't guarantee the AI follows it every single time.
+
+## Static Rules and Tests
+
+If asking nicely isn't enough, let a machine check instead. A [pre-commit](https://pre-commit.com/) hook that runs automatically before every commit does that job.
+
+```yaml
+repos:
+  - repo: local
+    hooks:
+      - id: backend-checks
+        entry: bash -c 'cd backend && uv run ruff check . && uv run ruff format --check .'
+        files: ^backend/.*\.py$
+      - id: frontend-checks
+        entry: bash -c 'cd frontend && pnpm exec prettier --check . && pnpm exec eslint . && pnpm exec tsc --noEmit'
+        files: ^frontend/.*\.(ts|tsx|js|mjs|json|css|md)$
+```
+
+For a frontend project, three things go in here. [prettier](https://prettier.io/) enforces formatting like indentation and line breaks, [eslint](https://eslint.org/) catches style and syntax issues like unused variables or invalid hook usage, and [tsc](https://www.typescriptlang.org/docs/handbook/compiler-options.html) catches type errors. All three have to pass before a commit goes through.
+
+If AGENTS.md is a request, this is a check that blocks the commit if it's not satisfied. You can push it further than style, too — enforce architecture itself through custom lint rules. Define the allowed dependency direction between layers or which imports aren't allowed, and reject code that violates it right at commit time. Write the error message specifically enough that the AI can read it and fix the problem on its own. Turn a pattern you keep flagging in review into a single lint rule, and you never have to repeat that feedback again.
+
+Formatting and style alone can't catch whether the code actually works, though. That's what tests are for. It's usually feature-first, tests-later, but flipping that order and asking for tests first works better. Deciding what to verify up front means the AI writes the feature to match that bar, and if a later change breaks it, the test catches it immediately. You just decide what needs verifying — writing the test and the code that passes it is work you can hand to AI.
+
+## Permissions
+
+Worse than mediocre code is AI running a command that wipes out a batch of files or force-pushes to a remote repository. Bad code can be fixed; that kind of accident often can't.
+
+So I bucket commands by risk and build an allowlist. In Claude Code, that goes into `.claude/settings.json` at the project root:
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash(pnpm test:*)", "Bash(git commit:*)", "Bash(git push:*)"],
+    "ask": ["Bash(git push --force:*)", "Bash(rm -rf:*)"]
+  }
+}
+```
+
+Reversible commands — running tests, creating files, committing — get approved automatically. Hard-to-reverse ones — force-pushing, changing system settings — require confirmation before they run. Confirming too often backfires: you stop reading and just click approve out of habit. Reserving confirmation for the genuinely dangerous commands is what makes you actually stop and look when the prompt appears.
+
+## Memory Across Sessions
+
+When a session ends, most of what was discussed in it disappears. Open the same project the next day and the AI has no memory of why yesterday's code was written that way, or what approach it tried and abandoned. So the same trial and error repeats.
+
+That's why I write down anything worth keeping across sessions as markdown files. One `memory/` folder, split by topic, with each file summarizing what it's about. `memory/no-explanatory-comments.md`, for example, looks like this:
+
+```markdown
+---
+name: no-explanatory-comments
+description: Don't add comments that explain what the code does
+---
+
+Don't add comments explaining what the code does by default. If a function or
+variable name already makes the intent clear, that's enough — and a comment
+describing *what* the code does goes stale the moment the code changes, since
+nothing forces it to change along with it.
+```
+
+Once these files pile up, they're hard to skim, so I keep a `MEMORY.md` index — just filenames and a one-line description each. Loading that index at the start of a new session means I never have to re-explain feedback I gave weeks ago.
+
+Taking this idea further, you can split things into raw sources, an AI-maintained wiki, and a file that defines how the two relate — and have the AI rewrite wiki pages directly every time it reads new material. Instead of searching for an answer from scratch every time, you keep compounding organized knowledge that stays current.
+
+## Tokens and Models
+
+Once all of this is in place, trust goes up, but so does how often you run the AI — code review, writing tests, checking rules, all of it now goes through AI. Reach for the best available model out of habit for every one of those runs and token usage climbs fast.
+
+It's easy to assume a better model is always better and reach for the same one for every task, but different tasks actually need different levels of capability. Designing code structure or working through an ambiguous requirement is worth a strong model. Digging through files to find a function, or checking whether a fixed rule was followed, is a job a lightweight model handles just fine.
+
+So I split subagents by role and match each one to a model that fits. The main agent, making the important calls, gets the strongest model; subagents doing repetitive research or verification get a lighter one. That split gets more checking done for the same budget.
+
+![The main agent uses a strong model for core judgment calls, while repetitive work like code search, rule checks, and test verification goes to subagents running a lighter model](/posts/trusting-ai-code/en/model-routing.svg "Splitting model use by role")
+
+## Closing Thoughts
+
+Even with all of this in place, you still can't fully trust AI-written code. A rules file is ultimately a request written in plain language by a person, and the AI reading it isn't perfect either. Rather than chasing a perfect setup from day one, it's more realistic to try things, see what doesn't fit, and adjust as you go.
+
+These days I often browse well-known developers' GitHub repositories to see what they put in their AGENTS.md. Seeing how they've put the same problems into words tends to reveal what's missing from my own.
+
+---
+
+This post may contain factual or interpretive errors. If you spot one or have a question, feel free to leave a comment.
+
+## Reference
+
+- [AGENTS.md](https://agents.md/) — the shared context-file standard read by most AI coding tools
+- Anthropic, [Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) — on managing context through rules, memory, and subagents
+- Ryan Lopopolo, [Harness engineering: using Codex in an agent-first world](https://openai.com/index/harness-engineering/) — an OpenAI team's account of running a repository entirely through a coding agent
+- Andrej Karpathy, [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) — a pattern for compounding a personal knowledge base across raw sources, an AI-maintained wiki, and a schema file
