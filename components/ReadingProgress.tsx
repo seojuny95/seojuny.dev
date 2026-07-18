@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useSyncExternalStore } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useRef, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 
 const subscribe = () => () => {};
 
@@ -10,7 +10,7 @@ export function ReadingProgress() {
   const mounted = useSyncExternalStore(
     subscribe,
     () => true,
-    () => false,
+    () => false
   );
 
   useEffect(() => {
@@ -29,26 +29,26 @@ export function ReadingProgress() {
       if (!raf) raf = requestAnimationFrame(update);
     };
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, [mounted]);
 
   if (!mounted) return null;
 
-  const slot = document.getElementById('reading-progress');
+  const slot = document.getElementById("reading-progress");
   if (!slot) return null;
 
   return createPortal(
     <div
       ref={barRef}
       className="h-full w-full origin-left bg-[var(--fg)]"
-      style={{ transform: 'scaleX(0)' }}
+      style={{ transform: "scaleX(0)" }}
     />,
-    slot,
+    slot
   );
 }

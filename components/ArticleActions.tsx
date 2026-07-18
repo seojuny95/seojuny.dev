@@ -1,6 +1,6 @@
-import { ShareButton } from './ShareButton';
-import { SpeechPlayer } from './SpeechPlayer';
-import type { Locale } from '@/lib/i18n';
+import { ShareButton } from "./ShareButton";
+import { SpeechPlayer } from "./SpeechPlayer";
+import type { Locale } from "@/lib/i18n";
 
 export function ArticleActions({
   audioSrc,

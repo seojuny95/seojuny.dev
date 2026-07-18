@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   // never read by functions at runtime. Keep them out of function bundles so the
   // dynamic OG-image route stays under Vercel's 250 MB function size limit.
   outputFileTracingExcludes: {
-    '*': ['public/posts/**/*'],
+    "*": ["public/posts/**/*"],
   },
 };
 

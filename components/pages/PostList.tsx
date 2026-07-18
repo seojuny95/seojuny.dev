@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import type { CSSProperties } from 'react';
-import { getAllPosts, formatDate } from '@/lib/posts';
-import { localePath, ui, type Locale } from '@/lib/i18n';
+import Link from "next/link";
+import type { CSSProperties } from "react";
+import { getAllPosts, formatDate } from "@/lib/posts";
+import { localePath, ui, type Locale } from "@/lib/i18n";
 
 export function PostList({ locale }: { locale: Locale }) {
   const posts = getAllPosts(locale);
@@ -28,7 +28,7 @@ export function PostList({ locale }: { locale: Locale }) {
             return (
               <section
                 key={year}
-                style={{ '--i': runningIndex++ } as CSSProperties}
+                style={{ "--i": runningIndex++ } as CSSProperties}
                 className="flex flex-col sm:flex-row sm:gap-8"
               >
                 <h2 className="text-[22px] sm:text-[26px] font-semibold text-[var(--fg)] mb-3 sm:mb-0 sm:w-[96px] shrink-0 tabular-nums tracking-[-0.01em] sm:pt-[3px]">

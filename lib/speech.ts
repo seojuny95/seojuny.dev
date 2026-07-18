@@ -8,8 +8,7 @@ const SENTENCE_BOUNDARY = /(?<=[.!?。…！？])\s+/;
  * 클라이언트가 audio.json의 문장 텍스트를 본문 DOM에서 찾을 때, 공백·문장부호·
  * 헤딩 앵커(#)·발음 교정 차이에 영향받지 않도록 양쪽을 같은 기준으로 맞춘다.
  */
-export const matchable = (s: string): string =>
-  s.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+export const matchable = (s: string): string => s.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 
 /**
  * 텍스트를 발화 단위 청크 배열로 나눈다.
@@ -22,7 +21,7 @@ export function splitIntoChunks(text: string, maxLen = 200): string[] {
   const result: string[] = [];
   for (const line of text.split(/\n+/)) {
     for (const piece of line.split(SENTENCE_BOUNDARY)) {
-      const normalized = piece.replace(/\s+/g, ' ').trim();
+      const normalized = piece.replace(/\s+/g, " ").trim();
       if (!normalized) continue;
       if (normalized.length <= maxLen) {
         result.push(normalized);
@@ -36,12 +35,12 @@ export function splitIntoChunks(text: string, maxLen = 200): string[] {
 
 function hardWrap(sentence: string, maxLen: number): string[] {
   const out: string[] = [];
-  let current = '';
-  for (const word of sentence.split(' ')) {
+  let current = "";
+  for (const word of sentence.split(" ")) {
     if (!current) {
       current = word;
-    } else if ((current + ' ' + word).length <= maxLen) {
-      current += ' ' + word;
+    } else if ((current + " " + word).length <= maxLen) {
+      current += " " + word;
     } else {
       out.push(current);
       current = word;
@@ -58,7 +57,7 @@ function hardWrap(sentence: string, maxLen: number): string[] {
 export function isHighlightOutOfView(
   rect: { top: number; bottom: number },
   viewportHeight: number,
-  insets: { top: number; bottom: number },
+  insets: { top: number; bottom: number }
 ): boolean {
   return rect.top < insets.top || rect.bottom > viewportHeight - insets.bottom;
 }

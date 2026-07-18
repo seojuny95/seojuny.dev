@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
-import { PostView, postStaticParams } from '@/components/pages/PostView';
-import { buildPostMetadata } from '@/lib/metadata';
-import { getPostBySlug } from '@/lib/posts';
+import type { Metadata } from "next";
+import { PostView, postStaticParams } from "@/components/pages/PostView";
+import { buildPostMetadata } from "@/lib/metadata";
+import { getPostBySlug } from "@/lib/posts";
 
 export function generateStaticParams() {
-  return postStaticParams('ko');
+  return postStaticParams("ko");
 }
 
 export async function generateMetadata({
@@ -14,7 +14,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   try {
-    return buildPostMetadata(getPostBySlug(slug, 'ko'), 'ko');
+    return buildPostMetadata(getPostBySlug(slug, "ko"), "ko");
   } catch {
     return {};
   }

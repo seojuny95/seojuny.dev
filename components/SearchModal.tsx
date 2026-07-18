@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   useCallback,
@@ -7,16 +7,16 @@ import {
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
-} from 'react';
-import { createPortal } from 'react-dom';
-import { useRouter } from 'next/navigation';
-import Fuse from 'fuse.js';
-import type { SearchEntry } from '@/lib/posts';
-import { localePath, ui, type Locale } from '@/lib/i18n';
+} from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
+import Fuse from "fuse.js";
+import type { SearchEntry } from "@/lib/posts";
+import { localePath, ui, type Locale } from "@/lib/i18n";
 
 export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: Locale }) {
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [activeIdx, setActiveIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
@@ -26,11 +26,11 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
   const fuse = useMemo(
     () =>
       new Fuse(index, {
-        keys: ['title', 'summary', 'tags'],
+        keys: ["title", "summary", "tags"],
         threshold: 0.4,
         ignoreLocation: true,
       }),
-    [index],
+    [index]
   );
 
   const trimmed = query.trim();
@@ -39,28 +39,28 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
   const openSearch = useCallback(() => setOpen(true), []);
   const closeSearch = useCallback(() => {
     setOpen(false);
-    setQuery('');
+    setQuery("");
     setActiveIdx(0);
   }, []);
 
   useEffect(() => {
     const down = (e: globalThis.KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setOpen((prev) => {
           if (prev) {
-            setQuery('');
+            setQuery("");
             setActiveIdx(0);
           }
           return !prev;
         });
       }
     };
-    window.addEventListener('keydown', down);
-    window.addEventListener('open-search', openSearch);
+    window.addEventListener("keydown", down);
+    window.addEventListener("open-search", openSearch);
     return () => {
-      window.removeEventListener('keydown', down);
-      window.removeEventListener('open-search', openSearch);
+      window.removeEventListener("keydown", down);
+      window.removeEventListener("open-search", openSearch);
     };
   }, [openSearch]);
 
@@ -70,11 +70,11 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
         previousFocus.current.focus();
         previousFocus.current = null;
       }
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
       return;
     }
     previousFocus.current = document.activeElement as HTMLElement | null;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     const id = window.setTimeout(() => inputRef.current?.focus(), 20);
     return () => window.clearTimeout(id);
   }, [open]);
@@ -85,16 +85,16 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
   };
 
   const onInputKey = (e: ReactKeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       e.preventDefault();
       closeSearch();
-    } else if (e.key === 'ArrowDown') {
+    } else if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIdx((i) => Math.min(i + 1, Math.max(0, results.length - 1)));
-    } else if (e.key === 'ArrowUp') {
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIdx((i) => Math.max(0, i - 1));
-    } else if (e.key === 'Enter') {
+    } else if (e.key === "Enter") {
       const pick = results[activeIdx];
       if (pick) {
         e.preventDefault();
@@ -104,7 +104,7 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
     }
   };
 
-  if (typeof document === 'undefined' || !open) return null;
+  if (typeof document === "undefined" || !open) return null;
 
   return createPortal(
     <div
@@ -137,18 +137,12 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
               type="button"
               aria-label="Clear search"
               onClick={() => {
-                onQueryChange('');
+                onQueryChange("");
                 inputRef.current?.focus();
               }}
               className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-[18px] h-[18px] rounded-sm text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] transition-colors duration-200"
             >
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-                aria-hidden
-              >
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
                 <path
                   d="M1.5 1.5L8.5 8.5M8.5 1.5L1.5 8.5"
                   stroke="currentColor"
@@ -168,10 +162,7 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
           </p>
         ) : null}
 
-        <ul
-          role="listbox"
-          className="max-h-[50vh] overflow-y-auto list-none p-1.5 m-0"
-        >
+        <ul role="listbox" className="max-h-[50vh] overflow-y-auto list-none p-1.5 m-0">
           {!trimmed ? (
             <li className="py-10 text-center text-[14px] text-[var(--muted)]">
               {t.searchPlaceholder}
@@ -193,16 +184,12 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
                   }}
                   onMouseEnter={() => setActiveIdx(i)}
                   className={`w-full text-left px-3 py-2.5 rounded-sm transition-colors duration-150 ${
-                    activeIdx === i
-                      ? 'bg-[color-mix(in_srgb,var(--fg)_6%,transparent)]'
-                      : ''
+                    activeIdx === i ? "bg-[color-mix(in_srgb,var(--fg)_6%,transparent)]" : ""
                   }`}
                 >
                   <div className="text-[15px] font-medium leading-snug">{r.title}</div>
                   {r.summary ? (
-                    <div className="text-[13px] text-[var(--muted)] mt-1 truncate">
-                      {r.summary}
-                    </div>
+                    <div className="text-[13px] text-[var(--muted)] mt-1 truncate">{r.summary}</div>
                   ) : null}
                   {r.tags && r.tags.length > 0 ? (
                     <div className="mt-1.5 flex flex-wrap gap-1.5 text-[11px] text-[var(--muted)]">
@@ -241,6 +228,6 @@ export function SearchModal({ index, locale }: { index: SearchEntry[]; locale: L
         </div>
       </div>
     </div>,
-    document.body,
+    document.body
   );
 }

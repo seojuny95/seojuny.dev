@@ -1,1 +1,1 @@
-export { default } from '@/components/PageTransition';
+export { default } from "@/components/PageTransition";

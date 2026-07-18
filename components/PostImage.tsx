@@ -1,7 +1,7 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-import Image from 'next/image';
-import { imageSize } from 'image-size';
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import Image from "next/image";
+import { imageSize } from "image-size";
 
 type PostImageProps = {
   src?: string;
@@ -11,7 +11,7 @@ type PostImageProps = {
 
 function getDimensions(src: string): { width: number; height: number } | null {
   try {
-    const publicDir = path.join(process.cwd(), 'public');
+    const publicDir = path.join(process.cwd(), "public");
     const filePath = path.join(publicDir, src);
     if (filePath !== publicDir && !filePath.startsWith(publicDir + path.sep)) {
       return null;
@@ -27,18 +27,18 @@ function getDimensions(src: string): { width: number; height: number } | null {
 export function PostImage({ src, alt, title }: PostImageProps) {
   if (!src) return null;
 
-  const dims = src.startsWith('/') ? getDimensions(src) : null;
+  const dims = src.startsWith("/") ? getDimensions(src) : null;
 
   if (!dims) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={src} alt={alt ?? ''} title={title} />;
+    return <img src={src} alt={alt ?? ""} title={title} />;
   }
 
   return (
     <figure>
       <Image
         src={src}
-        alt={alt ?? ''}
+        alt={alt ?? ""}
         width={dims.width}
         height={dims.height}
         sizes="(min-width: 680px) 680px, 100vw"

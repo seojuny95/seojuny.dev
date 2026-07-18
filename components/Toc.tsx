@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState, type MouseEvent } from 'react';
-import { createPortal } from 'react-dom';
-import { ui, type Locale } from '@/lib/i18n';
+import { useEffect, useState, type MouseEvent } from "react";
+import { createPortal } from "react-dom";
+import { ui, type Locale } from "@/lib/i18n";
 
 type Heading = {
   id: string;
@@ -12,21 +12,21 @@ type Heading = {
 
 export function Toc({ locale }: { locale: Locale }) {
   const [headings, setHeadings] = useState<Heading[]>([]);
-  const [activeId, setActiveId] = useState('');
+  const [activeId, setActiveId] = useState("");
   const tocLabel = ui[locale].toc;
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       const nodes = document.querySelectorAll<HTMLHeadingElement>(
-        '.prose-blog h2[id], .prose-blog h3[id]',
+        ".prose-blog h2[id], .prose-blog h3[id]"
       );
       setHeadings(
         Array.from(nodes).map((el) => ({
           id: el.id,
           // Trailing '#' comes from the appended autolink anchor.
-          text: (el.textContent ?? '').replace(/#\s*$/, '').trim(),
-          level: el.tagName === 'H2' ? 2 : 3,
-        })),
+          text: (el.textContent ?? "").replace(/#\s*$/, "").trim(),
+          level: el.tagName === "H2" ? 2 : 3,
+        }))
       );
     });
     return () => cancelAnimationFrame(raf);
@@ -37,7 +37,7 @@ export function Toc({ locale }: { locale: Locale }) {
     let raf = 0;
     const update = () => {
       raf = 0;
-      let current = '';
+      let current = "";
       for (const h of headings) {
         const el = document.getElementById(h.id);
         if (el && el.getBoundingClientRect().top <= 100) current = h.id;
@@ -48,12 +48,12 @@ export function Toc({ locale }: { locale: Locale }) {
       if (!raf) raf = requestAnimationFrame(update);
     };
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, [headings]);
 
@@ -61,11 +61,9 @@ export function Toc({ locale }: { locale: Locale }) {
     const el = document.getElementById(id);
     if (!el) return;
     e.preventDefault();
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-    history.pushState(null, '', `#${id}`);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+    history.pushState(null, "", `#${id}`);
   };
 
   if (headings.length < 2) return null;
@@ -75,22 +73,20 @@ export function Toc({ locale }: { locale: Locale }) {
       aria-label={tocLabel}
       className="toc hidden xl:block fixed top-[130px] left-[calc(50%_+_372px)] w-[200px] max-h-[calc(100vh_-_190px)] overflow-y-auto"
     >
-      <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)] mb-3">
-        {tocLabel}
-      </p>
+      <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)] mb-3">{tocLabel}</p>
       <ul className="list-none p-0 m-0 flex flex-col text-[12.5px] leading-snug border-l border-[var(--rule)]">
         {headings.map((h) => (
           <li key={h.id}>
             <a
               href={`#${h.id}`}
               onClick={(e) => onClick(e, h.id)}
-              aria-current={activeId === h.id ? 'location' : undefined}
+              aria-current={activeId === h.id ? "location" : undefined}
               className={`block py-[5px] -ml-px border-l transition-colors duration-200 ${
-                h.level === 3 ? 'pl-6' : 'pl-3'
+                h.level === 3 ? "pl-6" : "pl-3"
               } ${
                 activeId === h.id
-                  ? 'border-[var(--fg)] text-[var(--fg)]'
-                  : 'border-transparent text-[var(--muted)] hover:text-[var(--fg)]'
+                  ? "border-[var(--fg)] text-[var(--fg)]"
+                  : "border-transparent text-[var(--muted)] hover:text-[var(--fg)]"
               }`}
             >
               {h.text}
@@ -99,6 +95,6 @@ export function Toc({ locale }: { locale: Locale }) {
         ))}
       </ul>
     </nav>,
-    document.body,
+    document.body
   );
 }

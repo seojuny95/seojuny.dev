@@ -1,7 +1,7 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import matter from 'gray-matter';
-import { defaultLocale, type Locale } from '@/lib/i18n';
+import fs from "node:fs";
+import path from "node:path";
+import matter from "gray-matter";
+import { defaultLocale, type Locale } from "@/lib/i18n";
 
 export type Post = {
   slug: string;
@@ -13,7 +13,7 @@ export type Post = {
   readingTime: number;
 };
 
-export type SearchEntry = Pick<Post, 'slug' | 'title' | 'summary' | 'tags'>;
+export type SearchEntry = Pick<Post, "slug" | "title" | "summary" | "tags">;
 
 type RawPost = Post & { draft: boolean };
 
@@ -23,8 +23,8 @@ const CODE_WPM = 100;
 const SECONDS_PER_IMAGE = 12;
 
 const DATE_FORMATTERS: Record<Locale, Intl.DateTimeFormat> = {
-  ko: new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }),
-  en: new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+  ko: new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric" }),
+  en: new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" }),
 };
 
 export function formatDate(isoDate: string, locale: Locale = defaultLocale): string {
@@ -35,20 +35,20 @@ export function formatDate(isoDate: string, locale: Locale = defaultLocale): str
 
 export function readingTime(content: string): number {
   const codeWords = (content.match(/```[\s\S]*?```/g) ?? [])
-    .map((block) => block.replace(/^```[^\n]*\n?/, '').replace(/```$/, ''))
-    .join(' ')
+    .map((block) => block.replace(/^```[^\n]*\n?/, "").replace(/```$/, ""))
+    .join(" ")
     .split(/\s+/)
     .filter(Boolean).length;
-  const withoutCode = content.replace(/```[\s\S]*?```/g, ' ');
+  const withoutCode = content.replace(/```[\s\S]*?```/g, " ");
   const imageCount = (withoutCode.match(/!\[[^\]]*\]\([^)]*\)/g) ?? []).length;
   const stripped = withoutCode
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, ' $1 ')
-    .replace(/`([^`]*)`/g, ' $1 ')
-    .replace(/<[^>]+>/g, ' ');
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, " $1 ")
+    .replace(/`([^`]*)`/g, " $1 ")
+    .replace(/<[^>]+>/g, " ");
   const korean = (stripped.match(/[가-힣]/g) ?? []).length;
   const latin = stripped
-    .replace(/[가-힣]/g, ' ')
+    .replace(/[가-힣]/g, " ")
     .split(/\s+/)
     .filter((w) => /[A-Za-z0-9]/.test(w)).length;
   const textMinutes = korean / KOREAN_CPM + latin / LATIN_WPM;
@@ -58,14 +58,14 @@ export function readingTime(content: string): number {
 }
 
 function postsDir(locale: Locale): string {
-  return locale === 'ko'
-    ? path.join(process.cwd(), 'content', 'posts')
-    : path.join(process.cwd(), 'content', locale, 'posts');
+  return locale === "ko"
+    ? path.join(process.cwd(), "content", "posts")
+    : path.join(process.cwd(), "content", locale, "posts");
 }
 
 function slugFromFilename(filename: string): string {
-  const base = filename.replace(/\.mdx?$/, '');
-  return base.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+  const base = filename.replace(/\.mdx?$/, "");
+  return base.replace(/^\d{4}-\d{2}-\d{2}-/, "");
 }
 
 function readAllRaw(locale: Locale): RawPost[] {
@@ -73,7 +73,7 @@ function readAllRaw(locale: Locale): RawPost[] {
   if (!fs.existsSync(dir)) return [];
   const files = fs.readdirSync(dir).filter((f) => /\.mdx?$/.test(f));
   return files.map((filename) => {
-    const raw = fs.readFileSync(path.join(dir, filename), 'utf8');
+    const raw = fs.readFileSync(path.join(dir, filename), "utf8");
     const { data, content } = matter(raw);
     if (!data.title || !data.date) {
       throw new Error(`Missing required frontmatter (title/date) in ${filename}`);
@@ -110,7 +110,7 @@ export function hasPost(slug: string, locale: Locale): boolean {
 
 export function getAdjacentPosts(
   slug: string,
-  locale: Locale = defaultLocale,
+  locale: Locale = defaultLocale
 ): { prev?: Post; next?: Post } {
   const posts = getAllPosts(locale);
   const i = posts.findIndex((p) => p.slug === slug);

@@ -1,4 +1,4 @@
-import { NotFoundView } from '@/components/NotFoundView';
+import { NotFoundView } from "@/components/NotFoundView";
 
 export default function NotFound() {
   return <NotFoundView locale="ko" />;
