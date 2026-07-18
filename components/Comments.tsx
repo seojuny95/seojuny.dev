@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import Giscus from '@giscus/react';
-import type { Locale } from '@/lib/i18n';
+import { useEffect, useRef, useState } from "react";
+import Giscus from "@giscus/react";
+import type { Locale } from "@/lib/i18n";
 
 export function Comments({ locale }: { locale: Locale }) {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -14,7 +14,7 @@ export function Comments({ locale }: { locale: Locale }) {
     if (!node) return;
 
     // Fallback for environments without IntersectionObserver (very old browsers).
-    if (typeof IntersectionObserver === 'undefined') {
+    if (typeof IntersectionObserver === "undefined") {
       const id = window.setTimeout(() => setShouldLoad(true), 0);
       return () => window.clearTimeout(id);
     }
@@ -26,7 +26,7 @@ export function Comments({ locale }: { locale: Locale }) {
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' },
+      { rootMargin: "200px" }
     );
 
     observer.observe(node);

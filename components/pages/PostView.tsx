@@ -1,31 +1,31 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import type { ComponentPropsWithoutRef } from 'react';
-import type { MDXRemoteProps } from 'next-mdx-remote/rsc';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from '@/lib/posts';
-import { mdxOptions } from '@/lib/mdx';
-import { localePath, ui, type Locale } from '@/lib/i18n';
-import { buildPostJsonLd } from '@/lib/metadata';
-import { ArticleActions } from '@/components/ArticleActions';
-import { CodeBlock } from '@/components/CodeBlock';
-import { Comments } from '@/components/Comments';
-import { PostImage } from '@/components/PostImage';
-import { ReadingProgress } from '@/components/ReadingProgress';
-import { Toc } from '@/components/Toc';
+import fs from "node:fs";
+import path from "node:path";
+import type { ComponentPropsWithoutRef } from "react";
+import type { MDXRemoteProps } from "next-mdx-remote/rsc";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getAllPosts, getPostBySlug, getAdjacentPosts, formatDate } from "@/lib/posts";
+import { mdxOptions } from "@/lib/mdx";
+import { localePath, ui, type Locale } from "@/lib/i18n";
+import { buildPostJsonLd } from "@/lib/metadata";
+import { ArticleActions } from "@/components/ArticleActions";
+import { CodeBlock } from "@/components/CodeBlock";
+import { Comments } from "@/components/Comments";
+import { PostImage } from "@/components/PostImage";
+import { ReadingProgress } from "@/components/ReadingProgress";
+import { Toc } from "@/components/Toc";
 
 const mdxComponents = (locale: Locale) =>
   ({
     img: PostImage,
-    pre: (props: ComponentPropsWithoutRef<'pre'>) => <CodeBlock {...props} locale={locale} />,
-    table: (props: ComponentPropsWithoutRef<'table'>) => (
+    pre: (props: ComponentPropsWithoutRef<"pre">) => <CodeBlock {...props} locale={locale} />,
+    table: (props: ComponentPropsWithoutRef<"table">) => (
       <div className="table-wrap">
         <table {...props} />
       </div>
     ),
-  }) as MDXRemoteProps['components'];
+  }) as MDXRemoteProps["components"];
 
 export function postStaticParams(locale: Locale) {
   return getAllPosts(locale).map((p) => ({ slug: p.slug }));
@@ -42,16 +42,14 @@ export function PostView({ locale, slug }: { locale: Locale; slug: string }) {
   const { prev, next } = getAdjacentPosts(slug, locale);
 
   const audioRel =
-    locale === 'ko' ? `posts/${slug}/audio.mp3` : `posts/${slug}/${locale}/audio.mp3`;
-  const hasAudio = fs.existsSync(path.join(process.cwd(), 'public', audioRel));
+    locale === "ko" ? `posts/${slug}/audio.mp3` : `posts/${slug}/${locale}/audio.mp3`;
+  const hasAudio = fs.existsSync(path.join(process.cwd(), "public", audioRel));
   const audioSrc = hasAudio ? `/${audioRel}` : undefined;
-  const timingSrc = hasAudio ? `/${audioRel.replace(/\.mp3$/, '.json')}` : undefined;
+  const timingSrc = hasAudio ? `/${audioRel.replace(/\.mp3$/, ".json")}` : undefined;
 
   return (
     <article>
-      <script type="application/ld+json">
-        {JSON.stringify(buildPostJsonLd(post, locale))}
-      </script>
+      <script type="application/ld+json">{JSON.stringify(buildPostJsonLd(post, locale))}</script>
       <ReadingProgress />
       <Toc locale={locale} />
       <nav aria-label={t.pageNavAria}>
@@ -69,11 +67,15 @@ export function PostView({ locale, slug }: { locale: Locale; slug: string }) {
         </h1>
         <div className="text-[13px] text-[var(--muted)] mt-3 sm:mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums tracking-wide">
           <time dateTime={post.date}>{formatDate(post.date, locale)}</time>
-          <span aria-hidden className="opacity-60">·</span>
+          <span aria-hidden className="opacity-60">
+            ·
+          </span>
           <span>{t.minRead(post.readingTime)}</span>
           {post.tags.length > 0 ? (
             <>
-              <span aria-hidden className="opacity-60">·</span>
+              <span aria-hidden className="opacity-60">
+                ·
+              </span>
               <ul aria-label={t.tagsAria} className="flex gap-2.5 list-none p-0 m-0">
                 {post.tags.map((tag) => (
                   <li key={tag}>#{tag}</li>

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { matchable, isHighlightOutOfView } from '@/lib/speech';
-import { ui, type Locale } from '@/lib/i18n';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { matchable, isHighlightOutOfView } from "@/lib/speech";
+import { ui, type Locale } from "@/lib/i18n";
 
 const RATES = [1, 1.25, 1.5, 2] as const;
 
@@ -11,11 +11,11 @@ const RATES = [1, 1.25, 1.5, 2] as const;
 const TOP_INSET = 104;
 const BOTTOM_INSET = 40;
 
-type Status = 'idle' | 'playing' | 'paused';
+type Status = "idle" | "playing" | "paused";
 type Timing = { text: string; start: number; end: number };
 type Segment = { start: number; end: number; range: Range | null; block: Element | null };
 
-const BLOCK_SELECTOR = 'p, li, h1, h2, h3, h4, h5, h6, blockquote, figcaption, td, th';
+const BLOCK_SELECTOR = "p, li, h1, h2, h3, h4, h5, h6, blockquote, figcaption, td, th";
 
 // CSS Custom Highlight API (미지원 브라우저는 하이라이트만 생략)
 interface HighlightLike {
@@ -30,7 +30,7 @@ interface HighlightRegistry {
   delete(name: string): void;
 }
 function getHighlightApi(): { registry: HighlightRegistry; Ctor: HighlightCtor } | null {
-  if (typeof CSS === 'undefined') return null;
+  if (typeof CSS === "undefined") return null;
   const registry = (CSS as unknown as { highlights?: HighlightRegistry }).highlights;
   const Ctor = (globalThis as unknown as { Highlight?: HighlightCtor }).Highlight;
   return registry && Ctor ? { registry, Ctor } : null;
@@ -40,24 +40,24 @@ function getHighlightApi(): { registry: HighlightRegistry; Ctor: HighlightCtor }
 // 코드블록(pre)·표(.table-wrap)·캡션(figcaption)은 낭독 대상이 아니므로 제외하고,
 // 글자/숫자만 남긴 정규화 문자열에서 문장을 순서대로 탐색해 공백·문장부호 차이를 흡수한다.
 function buildSegments(timings: Timing[]): Segment[] {
-  const root = document.querySelector('.prose-blog');
+  const root = document.querySelector(".prose-blog");
   if (!root) {
     return timings.map((t) => ({ start: t.start, end: t.end, range: null, block: null }));
   }
 
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
-      return node.parentElement?.closest('pre, .table-wrap, figcaption, .katex')
+      return node.parentElement?.closest("pre, .table-wrap, figcaption, .katex")
         ? NodeFilter.FILTER_REJECT
         : NodeFilter.FILTER_ACCEPT;
     },
   });
 
-  let norm = '';
+  let norm = "";
   const map: { node: Text; offset: number }[] = [];
   let node: Node | null;
   while ((node = walker.nextNode())) {
-    const text = node.nodeValue ?? '';
+    const text = node.nodeValue ?? "";
     for (let i = 0; i < text.length; i++) {
       const m = matchable(text[i]);
       if (m) {
@@ -100,7 +100,7 @@ export function SpeechPlayer({
   locale: Locale;
 }) {
   const t = ui[locale];
-  const [status, setStatus] = useState<Status>('idle');
+  const [status, setStatus] = useState<Status>("idle");
   const [rate, setRate] = useState<(typeof RATES)[number]>(1);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -115,7 +115,7 @@ export function SpeechPlayer({
   const highlightRef = useRef<HighlightLike | null>(null);
   const suppressYieldUntil = useRef(0);
   const playPauseRef = useRef<HTMLButtonElement | null>(null);
-  const [jumpDir, setJumpDir] = useState<'up' | 'down' | null>(null);
+  const [jumpDir, setJumpDir] = useState<"up" | "down" | null>(null);
 
   const recomputeJump = useCallback(() => {
     const segments = segmentsRef.current;
@@ -126,8 +126,8 @@ export function SpeechPlayer({
       return;
     }
     const rect = range.getBoundingClientRect();
-    if (rect.bottom <= TOP_INSET) setJumpDir('up');
-    else if (rect.top >= window.innerHeight - BOTTOM_INSET) setJumpDir('down');
+    if (rect.bottom <= TOP_INSET) setJumpDir("up");
+    else if (rect.top >= window.innerHeight - BOTTOM_INSET) setJumpDir("down");
     else setJumpDir(null);
   }, []);
 
@@ -138,7 +138,7 @@ export function SpeechPlayer({
     if (!api) return;
     if (!highlightRef.current) {
       highlightRef.current = new api.Ctor();
-      api.registry.set('reading', highlightRef.current);
+      api.registry.set("reading", highlightRef.current);
     }
     highlightRef.current.clear();
     if (range) highlightRef.current.add(range);
@@ -182,10 +182,12 @@ export function SpeechPlayer({
     setHighlight(range);
     if (range && followRef.current) {
       const rect = range.getBoundingClientRect();
-      if (isHighlightOutOfView(rect, window.innerHeight, { top: TOP_INSET, bottom: BOTTOM_INSET })) {
+      if (
+        isHighlightOutOfView(rect, window.innerHeight, { top: TOP_INSET, bottom: BOTTOM_INSET })
+      ) {
         range.startContainer.parentElement?.scrollIntoView({
-          block: 'center',
-          behavior: 'smooth',
+          block: "center",
+          behavior: "smooth",
         });
       }
     }
@@ -195,11 +197,11 @@ export function SpeechPlayer({
   const handlePlayPause = useCallback(async () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (status === 'playing') {
+    if (status === "playing") {
       audio.pause();
       return;
     }
-    if (status === 'idle') {
+    if (status === "idle") {
       audio.currentTime = 0;
       followRef.current = true;
       setFollowSuspended(false);
@@ -221,7 +223,7 @@ export function SpeechPlayer({
     const segments = segmentsRef.current;
     const active = activeRef.current;
     const range = active >= 0 && segments ? segments[active].range : null;
-    range?.startContainer.parentElement?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    range?.startContainer.parentElement?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, []);
 
   const resumeFollow = useCallback(() => {
@@ -245,24 +247,23 @@ export function SpeechPlayer({
   useEffect(
     () => () => {
       audioRef.current?.pause();
-      getHighlightApi()?.registry.delete('reading');
+      getHighlightApi()?.registry.delete("reading");
     },
-    [],
+    []
   );
 
   useEffect(() => {
     const el = inlineRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(
-      ([entry]) => setInlineVisible(entry.isIntersecting),
-      { threshold: 0 },
-    );
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setInlineVisible(entry.isIntersecting), {
+      threshold: 0,
+    });
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   useEffect(() => {
-    if (status === 'idle') return;
+    if (status === "idle") return;
     const yield_ = () => {
       if (Date.now() < suppressYieldUntil.current) return;
       if (!followRef.current) return;
@@ -271,46 +272,46 @@ export function SpeechPlayer({
       recomputeJump();
     };
     const onKey = (e: KeyboardEvent) => {
-      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) {
+      if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"].includes(e.key)) {
         const el = document.activeElement as HTMLElement | null;
         const tag = el?.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || el?.isContentEditable) return;
+        if (tag === "INPUT" || tag === "TEXTAREA" || el?.isContentEditable) return;
         yield_();
       }
     };
-    window.addEventListener('wheel', yield_, { passive: true });
-    window.addEventListener('touchmove', yield_, { passive: true });
-    window.addEventListener('keydown', onKey);
+    window.addEventListener("wheel", yield_, { passive: true });
+    window.addEventListener("touchmove", yield_, { passive: true });
+    window.addEventListener("keydown", onKey);
     return () => {
-      window.removeEventListener('wheel', yield_);
-      window.removeEventListener('touchmove', yield_);
-      window.removeEventListener('keydown', onKey);
+      window.removeEventListener("wheel", yield_);
+      window.removeEventListener("touchmove", yield_);
+      window.removeEventListener("keydown", onKey);
     };
   }, [status, recomputeJump]);
 
   // 칩 방향은 스크롤마다 갱신(초기값은 yield_, 해제는 onPause·onEnded·resumeFollow).
   useEffect(() => {
-    if (!followSuspended || status !== 'playing') return;
-    window.addEventListener('scroll', recomputeJump, { passive: true });
-    return () => window.removeEventListener('scroll', recomputeJump);
+    if (!followSuspended || status !== "playing") return;
+    window.addEventListener("scroll", recomputeJump, { passive: true });
+    return () => window.removeEventListener("scroll", recomputeJump);
   }, [followSuspended, status, recomputeJump]);
 
   // 듣기 세션 중(재생/일시정지)에는 스페이스바로 재생/일시정지 토글.
   // 입력창·버튼 포커스 시에는 가로채지 않아 평소 스크롤·버튼 동작을 보존한다.
   useEffect(() => {
-    if (status === 'idle') return;
+    if (status === "idle") return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.code !== 'Space' && e.key !== ' ') return;
+      if (e.code !== "Space" && e.key !== " ") return;
       const el = document.activeElement as HTMLElement | null;
       const tag = el?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'BUTTON' || el?.isContentEditable) {
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON" || el?.isContentEditable) {
         return;
       }
       e.preventDefault();
       void handlePlayPause();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [status, handlePlayPause]);
 
   if (!audioSrc) {
@@ -328,7 +329,7 @@ export function SpeechPlayer({
     );
   }
 
-  const showMini = !inlineVisible && status !== 'idle';
+  const showMini = !inlineVisible && status !== "idle";
 
   return (
     <>
@@ -337,15 +338,15 @@ export function SpeechPlayer({
           ref={audioRef}
           src={audioSrc}
           preload="none"
-          onPlay={() => setStatus('playing')}
+          onPlay={() => setStatus("playing")}
           onPause={() => {
-            setStatus((s) => (s === 'idle' ? 'idle' : 'paused'));
+            setStatus((s) => (s === "idle" ? "idle" : "paused"));
             activeRef.current = -1;
             setHighlight(null);
             setJumpDir(null);
           }}
           onEnded={() => {
-            setStatus('idle');
+            setStatus("idle");
             activeRef.current = -1;
             setHighlight(null);
             setJumpDir(null);
@@ -367,7 +368,7 @@ export function SpeechPlayer({
           playPauseRef={playPauseRef}
         />
       </div>
-      {showMini && typeof document !== 'undefined'
+      {showMini && typeof document !== "undefined"
         ? createPortal(
             <div className="speech-mini" role="region" aria-label={t.playerAria}>
               <div className="speech-mini-inner">
@@ -383,10 +384,10 @@ export function SpeechPlayer({
                 />
               </div>
             </div>,
-            document.body,
+            document.body
           )
         : null}
-      {jumpDir && typeof document !== 'undefined'
+      {jumpDir && typeof document !== "undefined"
         ? createPortal(
             <button
               type="button"
@@ -395,11 +396,11 @@ export function SpeechPlayer({
               className={`speech-jump speech-jump-${jumpDir}`}
             >
               <span aria-hidden className="speech-jump-arrow">
-                {jumpDir === 'up' ? '↑' : '↓'}
+                {jumpDir === "up" ? "↑" : "↓"}
               </span>
               <span>{t.jumpToCurrent}</span>
             </button>,
-            document.body,
+            document.body
           )
         : null}
     </>
@@ -428,20 +429,20 @@ function Controls({
   playPauseRef?: React.Ref<HTMLButtonElement>;
 }) {
   const t = ui[locale];
-  const isPlaying = status === 'playing';
+  const isPlaying = status === "playing";
   return (
     <>
       <button
         ref={playPauseRef}
         type="button"
         onClick={onPlayPause}
-        aria-label={isPlaying ? t.pause : status === 'paused' ? t.resume : t.listenPostAria}
+        aria-label={isPlaying ? t.pause : status === "paused" ? t.resume : t.listenPostAria}
         className="inline-flex items-center gap-1.5 text-[13px] text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-300"
       >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        <span>{isPlaying ? t.pause : status === 'paused' ? t.resume : t.listen}</span>
+        <span>{isPlaying ? t.pause : status === "paused" ? t.resume : t.listen}</span>
       </button>
-      {status !== 'idle' ? (
+      {status !== "idle" ? (
         <>
           <span className="text-[12px] tabular-nums text-[var(--muted)]">
             {fmtTime(time)} / {fmtTime(duration)}
@@ -482,7 +483,7 @@ function fmtTime(s: number): string {
   if (!Number.isFinite(s) || s < 0) s = 0;
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
-  return `${m}:${String(sec).padStart(2, '0')}`;
+  return `${m}:${String(sec).padStart(2, "0")}`;
 }
 
 function PlayIcon() {

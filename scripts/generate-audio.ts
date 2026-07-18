@@ -7,12 +7,12 @@
 //
 // 산출물: public/posts/<slug>/audio.mp3, public/posts/<slug>/audio.json
 // 순수 텍스트 로직(추출·발음교정·정렬)은 lib/audio-text.ts (테스트 대상).
-import fs from 'node:fs';
-import path from 'node:path';
-import { execFileSync } from 'node:child_process';
-import matter from 'gray-matter';
-import { EdgeTTS, Constants } from '@andresaya/edge-tts';
-import { splitIntoChunks } from '../lib/speech';
+import fs from "node:fs";
+import path from "node:path";
+import { execFileSync } from "node:child_process";
+import matter from "gray-matter";
+import { EdgeTTS, Constants } from "@andresaya/edge-tts";
+import { splitIntoChunks } from "../lib/speech";
 import {
   mdxToReadableText,
   toSpeechText,
@@ -21,25 +21,23 @@ import {
   slugOf,
   type Sentence,
   type SpeechLocale,
-} from '../lib/audio-text';
+} from "../lib/audio-text";
 
 const VOICES: Record<SpeechLocale, string> = {
-  ko: 'ko-KR-HyunsuMultilingualNeural',
-  en: 'en-US-AndrewMultilingualNeural',
+  ko: "ko-KR-HyunsuMultilingualNeural",
+  en: "en-US-AndrewMultilingualNeural",
 };
-const OUT_ROOT = path.join(process.cwd(), 'public', 'posts');
+const OUT_ROOT = path.join(process.cwd(), "public", "posts");
 
 function postsDir(locale: SpeechLocale): string {
-  return locale === 'ko'
-    ? path.join(process.cwd(), 'content', 'posts')
-    : path.join(process.cwd(), 'content', locale, 'posts');
+  return locale === "ko"
+    ? path.join(process.cwd(), "content", "posts")
+    : path.join(process.cwd(), "content", locale, "posts");
 }
 
 // ko → public/posts/<slug>/ , en → public/posts/<slug>/en/
 function outDirFor(slug: string, locale: SpeechLocale): string {
-  return locale === 'ko'
-    ? path.join(OUT_ROOT, slug)
-    : path.join(OUT_ROOT, slug, locale);
+  return locale === "ko" ? path.join(OUT_ROOT, slug) : path.join(OUT_ROOT, slug, locale);
 }
 
 function postFiles(locale: SpeechLocale): string[] {
@@ -47,15 +45,18 @@ function postFiles(locale: SpeechLocale): string[] {
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
-    .filter((f) => f.endsWith('.mdx'))
+    .filter((f) => f.endsWith(".mdx"))
     .map((f) => path.join(dir, f));
 }
 
 function mp3Duration(file: string): number {
-  const out = execFileSync('ffprobe', [
-    '-v', 'error',
-    '-show_entries', 'format=duration',
-    '-of', 'csv=p=0',
+  const out = execFileSync("ffprobe", [
+    "-v",
+    "error",
+    "-show_entries",
+    "format=duration",
+    "-of",
+    "csv=p=0",
     file,
   ]);
   return parseFloat(out.toString().trim());
@@ -64,13 +65,13 @@ function mp3Duration(file: string): number {
 async function synthesizeBatch(
   sentences: string[],
   outPath: string,
-  locale: SpeechLocale,
+  locale: SpeechLocale
 ): Promise<Sentence[]> {
   const tts = new EdgeTTS();
-  await tts.synthesize(sentences.join(' '), VOICES[locale], {
+  await tts.synthesize(sentences.join(" "), VOICES[locale], {
     outputFormat: Constants.OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3,
   });
-  await tts.toFile(outPath.replace(/\.mp3$/, ''));
+  await tts.toFile(outPath.replace(/\.mp3$/, ""));
   const words = tts.getWordBoundaries() as {
     offset: number;
     duration: number;
@@ -80,7 +81,7 @@ async function synthesizeBatch(
 }
 
 async function generate(file: string, locale: SpeechLocale): Promise<void> {
-  const raw = fs.readFileSync(file, 'utf8');
+  const raw = fs.readFileSync(file, "utf8");
   const { data } = matter(raw);
   const slug = slugOf(file);
   if (data.draft) {
@@ -116,36 +117,39 @@ async function generate(file: string, locale: SpeechLocale): Promise<void> {
     offset += mp3Duration(part); // 실제 길이로 보정(단어 종료 시각보다 정확)
   }
 
-  const finalPath = path.join(outDir, 'audio.mp3');
+  const finalPath = path.join(outDir, "audio.mp3");
   if (parts.length === 1) {
     fs.renameSync(parts[0], finalPath);
   } else {
-    const listFile = path.join(outDir, '.concat.txt');
-    fs.writeFileSync(listFile, parts.map((p) => `file '${path.resolve(p)}'`).join('\n'));
-    execFileSync('ffmpeg', ['-y', '-f', 'concat', '-safe', '0', '-i', listFile, '-c', 'copy', finalPath], {
-      stdio: 'ignore',
-    });
+    const listFile = path.join(outDir, ".concat.txt");
+    fs.writeFileSync(listFile, parts.map((p) => `file '${path.resolve(p)}'`).join("\n"));
+    execFileSync(
+      "ffmpeg",
+      ["-y", "-f", "concat", "-safe", "0", "-i", listFile, "-c", "copy", finalPath],
+      {
+        stdio: "ignore",
+      }
+    );
     fs.rmSync(listFile);
     for (const p of parts) fs.rmSync(p);
   }
 
-  fs.writeFileSync(path.join(outDir, 'audio.json'), JSON.stringify(timed));
+  fs.writeFileSync(path.join(outDir, "audio.json"), JSON.stringify(timed));
 
   console.log(
-    `ok: ${slug}  (${sentences.length} sentences, ${batches.length} batches, ${offset.toFixed(1)}s)`,
+    `ok: ${slug}  (${sentences.length} sentences, ${batches.length} batches, ${offset.toFixed(1)}s)`
   );
 }
 
 const hasAudio = (slug: string, locale: SpeechLocale) =>
-  fs.existsSync(path.join(outDirFor(slug, locale), 'audio.mp3'));
+  fs.existsSync(path.join(outDirFor(slug, locale), "audio.mp3"));
 
 async function main() {
   const args = process.argv.slice(2);
-  const all = args.includes('--all');
+  const all = args.includes("--all");
   // --locale=en / --en : 영어 본문(content/en/posts) → public/posts/<slug>/en/
-  const locale: SpeechLocale =
-    args.includes('--en') || args.includes('--locale=en') ? 'en' : 'ko';
-  const slug = args.find((a) => !a.startsWith('--'));
+  const locale: SpeechLocale = args.includes("--en") || args.includes("--locale=en") ? "en" : "ko";
+  const slug = args.find((a) => !a.startsWith("--"));
 
   let files = postFiles(locale);
   if (slug) {
@@ -158,7 +162,7 @@ async function main() {
     // 기본: 오디오가 아직 없는 글만 생성(증분). 전체 재생성은 --all.
     files = files.filter((f) => !hasAudio(slugOf(f), locale));
     if (files.length === 0) {
-      console.log('오디오 없는 글이 없습니다. 전체를 다시 만들려면 --all 을 붙이세요.');
+      console.log("오디오 없는 글이 없습니다. 전체를 다시 만들려면 --all 을 붙이세요.");
       return;
     }
   }

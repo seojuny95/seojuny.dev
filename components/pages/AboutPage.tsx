@@ -1,25 +1,29 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import type { Metadata } from 'next';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { mdxOptions } from '@/lib/mdx';
-import { localePath, type Locale } from '@/lib/i18n';
+import fs from "node:fs";
+import path from "node:path";
+import type { Metadata } from "next";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { mdxOptions } from "@/lib/mdx";
+import { localePath, type Locale } from "@/lib/i18n";
 
 export function aboutMetadata(locale: Locale): Metadata {
   return {
     // 레이아웃 메타데이터의 `%s — seojuny.dev` 템플릿이 접미사를 붙이므로 'About'만.
-    title: 'About',
+    title: "About",
     alternates: {
-      canonical: localePath(locale, '/about'),
-      languages: { ko: '/about', en: '/en/about', 'x-default': '/about' },
+      canonical: localePath(locale, "/about"),
+      languages: { ko: "/about", en: "/en/about", "x-default": "/about" },
     },
   };
 }
 
 export function AboutView({ locale }: { locale: Locale }) {
   const source = fs.readFileSync(
-    path.join(process.cwd(), 'content', ...(locale === 'ko' ? ['about.mdx'] : [locale, 'about.mdx'])),
-    'utf8',
+    path.join(
+      process.cwd(),
+      "content",
+      ...(locale === "ko" ? ["about.mdx"] : [locale, "about.mdx"])
+    ),
+    "utf8"
   );
   return (
     <section>

@@ -1,19 +1,13 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import { otherLocale, switchLocalePath, ui, type Locale } from '@/lib/i18n';
+import { usePathname } from "next/navigation";
+import { otherLocale, switchLocalePath, ui, type Locale } from "@/lib/i18n";
 
-const LABELS: Record<Locale, string> = { ko: 'KO', en: 'EN' };
+const LABELS: Record<Locale, string> = { ko: "KO", en: "EN" };
 
 // KO↔EN은 서로 다른 루트 레이아웃((ko)/(en) route group)을 넘나들어 전체 페이지 로드가
 // 필요하다 — next/link의 소프트 내비게이션은 경계에서 간헐적으로 실패하므로 하드 <a>로 이동한다.
-export function LocaleSwitcher({
-  locale,
-  otherSlugs,
-}: {
-  locale: Locale;
-  otherSlugs: string[];
-}) {
+export function LocaleSwitcher({ locale, otherSlugs }: { locale: Locale; otherSlugs: string[] }) {
   const pathname = usePathname();
   const target = otherLocale(locale);
   const href = switchLocalePath(pathname, target, otherSlugs);
@@ -44,9 +38,11 @@ export function LocaleSwitcher({
       aria-label={ui[locale].switchToOther}
       className="flex items-center gap-2.5 text-[13px] uppercase tracking-[0.04em] tabular-nums"
     >
-      {item('ko')}
-      <span aria-hidden className="text-[var(--rule)]">·</span>
-      {item('en')}
+      {item("ko")}
+      <span aria-hidden className="text-[var(--rule)]">
+        ·
+      </span>
+      {item("en")}
     </div>
   );
 }

@@ -1,14 +1,8 @@
-import Link from 'next/link';
-import { localePath, type Locale } from '@/lib/i18n';
-import { LocaleSwitcher } from './LocaleSwitcher';
+import Link from "next/link";
+import { localePath, type Locale } from "@/lib/i18n";
+import { LocaleSwitcher } from "./LocaleSwitcher";
 
-export function Footer({
-  locale,
-  otherSlugs,
-}: {
-  locale: Locale;
-  otherSlugs: string[];
-}) {
+export function Footer({ locale, otherSlugs }: { locale: Locale; otherSlugs: string[] }) {
   const year = new Date().getFullYear();
   return (
     <footer className="border-t border-[var(--rule)] mt-20 sm:mt-28">
@@ -33,13 +27,13 @@ export function Footer({
             Posts
           </Link>
           <Link
-            href={localePath(locale, '/about')}
+            href={localePath(locale, "/about")}
             className="hover:text-[var(--fg)] transition-colors duration-200"
           >
             About
           </Link>
           <a
-            href={localePath(locale, '/feed.xml')}
+            href={localePath(locale, "/feed.xml")}
             className="hover:text-[var(--fg)] transition-colors duration-200"
           >
             RSS

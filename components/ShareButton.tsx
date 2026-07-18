@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { ui, type Locale } from '@/lib/i18n';
+import { useEffect, useRef, useState } from "react";
+import { ui, type Locale } from "@/lib/i18n";
 
 export function ShareButton({ locale }: { locale: Locale }) {
   const resetTimer = useRef<number | undefined>(undefined);

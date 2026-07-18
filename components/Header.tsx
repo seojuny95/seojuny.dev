@@ -1,8 +1,8 @@
-import Link from 'next/link';
-import { SearchTrigger } from './SearchTrigger';
-import { MobileMenu } from './MobileMenu';
-import { NavLinks } from './NavLinks';
-import { localePath, type Locale } from '@/lib/i18n';
+import Link from "next/link";
+import { SearchTrigger } from "./SearchTrigger";
+import { MobileMenu } from "./MobileMenu";
+import { NavLinks } from "./NavLinks";
+import { localePath, type Locale } from "@/lib/i18n";
 
 export function Header({ locale }: { locale: Locale }) {
   return (

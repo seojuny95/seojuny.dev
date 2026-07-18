@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState, type ComponentPropsWithoutRef } from 'react';
-import { ui, type Locale } from '@/lib/i18n';
+import { useEffect, useRef, useState, type ComponentPropsWithoutRef } from "react";
+import { ui, type Locale } from "@/lib/i18n";
 
-const UNLABELED_LANGS = new Set(['plaintext', 'text', 'txt']);
+const UNLABELED_LANGS = new Set(["plaintext", "text", "txt"]);
 
 export function CodeBlock({
   locale,
   children,
   ...props
-}: ComponentPropsWithoutRef<'pre'> & { locale: Locale }) {
+}: ComponentPropsWithoutRef<"pre"> & { locale: Locale }) {
   const preRef = useRef<HTMLPreElement>(null);
   const resetTimer = useRef<number | undefined>(undefined);
   const [copied, setCopied] = useState(false);
@@ -17,11 +17,8 @@ export function CodeBlock({
 
   useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
-  const language = (props as Record<string, unknown>)['data-language'];
-  const label =
-    typeof language === 'string' && !UNLABELED_LANGS.has(language)
-      ? language
-      : null;
+  const language = (props as Record<string, unknown>)["data-language"];
+  const label = typeof language === "string" && !UNLABELED_LANGS.has(language) ? language : null;
 
   const copy = async () => {
     const text = preRef.current?.textContent?.trimEnd();

@@ -24,7 +24,13 @@ body {
 }
 
 body {
-  font-family: var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, sans-serif;
+  font-family:
+    var(--font-pretendard),
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    system-ui,
+    sans-serif;
   font-size: 18px;
   line-height: 1.72;
   -webkit-font-smoothing: antialiased;
@@ -116,8 +122,9 @@ hr {
   width: 0;
   height: 1px;
   background: var(--fg);
-  transition: width 320ms cubic-bezier(0.4, 0, 0.2, 1),
-              left 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    width 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    left 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .focus-underline:focus-within::after {
   left: 0;
@@ -125,20 +132,38 @@ hr {
 }
 
 @keyframes reveal {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .reveal {
   animation: reveal 560ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
 }
-.reveal-delay-1 { animation-delay: 80ms; }
-.reveal-delay-2 { animation-delay: 160ms; }
-.reveal-delay-3 { animation-delay: 240ms; }
+.reveal-delay-1 {
+  animation-delay: 80ms;
+}
+.reveal-delay-2 {
+  animation-delay: 160ms;
+}
+.reveal-delay-3 {
+  animation-delay: 240ms;
+}
 
 /* Page-transition: fires on every route change via template.tsx. */
 @keyframes page-enter {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .page-enter {
   animation: page-enter 480ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
@@ -161,7 +186,9 @@ hr {
 
 /* Theme-toggle icon. */
 .toggle-icon {
-  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  transition:
+    opacity 320ms ease,
+    transform 420ms cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
 /* Keyboard hint. */
@@ -184,8 +211,14 @@ hr {
 
 /* Mobile menu drawer. */
 @keyframes mobile-menu-in {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .mobile-menu-in {
   animation: mobile-menu-in 240ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
@@ -204,19 +237,30 @@ hr {
   background: currentColor;
   border-radius: 2px;
   transform: translateX(-50%);
-  transition: transform 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
-              top 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
-              opacity 180ms ease;
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
+    top 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
+    opacity 180ms ease;
 }
 
 /* Search modal. */
 @keyframes backdrop-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes panel-in {
-  from { opacity: 0; transform: translateY(8px) scale(0.985); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .search-backdrop {
   animation: backdrop-in 200ms ease-out both;
@@ -266,8 +310,12 @@ hr {
   margin-top: 2em;
   margin-bottom: 0.6em;
 }
-.prose-blog h2 { font-size: 1.4rem; }
-.prose-blog h3 { font-size: 1.15rem; }
+.prose-blog h2 {
+  font-size: 1.4rem;
+}
+.prose-blog h3 {
+  font-size: 1.15rem;
+}
 .prose-blog h2,
 .prose-blog h3 {
   scroll-margin-top: 90px;
@@ -285,7 +333,9 @@ hr {
 .prose-blog h3:hover .heading-anchor {
   opacity: 1;
 }
-.prose-blog p { margin: 1em 0; }
+.prose-blog p {
+  margin: 1em 0;
+}
 .prose-blog a {
   background-image: linear-gradient(currentColor, currentColor);
   background-position: 0 100%;
@@ -293,15 +343,23 @@ hr {
   background-size: 100% 1px;
   transition: background-size 220ms ease;
 }
-.prose-blog a:hover { background-size: 0 1px; }
+.prose-blog a:hover {
+  background-size: 0 1px;
+}
 .prose-blog ul,
 .prose-blog ol {
   margin: 1em 0;
   padding-left: 1.4em;
 }
-.prose-blog ul { list-style: disc; }
-.prose-blog ol { list-style: decimal; }
-.prose-blog li::marker { color: var(--muted); }
+.prose-blog ul {
+  list-style: disc;
+}
+.prose-blog ol {
+  list-style: decimal;
+}
+.prose-blog li::marker {
+  color: var(--muted);
+}
 .prose-blog blockquote {
   border-left: 1px solid var(--rule);
   padding-left: 1.25em;
@@ -325,7 +383,10 @@ hr {
   line-height: 1.6;
   border: 1px solid var(--rule);
 }
-.prose-blog pre code { background: transparent; padding: 0; }
+.prose-blog pre code {
+  background: transparent;
+  padding: 0;
+}
 
 /* Code block: language label + copy button, floating top-right. */
 .code-block {
@@ -358,7 +419,9 @@ hr {
   background: var(--bg);
   color: var(--muted);
   opacity: 0;
-  transition: opacity 180ms ease, color 180ms ease;
+  transition:
+    opacity 180ms ease,
+    color 180ms ease;
 }
 .code-block:hover .code-copy,
 .code-copy:focus-visible,
@@ -444,7 +507,9 @@ hr {
   background-color: color-mix(in srgb, var(--yc) 20%, transparent);
   color: inherit;
 }
-.prose-blog hr { margin: 2.5em 0; }
+.prose-blog hr {
+  margin: 2.5em 0;
+}
 .prose-blog .table-wrap {
   overflow-x: auto;
   margin: 1.75em 0;
