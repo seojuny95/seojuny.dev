@@ -1,0 +1,40 @@
+<svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>핵심 판단은 강한 모델에게, 반복 작업은 가벼운 모델에게 나눠 맡긴다</title>
+  <desc>메인 에이전트는 강한 모델을 써서 코드 구조 설계나 애매한 요구사항 판단 같은 핵심 판단을 맡는다. 코드 탐색, 규칙 확인, 테스트 검증처럼 반복적이고 기계적인 작업은 가벼운 모델을 붙인 서브에이전트 여러 개로 나눠 맡긴다.</desc>
+
+  <defs>
+    <marker id="mr-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="14" font-weight="500" fill="#000">역할별로 모델 나눠 쓰기</text>
+
+  <!-- 메인 에이전트 -->
+  <rect x="250" y="46" width="180" height="62" rx="6" fill="#fff" stroke="#000" stroke-width="1.9"/>
+  <text x="340" y="72" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="600" fill="#000">메인 에이전트</text>
+  <text x="340" y="90" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10.5" fill="#000" opacity="0.65">핵심 판단 · 강한 모델</text>
+
+  <!-- 화살표: 메인 -> 서브 3개 -->
+  <path d="M 300 108 L 140 176" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#mr-arr)"/>
+  <path d="M 340 108 L 340 176" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#mr-arr)"/>
+  <path d="M 380 108 L 540 176" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" marker-end="url(#mr-arr)"/>
+
+  <!-- 서브에이전트 1 -->
+  <rect x="56" y="178" width="168" height="58" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="140" y="203" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">코드 탐색</text>
+  <text x="140" y="220" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.65">서브에이전트 · 가벼운 모델</text>
+
+  <!-- 서브에이전트 2 -->
+  <rect x="256" y="178" width="168" height="58" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="340" y="203" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">규칙 확인</text>
+  <text x="340" y="220" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.65">서브에이전트 · 가벼운 모델</text>
+
+  <!-- 서브에이전트 3 -->
+  <rect x="456" y="178" width="168" height="58" rx="6" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="540" y="203" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="12" font-weight="600" fill="#000">테스트 검증</text>
+  <text x="540" y="220" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#000" opacity="0.65">서브에이전트 · 가벼운 모델</text>
+
+  <!-- 캡션 -->
+  <text x="340" y="300" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="11.5" fill="#000" opacity="0.85">핵심 판단은 강한 모델에게, 반복 작업은 가벼운 모델에게 나눠 맡긴다</text>
+</svg>
