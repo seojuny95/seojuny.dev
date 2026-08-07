@@ -31,6 +31,7 @@ Personal blog (seojuny.dev): a file-based MDX blog, statically generated (SSG) o
 - Components: `PascalCase.tsx`. Lib modules: `kebab-case.ts`. Image files: kebab-case.
 - Posts: `content/posts/YYYY-MM-DD-slug.mdx`; slug = filename minus the `YYYY-MM-DD-` prefix. Frontmatter: `title` + `date` required, `summary`/`tags`/`draft` optional.
 - MDX bodies **start at `##` (h2)** — the page `h1` comes from the frontmatter `title`.
+- Post headings are short and concise; prose should follow the natural, plainspoken tone of recent posts.
 - Light mode only. Theme = CSS custom props on `:root` in `globals.css`; post bodies use `.prose-blog` (not `@tailwindcss/typography`).
 - No explanatory comments; match the surrounding comment density.
 
