@@ -1,0 +1,33 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>React is still beating</title>
+  <desc>The React atom is connected to the Compiler, React Core, and Server while a heartbeat line continues behind it.</desc>
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.5; }
+      .accent { fill: #fff3ec; stroke: #f26522; stroke-width: 1.6; }
+      .line { fill: none; stroke: #171717; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .sub { font-size: 10.5px; fill: #8a8a85; text-anchor: middle; }
+      .label { font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+    </style>
+  </defs>
+  <text x="340" y="22" text-anchor="middle" font-size="14" font-weight="500">React is still beating</text>
+  <path d="M24 114H90L104 114L112 92L124 140L138 104L150 114H250" fill="none" stroke="#f26522" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M430 114H522L534 114L542 92L554 140L568 104L580 114H656" fill="none" stroke="#f26522" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="340" cy="112" r="72" fill="#fff" stroke="#171717" stroke-width="1.7"/>
+  <ellipse cx="340" cy="112" rx="54" ry="20" class="line"/>
+  <ellipse cx="340" cy="112" rx="54" ry="20" class="line" transform="rotate(60 340 112)"/>
+  <ellipse cx="340" cy="112" rx="54" ry="20" class="line" transform="rotate(120 340 112)"/>
+  <circle cx="340" cy="112" r="12" fill="#f26522"/>
+  <path d="M306 176L192 206M340 184V206M374 176L488 206" class="line"/>
+  <rect x="118" y="206" width="148" height="42" rx="9" class="box"/>
+  <rect x="266" y="206" width="148" height="42" rx="9" class="accent"/>
+  <rect x="414" y="206" width="148" height="42" rx="9" class="box"/>
+  <text x="192" y="224" class="label">Compiler</text>
+  <text x="192" y="239" class="sub">Auto optimization</text>
+  <text x="340" y="224" class="label">React Core</text>
+  <text x="340" y="239" class="sub">Ongoing releases</text>
+  <text x="488" y="224" class="label">Server</text>
+  <text x="488" y="239" class="sub">RSC · Streaming</text>
+  <text x="340" y="270" class="sub" style="font-size:11.5px;fill:#171717;opacity:.85;">Its shape has changed, but development has not stopped</text>
+</svg>

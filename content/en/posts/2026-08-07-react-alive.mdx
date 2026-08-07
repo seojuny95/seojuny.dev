@@ -1,0 +1,186 @@
+---
+title: "React, Are You Still Alive?"
+date: "2026-08-07"
+summary: "React news has been quieter than it used to be. But its recent updates and the community response show that React is not dead. It is taking on a different shape."
+tags: ["React", "React Compiler", "React Server Components", "Next.js"]
+draft: false
+---
+
+Lately, I haven't kept up with React news as closely as I used to. Frontend communities are packed with AI discussions, while posts and conversations about React itself have become noticeably less common. The [official blog](https://react.dev/blog) has been quiet too. As of August 2026, when I am writing this, its latest post is the React Foundation announcement from February. It feels very different from the days when React news seemed to find you without any effort.
+
+AI has also changed the way I develop. I used to keep the React documentation open and look up APIs as I worked. Now, when I get stuck, I ask AI before opening the docs. I still use React, but it has become surprisingly easy to miss how React itself is changing.
+
+That does not mean React has lost its place in frontend development. It is still one of the most widely used technologies in the field. I also tend to reach for React when I start a new project, yet I could not remember the last time I had looked through its release news.
+
+So I decided to catch up. What has React added recently, who is leading its development now, and how does the community feel about those changes?
+
+## Still Alive?
+
+React is very much alive. It just looks quite different from the client-side UI library many of us remember. Its scope now reaches into compilers and server rendering. What has not been communicated as clearly is why React is moving in this direction.
+
+![An illustration of the React core still beating like a heartbeat, connected to the compiler and server](/posts/react-alive/en/react-is-alive.svg "React is still beating")
+
+## Recent Updates
+
+Let's start with what has changed since React 19.
+
+![A timeline of recent updates from React 19 through the React Foundation and React 19.2.8](/posts/react-alive/en/recent-timeline.svg "Recent React update timeline")
+
+[React 19](https://react.dev/blog/2024/12/05/react-19), released in December 2024, introduced Actions for asynchronous work, `use`, form-related Hooks, and the ability to pass `ref` as a regular prop. In October 2025, [React 19.2](https://react.dev/blog/2025/10/01/react-19-2) and [React Compiler 1.0](https://react.dev/blog/2025/10/07/react-compiler-1) followed one after the other.
+
+Why were these features needed? As web apps grow, data loading and transitions become more complicated, and avoiding unnecessary renders becomes harder. Developers have traditionally solved these problems by combining libraries and optimization techniques. React is now trying to address more of them directly within its rendering model.
+
+The organization behind React changed in February 2026 as well. Ownership and governance of React and React Native moved from Meta to the [React Foundation](https://react.dev/blog/2026/02/24/the-react-foundation) under the Linux Foundation. React had grown beyond an internal Meta tool into infrastructure that many companies depend on. At that point, governance by a neutral foundation made more sense than ownership by a single company.
+
+That does not mean Meta has stepped away from React. The company committed more than $3 million over five years and continues to assign dedicated engineers. As of August 2026, five of the seven members of the React Leadership Council work at Meta, while the other two work at Vercel.
+
+[React 19.2.8](https://github.com/react/react/releases/tag/v19.2.8) was released on July 21, 2026. It did not introduce a major new feature, but it improved React Server Components decoding performance. The official blog may be quiet, but development and releases are still moving forward.
+
+## React Compiler
+
+React Compiler is the most visible recent change. A React component function runs again when its state changes, which can repeat the same calculations and child renders. React Compiler reduces that unnecessary work by handling, at build time, much of the memoization developers previously had to write themselves.
+
+Until now, reducing unnecessary calculations and renders often meant combining `useMemo`, `useCallback`, and `React.memo` by hand.
+
+```tsx
+const TodoList = memo(function TodoList({ todos, onSelect }) {
+  const visibleTodos = useMemo(
+    () => todos.filter((todo) => !todo.done),
+    [todos],
+  )
+
+  const handleSelect = useCallback(
+    (id) => onSelect(id),
+    [onSelect],
+  )
+
+  return <List items={visibleTodos} onSelect={handleSelect} />
+})
+```
+
+The calculation is wrapped in `useMemo`, the function in `useCallback`, and the component in `React.memo`. Choosing what to reuse and keeping the dependency arrays correct were both the developer's responsibility.
+
+With the Compiler, the code becomes simpler.
+
+```tsx
+function TodoList({ todos, onSelect }) {
+  const visibleTodos = todos.filter((todo) => !todo.done)
+  const handleSelect = (id) => onSelect(id)
+
+  return <List items={visibleTodos} onSelect={handleSelect} />
+}
+```
+
+The Compiler does not literally insert those three APIs into the code. Internally, it first receives the source code Babel has parsed into an AST, or Abstract Syntax Tree. An AST represents syntax such as functions, conditions, variables, and JSX as a tree.
+
+It then converts the AST into a CFG-based HIR. A CFG, or Control Flow Graph, connects branches in the program such as conditions and early returns instead of treating the code as a simple top-to-bottom sequence. HIR, or High-Level Intermediate Representation, organizes that flow into a form the Compiler can analyze. The [official React Compiler deep dive](https://react.dev/blog/2025/10/07/react-compiler-1#deep-dive-how-does-react-compiler-work) describes this process in more detail.
+
+![React code is converted into an AST and CFG-based HIR, then analyzed for data flow and mutability before caches are created](/posts/react-alive/en/compiler-pipeline.svg "How React Compiler analyzes code")
+
+Data-flow analysis then tracks where each value comes from and what it depends on. In this example, `visibleTodos` depends on `todos`, while `handleSelect` depends on `onSelect`. `<List>` uses both values.
+
+```text
+todos    → visibleTodos ─┐
+                         ├→ <List />
+onSelect → handleSelect ─┘
+```
+
+Mutability analysis checks whether a value may change later. If several variables refer to the same object, or an external function may modify it, reusing an earlier result can be unsafe. When the dependencies are clear and the values are predictable, the Compiler can create caches for the necessary calculations and JSX.
+
+You can inspect the actual transformation in the [React Compiler Playground](https://playground.react.dev/#N4Igzg9grgTgxgUxALhAMygOzgFwJYSYAEAKhACYQAyeYOAFMEThRGADRGEDKCANglxEAvgEoiwADrEicQnSIA3WngBGAspTBEAvM1ZgAdGjx8cCGPXotK4nQD4iAQhsRDlTAlHSis+TiIACwBDTHIBXgEhPXo8cjtHHn5BBjjvTB8iGAQcWGIAHhoFPHMAWzAdYGUwNQ0DYS5MSJTKkLCI5NwGgHp7aWEQdhA5TBMAcxQQKRlu7rlSgAdTYPxCAFkKBGQiSRBgvj5d-sHwQIgAdwBJTHMYTH2wFDQHhGEgA). The output creates a cache through `react/compiler-runtime` and reads previous values from it when the inputs have not changed.
+
+When `todos` changes, only the list is recalculated. When `onSelect` changes, only the function is recreated. If neither changes, React can reuse the previous `<List>` and skip rendering the child component again. The result is similar to optimizations previously handled with `useMemo`, `useCallback`, and `React.memo`.
+
+None of this analysis happens in real time in the browser. It is completed when the app is built, producing optimized code with the caches already in place. The Compiler can also optimize only the necessary scope in places where a developer could not easily add a Hook, such as a calculation after a conditional branch.
+
+It does not cache everything indiscriminately. The Compiler selects values and JSX in components and Hooks that follow the Rules of React. If it cannot analyze a piece of code safely, it skips that optimization rather than changing the program's behavior. There is no need to remove every existing `useMemo` or `useCallback` immediately either. The important shift is that the Compiler can now find many of the performance hints developers used to add one by one.
+
+## Server Components
+
+React Server Components, or RSC, are another part of React's recent changes that cannot be overlooked. The name sounds complicated, but the direction is simple: <strong>when the server is better suited to part of the work required to build a screen, handle that part on the server</strong>.
+
+A [Server Component](https://react.dev/reference/rsc/server-components) can read a database or file directly inside the component. Instead of having the browser call an API, wait for data, and render the screen again, that work can finish on the server.
+
+```tsx
+async function PostPage({ id }) {
+  const post = await db.posts.find(id)
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+      <LikeButton postId={post.id} />
+    </article>
+  )
+}
+```
+
+`PostPage` and its database code run only on the server. That does not mean the browser receives no JavaScript at all. For a read-only part such as the post body, the server sends only the rendered result. The JavaScript for the interactive `LikeButton` still goes to the browser. The benefit of RSC is sending JavaScript only for the parts that need interaction, reducing how much users have to download.
+
+When this page first opens, the server turns both the `PostPage` content and the initial appearance of `LikeButton` into HTML. That is SSR, or Server-Side Rendering. In other words, the first screen produced through SSR can contain both Server and Client Components.
+
+| | Initial HTML | Browser JavaScript | Role |
+|---|---|---|---|
+| Server Component (`PostPage`) | Included | Not sent | Fetch data and display the post |
+| Client Component (`LikeButton`) | Included | Sent and hydrated | Handle clicks and state changes |
+
+The difference appears after that first screen. `PostPage` has already finished its work on the server, so it does not run again in the browser. `LikeButton`, on the other hand, needs to respond to clicks, so its JavaScript is downloaded and connected to the page.
+
+In short, SSR describes <strong>how the initial screen is delivered</strong>, while RSC describes <strong>which components run only on the server</strong>. SSR helps with the initial screen and search visibility. A Server Component cannot use `useState` or `onClick`, however, so interactive parts must be separated into Client Components.
+
+A framework is needed to define that boundary and connect it to data loading and caching.
+
+Reducing JavaScript and simplifying data loading is an appealing direction. But RSC also asks developers to learn a different way of dividing React code. That is why the community response has been mixed, and why the conversation naturally leads to Next.js.
+
+## Community Response
+
+[State of React 2025](https://2025.stateofreact.com/en-US/usage/) was an unofficial survey with 3,760 respondents. It cannot represent every React developer, but it does offer a glimpse into which features the community is looking forward to and what it is worried about.
+
+![A comparison of expectations for React Compiler and Server Components and positive and negative responses to Meta, Vercel, and the React Foundation](/posts/react-alive/en/community-reaction.svg "State of React 2025 community response")
+
+About 62% of respondents selected React Compiler as a feature they were looking forward to. React Server Components received only about 20%.
+
+Why such a large gap? The Compiler can improve performance while leaving most existing code as it is. Adopting RSC means reconsidering server and client boundaries, data loading, caching, and even deployment. Its benefits are clear, but so is the amount developers have to learn.
+
+Opinions also differed on the organizations involved in React. Responses to Meta's participation were more positive than negative. The independent React Foundation received a positive response from 50% of respondents and a negative one from only 2%. There was a clear sense of support for moving a project owned by one company into a neutral foundation.
+
+Vercel's involvement drew a 36% negative response and a 25% positive one. Vercel invests heavily in React, but it also builds its business around Next.js and hosting. As React's shift toward the server overlaps with Vercel's business, some developers worry that React could become too dependent on one company or platform.
+
+Security issues added to that concern. In late 2025, a [remote code execution vulnerability](https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components) in React Server Components was followed by [denial-of-service and source code exposure vulnerabilities](https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components). The patches arrived quickly, but the incidents left the impression that RSC was still maturing.
+
+Ultimately, much of the community's frustration seems to be less about the changes themselves and more about <strong>not understanding why React is moving in this direction</strong>. Redux maintainer Mark Erikson made a similar point in [his overview of the React community](https://blog.isquaredsoftware.com/2025/06/react-community-2025/). He argued that claims of Vercel taking over React were exaggerated, while also noting that limited documentation and communication from the React team had helped those suspicions grow.
+
+## React and Next.js
+
+React is a library for building user interfaces. Next.js is a framework that adds routing, builds, data loading, caching, and deployment structure. They are not the same product.
+
+The two have become much closer than they used to be, however. Installing React Server Components does not give an app a complete server architecture by itself. A framework has to connect routing and bundling so that code can be split between the server and the browser and the results can move between them.
+
+Next.js App Router was one of the early large-scale implementations of that role in production applications. Canary features were tested through Next.js before reaching stable React releases. Vercel developers also participate in the React team, so React changes reach Next.js quickly, while problems discovered in Next.js can feed back into React's development.
+
+That does not mean Vercel owns React. Still, there is some truth to the idea that Next.js is often where React's future appears first.
+
+This close relationship has given React a place to test new features in real applications. At the same time, it can create the impression that using React properly now requires choosing Next.js as well.
+
+## A Different React
+
+React is not dead. New versions continue to arrive, build-time optimizations such as the Compiler are still improving, and Meta continues to invest people and money even after transferring ownership to the foundation.
+
+What has changed is React's scope. It used to be closer to a small library that re-rendered the UI when state changed. Now it seems to be bringing the client, the server, and the build step into one rendering model.
+
+---
+
+This post may contain factual or interpretive errors. If you spot one or have a question, feel free to leave a comment.
+
+## Reference
+
+- React, [React 19.2](https://react.dev/blog/2025/10/01/react-19-2)
+- React, [React Compiler v1.0](https://react.dev/blog/2025/10/07/react-compiler-1)
+- React, [Server Components](https://react.dev/reference/rsc/server-components)
+- React, [The React Foundation: A New Home for React](https://react.dev/blog/2026/02/24/the-react-foundation)
+- React, [Meet the Team](https://react.dev/community/team)
+- React, [Critical Security Vulnerability in React Server Components](https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components)
+- React, [Denial of Service and Source Code Exposure in React Server Components](https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components)
+- Meta, [Introducing the React Foundation](https://engineering.fb.com/2025/10/07/open-source/introducing-the-react-foundation-the-new-home-for-react-react-native/)
+- Devographics, [State of React 2025](https://2025.stateofreact.com/en-US/usage/)
+- Mark Erikson, [The State of React and the Community in 2025](https://blog.isquaredsoftware.com/2025/06/react-community-2025/)
