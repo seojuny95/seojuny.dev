@@ -1,0 +1,71 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>React Compiler 내부 분석 흐름</title>
+  <desc>React 코드를 AST로 읽고 CFG 기반 HIR로 변환한 뒤, 데이터 흐름과 변경 가능성을 분석해 필요한 값과 함수, JSX에 캐시를 만드는 과정이다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.5; }
+      .accent { fill: #fff3ec; stroke: #f26522; stroke-width: 1.6; }
+      .label { font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+      .sub { font-size: 9.5px; fill: #8a8a85; text-anchor: middle; }
+      .detail-title { font-size: 10.5px; font-weight: 600; }
+      .detail { font-size: 9.5px; fill: #8a8a85; }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#8a8a85"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="22" text-anchor="middle" font-size="14" font-weight="500">코드를 읽고, 관계를 찾고, 필요한 부분만 기억한다</text>
+
+  <g>
+    <rect x="20" y="48" width="112" height="72" rx="9" class="box"/>
+    <text x="76" y="77" class="label">React 코드</text>
+    <text x="76" y="96" class="sub">함수 · Hook · JSX</text>
+
+    <line x1="138" y1="84" x2="146" y2="84" stroke="#8a8a85" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <rect x="152" y="48" width="112" height="72" rx="9" class="box"/>
+    <text x="208" y="77" class="label">AST</text>
+    <text x="208" y="96" class="sub">문법을 트리로 표현</text>
+
+    <line x1="270" y1="84" x2="278" y2="84" stroke="#8a8a85" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <rect x="284" y="48" width="112" height="72" rx="9" class="accent"/>
+    <text x="340" y="77" class="label" style="fill:#f26522;">CFG 기반 HIR</text>
+    <text x="340" y="96" class="sub">실행 경로를 연결</text>
+
+    <line x1="402" y1="84" x2="410" y2="84" stroke="#8a8a85" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <rect x="416" y="48" width="112" height="72" rx="9" class="box"/>
+    <text x="472" y="77" class="label">관계 분석</text>
+    <text x="472" y="94" class="sub">data-flow</text>
+    <text x="472" y="107" class="sub">mutability</text>
+
+    <line x1="534" y1="84" x2="542" y2="84" stroke="#f26522" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <rect x="548" y="48" width="112" height="72" rx="9" class="accent"/>
+    <text x="604" y="77" class="label" style="fill:#f26522;">캐시 생성</text>
+    <text x="604" y="96" class="sub">값 · 함수 · JSX</text>
+  </g>
+
+  <rect x="20" y="144" width="640" height="112" rx="9" class="box"/>
+  <text x="40" y="168" class="detail-title">Compiler가 확인하는 것</text>
+  <line x1="233" y1="180" x2="233" y2="236" stroke="#d8d8d4"/>
+  <line x1="447" y1="180" x2="447" y2="236" stroke="#d8d8d4"/>
+
+  <text x="40" y="198" class="detail-title">문법 구조</text>
+  <text x="40" y="216" class="detail">무슨 함수와 조건문, JSX가</text>
+  <text x="40" y="231" class="detail">사용됐는지 확인한다</text>
+
+  <text x="254" y="198" class="detail-title">실행 흐름</text>
+  <text x="254" y="216" class="detail">분기와 조기 반환을 따라</text>
+  <text x="254" y="231" class="detail">실행될 수 있는 경로를 나눈다</text>
+
+  <text x="468" y="198" class="detail-title">값의 관계</text>
+  <text x="468" y="216" class="detail">무엇에 의존하고 어디에서</text>
+  <text x="468" y="231" class="detail">바뀔 수 있는지 추적한다</text>
+
+  <text x="340" y="286" text-anchor="middle" font-size="11.5" opacity=".85">분석은 빌드할 때 끝나고, 브라우저에는 최적화된 코드가 전달된다</text>
+</svg>

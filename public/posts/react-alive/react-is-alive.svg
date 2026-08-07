@@ -1,0 +1,39 @@
+<svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>React는 여전히 뛰고 있다</title>
+  <desc>React를 상징하는 원자 모양을 중심으로 Compiler, Server, Community가 연결되어 있고, 뒤로 심전도 선이 이어진다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.5; }
+      .accent { fill: #fff3ec; stroke: #f26522; stroke-width: 1.6; }
+      .line { fill: none; stroke: #171717; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      .sub { font-size: 10.5px; fill: #8a8a85; text-anchor: middle; }
+      .label { font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <text x="340" y="22" text-anchor="middle" font-size="14" font-weight="500">React는 여전히 뛰고 있다</text>
+
+  <path d="M24 114H90L104 114L112 92L124 140L138 104L150 114H250" fill="none" stroke="#f26522" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M430 114H522L534 114L542 92L554 140L568 104L580 114H656" fill="none" stroke="#f26522" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <circle cx="340" cy="112" r="72" fill="#fff" stroke="#171717" stroke-width="1.7"/>
+  <ellipse cx="340" cy="112" rx="54" ry="20" class="line"/>
+  <ellipse cx="340" cy="112" rx="54" ry="20" class="line" transform="rotate(60 340 112)"/>
+  <ellipse cx="340" cy="112" rx="54" ry="20" class="line" transform="rotate(120 340 112)"/>
+  <circle cx="340" cy="112" r="12" fill="#f26522"/>
+
+  <path d="M306 176L240 206M340 184V206M374 176L440 206" class="line"/>
+  <rect x="176" y="206" width="128" height="42" rx="9" class="box"/>
+  <rect x="276" y="206" width="128" height="42" rx="9" class="accent"/>
+  <rect x="376" y="206" width="128" height="42" rx="9" class="box"/>
+  <text x="240" y="224" class="label">Compiler</text>
+  <text x="240" y="239" class="sub">자동 최적화</text>
+  <text x="340" y="224" class="label">React Core</text>
+  <text x="340" y="239" class="sub">계속되는 릴리스</text>
+  <text x="440" y="224" class="label">Server</text>
+  <text x="440" y="239" class="sub">RSC · 스트리밍</text>
+
+  <text x="340" y="270" class="sub" style="font-size:11.5px;fill:#171717;opacity:.85;">모습은 달라졌지만 개발은 멈추지 않았다</text>
+</svg>

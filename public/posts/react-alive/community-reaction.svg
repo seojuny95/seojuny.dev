@@ -1,0 +1,62 @@
+<svg width="100%" viewBox="0 0 680 404" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>State of React 2025 커뮤니티 반응</title>
+  <desc>React Compiler에는 62퍼센트가 기대했지만 Server Components에는 20퍼센트가 기대했다. Meta 참여는 부정 15퍼센트와 긍정 28퍼센트, Vercel은 부정 36퍼센트와 긍정 25퍼센트, React Foundation은 부정 2퍼센트와 긍정 50퍼센트였다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .box { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.5; }
+      .label { font-size: 11px; font-weight: 600; }
+      .sub { font-size: 9.5px; fill: #8a8a85; }
+      .value { font-size: 10.5px; font-weight: 600; }
+    </style>
+  </defs>
+
+  <text x="340" y="22" text-anchor="middle" font-size="14" font-weight="500">새 기능은 반갑고, 방향은 불안하다</text>
+
+  <rect x="24" y="44" width="632" height="116" rx="9" class="box"/>
+  <text x="44" y="68" class="label">가장 기대하는 새 기능</text>
+  <text x="44" y="96" class="label">React Compiler</text>
+  <rect x="174" y="84" width="400" height="16" rx="5" fill="#e6e6e3"/>
+  <rect x="174" y="84" width="248" height="16" rx="5" fill="#f26522"/>
+  <text x="586" y="97" class="value" style="fill:#f26522;">62%</text>
+  <text x="44" y="130" class="label">Server Components</text>
+  <rect x="174" y="118" width="400" height="16" rx="5" fill="#e6e6e3"/>
+  <rect x="174" y="118" width="80" height="16" rx="5" fill="#8a8a85"/>
+  <text x="586" y="131" class="value">20%</text>
+
+  <rect x="24" y="176" width="632" height="188" rx="9" class="box"/>
+  <text x="44" y="200" class="label">React에 참여하는 조직을 보는 시선</text>
+  <rect x="424" y="190" width="10" height="10" rx="2" fill="#171717"/>
+  <text x="440" y="199" class="sub">부정</text>
+  <rect x="486" y="190" width="10" height="10" rx="2" fill="#d0d0cc"/>
+  <text x="502" y="199" class="sub">중립</text>
+  <rect x="548" y="190" width="10" height="10" rx="2" fill="#f26522"/>
+  <text x="564" y="199" class="sub">긍정</text>
+
+  <text x="44" y="242" class="label">Meta</text>
+  <g transform="translate(132 226)">
+    <rect width="57" height="20" rx="5" fill="#171717"/>
+    <rect x="57" width="219" height="20" fill="#d0d0cc"/>
+    <rect x="276" width="107" height="20" rx="5" fill="#f26522"/>
+  </g>
+  <text x="530" y="241" class="sub">부정 15% · 긍정 28%</text>
+
+  <text x="44" y="286" class="label">Vercel</text>
+  <g transform="translate(132 270)">
+    <rect width="137" height="20" rx="5" fill="#171717"/>
+    <rect x="137" width="150" height="20" fill="#d0d0cc"/>
+    <rect x="287" width="96" height="20" rx="5" fill="#f26522"/>
+  </g>
+  <text x="530" y="285" class="sub">부정 36% · 긍정 25%</text>
+
+  <text x="44" y="330" class="label">Foundation</text>
+  <g transform="translate(132 314)">
+    <rect width="8" height="20" rx="4" fill="#171717"/>
+    <rect x="8" width="184" height="20" fill="#d0d0cc"/>
+    <rect x="192" width="191" height="20" rx="5" fill="#f26522"/>
+  </g>
+  <text x="530" y="329" class="sub">부정 2% · 긍정 50%</text>
+
+  <text x="340" y="392" text-anchor="middle" font-size="11.5" opacity=".85">Compiler에는 기대가, Foundation에는 안도감이 모였다</text>
+</svg>

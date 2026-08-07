@@ -1,0 +1,56 @@
+<svg width="100%" viewBox="0 0 680 246" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>최근 React 업데이트 타임라인</title>
+  <desc>2024년 12월 React 19, 2025년 10월 React 19.2와 Compiler 1.0, 2026년 2월 React Foundation, 2026년 7월 React 19.2.8이 공개됐다.</desc>
+
+  <defs>
+    <style>
+      text { font-family: -apple-system, system-ui, sans-serif; fill: #171717; }
+      .date { font-size: 10px; fill: #8a8a85; text-anchor: middle; }
+      .name { font-size: 11.5px; font-weight: 600; text-anchor: middle; }
+      .sub { font-size: 9.5px; fill: #8a8a85; text-anchor: middle; }
+      .box { fill: #fafaf9; stroke: #d8d8d4; stroke-width: 1.5; }
+      .accent { fill: #fff3ec; stroke: #f26522; stroke-width: 1.6; }
+    </style>
+  </defs>
+
+  <text x="340" y="22" text-anchor="middle" font-size="14" font-weight="500">조용했지만 멈추지는 않았다</text>
+  <line x1="82" y1="118" x2="598" y2="118" stroke="#171717" stroke-width="1.5"/>
+
+  <g transform="translate(104 0)">
+    <rect x="-64" y="54" width="128" height="48" rx="9" class="box"/>
+    <text x="0" y="74" class="name">React 19</text>
+    <text x="0" y="90" class="sub">Actions · use · RSC</text>
+    <line x1="0" y1="102" x2="0" y2="112" stroke="#171717" stroke-width="1.5"/>
+    <circle cy="118" r="7" fill="#171717"/>
+    <text x="0" y="146" class="date">2024.12</text>
+  </g>
+
+  <g transform="translate(262 0)">
+    <rect x="-66" y="136" width="132" height="52" rx="9" class="box"/>
+    <text x="0" y="156" class="name">React 19.2</text>
+    <text x="0" y="172" class="sub">Activity · Compiler 1.0</text>
+    <line x1="0" y1="124" x2="0" y2="136" stroke="#171717" stroke-width="1.5"/>
+    <circle cy="118" r="7" fill="#171717"/>
+    <text x="0" y="210" class="date">2025.10</text>
+  </g>
+
+  <g transform="translate(420 0)">
+    <rect x="-68" y="54" width="136" height="48" rx="9" class="box"/>
+    <text x="0" y="74" class="name">React Foundation</text>
+    <text x="0" y="90" class="sub">Linux Foundation 산하</text>
+    <line x1="0" y1="102" x2="0" y2="112" stroke="#171717" stroke-width="1.5"/>
+    <circle cy="118" r="7" fill="#171717"/>
+    <text x="0" y="146" class="date">2026.02</text>
+  </g>
+
+  <g transform="translate(576 0)">
+    <rect x="-64" y="136" width="128" height="52" rx="9" class="accent"/>
+    <text x="0" y="156" class="name" style="fill:#f26522;">React 19.2.8</text>
+    <text x="0" y="172" class="sub">RSC 디코딩 개선</text>
+    <line x1="0" y1="124" x2="0" y2="136" stroke="#f26522" stroke-width="1.5"/>
+    <circle cy="118" r="8" fill="#f26522"/>
+    <text x="0" y="210" class="date">2026.07</text>
+  </g>
+
+  <text x="340" y="236" font-size="11.5" text-anchor="middle" opacity=".85">기능·조직·성능 개선이 지난 20개월 동안 이어졌다</text>
+</svg>
