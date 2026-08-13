@@ -1,0 +1,11 @@
+---
+import NotFoundPage from "../components/not-found/NotFoundPage.astro";
+import { localeFromPathname } from "../i18n/routing";
+
+export const prerender = false;
+
+const locale = localeFromPathname(Astro.url.pathname);
+Astro.response.status = 404;
+---
+
+<NotFoundPage {locale} />

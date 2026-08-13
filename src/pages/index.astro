@@ -1,0 +1,38 @@
+---
+import PostList from "../components/post/PostList.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { prefersEnglish } from "../i18n/accept-language";
+import { getAllPosts } from "../lib/content/posts";
+
+export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", "private, no-store");
+Astro.response.headers.set("Vary", "Accept-Language, Cookie");
+
+const cookieLocale = Astro.cookies.get("locale")?.value;
+const shouldUseEnglish =
+  cookieLocale === "en" ||
+  (cookieLocale !== "ko" &&
+    prefersEnglish(Astro.request.headers.get("accept-language") ?? ""));
+
+if (shouldUseEnglish) {
+  return new Response(null, {
+    status: 307,
+    headers: {
+      "Cache-Control": "private, no-store",
+      Location: "/en",
+      Vary: "Accept-Language, Cookie",
+    },
+  });
+}
+
+const posts = await getAllPosts("ko");
+---
+
+<SiteLayout
+  locale="ko"
+  canonicalPath="/"
+  alternatePaths={{ ko: "/", en: "/en" }}
+>
+  <PostList locale="ko" posts={posts} />
+</SiteLayout>

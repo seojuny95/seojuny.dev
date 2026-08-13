@@ -1,0 +1,57 @@
+<button
+  type="button"
+  data-search-trigger
+  class="inline-flex items-center gap-1.5 text-[var(--muted)] transition-colors duration-300 hover:text-[var(--fg)]"
+>
+  <span class="sr-only sm:hidden">Search</span>
+  <svg
+    class="sm:hidden"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    aria-hidden="true"
+  >
+    <circle cx="7" cy="7" r="4.25" stroke="currentColor" stroke-width="1.4"
+    ></circle>
+    <path
+      d="M10.3 10.3L14 14"
+      stroke="currentColor"
+      stroke-width="1.4"
+      stroke-linecap="round"></path>
+  </svg>
+  <span class="link hidden sm:inline">Search</span>
+  <kbd class="kbd hidden w-[56px] shrink-0 sm:inline-flex">
+    <span data-shortcut-label>Ctrl + K</span>
+  </kbd>
+</button>
+
+<script is:inline>
+  (() => {
+    const shortcutLabel =
+      document.currentScript?.previousElementSibling?.querySelector(
+        "[data-shortcut-label]",
+      );
+    const legacyPlatform = Reflect.get(navigator, "platform");
+    const platform =
+      navigator.userAgentData?.platform ||
+      (typeof legacyPlatform === "string" ? legacyPlatform : "") ||
+      navigator.userAgent;
+
+    if (shortcutLabel) {
+      shortcutLabel.textContent = /Mac|iPhone|iPad|iPod/i.test(platform)
+        ? "⌘ + K"
+        : "Ctrl + K";
+    }
+  })();
+</script>
+
+<script>
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-search-trigger]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        window.dispatchEvent(new Event("open-search"));
+      });
+    });
+</script>

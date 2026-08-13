@@ -1,0 +1,508 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+:root {
+  --bg: #fafaf9;
+  --fg: #171717;
+  --muted: #6b6b66;
+  --rule: #ececea;
+  --accent: #171717;
+  --yc: #f26522;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family:
+    var(--font-pretendard),
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    system-ui,
+    sans-serif;
+  font-size: 18px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Keyboard focus ring — visible only via keyboard, never from mouse clicks. */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Visually hidden, reachable by SR + keyboard focus. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip-to-content link. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transform: translateY(-150%);
+  transition: transform 200ms ease;
+}
+.skip-link:focus {
+  transform: translateY(8px);
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--fg) 16%, transparent);
+  color: inherit;
+}
+
+/* Underline-slide link. */
+.link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  transition: background-size 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  padding-bottom: 1px;
+}
+.link:hover {
+  background-size: 100% 1px;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Page entry transition. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: page-enter 480ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+
+/* Staggered children: animation-delay per child via --i. */
+.stagger > * {
+  animation: reveal 520ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
+
+/* Hover lift for list rows: whole block slides together. */
+.row-nudge {
+  transition: transform 300ms cubic-bezier(0.22, 0.65, 0.2, 1);
+  will-change: transform;
+}
+.group:hover .row-nudge {
+  transform: translateX(4px);
+}
+
+/* Keyboard hint. */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 10.5px;
+  line-height: 1;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
+}
+
+/* Mobile menu drawer. */
+@keyframes mobile-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.mobile-menu-in {
+  animation: mobile-menu-in 240ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+.mobile-menu-stagger > * {
+  animation: mobile-menu-in 320ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 60ms);
+}
+
+/* Hamburger bars. */
+.hamburger-bar {
+  position: absolute;
+  left: 50%;
+  width: 16px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
+    top 320ms cubic-bezier(0.2, 0.6, 0.2, 1),
+    opacity 180ms ease;
+}
+
+/* Search modal. */
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.search-backdrop {
+  animation: backdrop-in 200ms ease-out both;
+}
+.search-panel {
+  animation: panel-in 260ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 12px 36px -8px rgba(0, 0, 0, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .stagger > *,
+  .search-backdrop,
+  .search-panel,
+  .mobile-menu-in,
+  .mobile-menu-stagger > * {
+    animation: none;
+  }
+  .link,
+  .row-nudge,
+  .hamburger-bar,
+  .skip-link,
+  .heading-anchor,
+  .code-copy {
+    transition: none;
+  }
+}
+
+/* Post body */
+.prose-blog {
+  line-height: 1.75;
+}
+.prose-blog h1,
+.prose-blog h2,
+.prose-blog h3 {
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+.prose-blog h2 {
+  font-size: 1.4rem;
+}
+.prose-blog h3 {
+  font-size: 1.15rem;
+}
+.prose-blog h2,
+.prose-blog h3 {
+  scroll-margin-top: 90px;
+}
+
+/* Heading anchor: '#' appended by rehype-autolink-headings, shown on hover. */
+.prose-blog .heading-anchor {
+  background-image: none;
+  margin-left: 0.4em;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.prose-blog h2:hover .heading-anchor,
+.prose-blog h3:hover .heading-anchor {
+  opacity: 1;
+}
+.prose-blog p {
+  margin: 1em 0;
+}
+.prose-blog a {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: background-size 220ms ease;
+}
+.prose-blog a:hover {
+  background-size: 0 1px;
+}
+.prose-blog ul,
+.prose-blog ol {
+  margin: 1em 0;
+  padding-left: 1.4em;
+}
+.prose-blog ul {
+  list-style: disc;
+}
+.prose-blog ol {
+  list-style: decimal;
+}
+.prose-blog li::marker {
+  color: var(--muted);
+}
+.prose-blog blockquote {
+  border-left: 1px solid var(--rule);
+  padding-left: 1.25em;
+  margin: 1.5em 0;
+  color: var(--muted);
+  font-style: italic;
+}
+.prose-blog code {
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 0.88em;
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.prose-blog pre {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+  padding: 1em 1.15em;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.88em;
+  line-height: 1.6;
+  border: 1px solid var(--rule);
+}
+.prose-blog pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Code block: language label + copy button, floating top-right. */
+.code-block {
+  position: relative;
+}
+.code-controls {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.code-lang {
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  user-select: none;
+}
+.code-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--muted);
+  opacity: 0;
+  transition:
+    opacity 180ms ease,
+    color 180ms ease;
+}
+.code-block:hover .code-copy,
+.code-copy:focus-visible,
+.code-copy[data-copied] {
+  opacity: 1;
+}
+.code-copy:hover,
+.code-copy[data-copied] {
+  color: var(--fg);
+}
+@media (hover: none) {
+  .code-copy {
+    opacity: 1;
+  }
+}
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+/* 음성 재생 중 상단 인라인 컨트롤이 화면 밖으로 나가면 뜨는 고정 미니플레이어 */
+.speech-mini {
+  position: fixed;
+  inset-block-start: 57px;
+  inset-inline: 0;
+  z-index: 30;
+  background-color: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.speech-mini-inner {
+  max-width: 680px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 1rem;
+}
+@media (min-width: 640px) {
+  .speech-mini-inner {
+    padding-inline: 1.25rem;
+  }
+}
+.speech-mini-inner button {
+  min-height: 40px;
+}
+
+/* 자동 추적이 양보된 동안, 현재 읽는 문장으로 되돌아가는 복귀 버튼.
+   하이라이트가 화면 위면 상단(미니플레이어 아래)에 ↑, 아래면 하단에 ↓로 뜬다. */
+.speech-jump {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 41;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 13px;
+  border-radius: 999px;
+  background-color: var(--fg);
+  color: var(--bg);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+.speech-jump-up {
+  inset-block-start: calc(57px + 3.25rem);
+}
+.speech-jump-down {
+  inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+.speech-jump-arrow {
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.prose-blog hr {
+  margin: 2.5em 0;
+}
+.prose-blog .table-wrap {
+  overflow-x: auto;
+  margin: 1.75em 0;
+}
+.prose-blog table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+  margin: 1.75em 0;
+}
+.prose-blog .table-wrap table {
+  margin: 0;
+}
+.prose-blog thead {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+.prose-blog th,
+.prose-blog td {
+  padding: 0.6em 0.9em;
+  border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent);
+  text-align: left;
+  vertical-align: top;
+}
+.prose-blog th {
+  font-weight: 600;
+}
+.prose-blog figure {
+  margin: 1.75em 0;
+}
+.prose-blog figure img {
+  margin: 0 auto;
+}
+.prose-blog figcaption {
+  margin-top: 0.6em;
+  text-align: center;
+  font-size: 0.85em;
+  line-height: 1.5;
+  color: var(--muted);
+  font-style: italic;
+}
+.prose-blog .katex-display {
+  margin: 1.5em 0;
+  padding: 1em 1.25em;
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow-x: auto;
+}

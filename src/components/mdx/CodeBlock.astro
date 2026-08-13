@@ -1,0 +1,98 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { messages } from "../../i18n/messages";
+
+type Props = HTMLAttributes<"pre">;
+
+const attributes = Astro.props;
+const locale = Astro.url.pathname.startsWith("/en/") ? "en" : "ko";
+const language = attributes["data-language"];
+const label =
+  typeof language === "string" &&
+  !["plaintext", "text", "txt"].includes(language)
+    ? language
+    : undefined;
+---
+
+<div class="code-block">
+  <div class="code-controls">
+    {
+      label && (
+        <span class="code-lang" aria-hidden="true">
+          {label}
+        </span>
+      )
+    }
+    <button
+      type="button"
+      data-code-copy
+      data-copy-label={messages[locale].codeCopyAria}
+      data-copied-label={messages[locale].copied}
+      aria-label={messages[locale].codeCopyAria}
+      class="code-copy"
+    >
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect
+          x="4"
+          y="4"
+          width="6.5"
+          height="6.5"
+          rx="1.2"
+          stroke="currentColor"
+          stroke-width="1.2"></rect>
+        <path
+          d="M8 1.5H3A1.5 1.5 0 0 0 1.5 3v5"
+          stroke="currentColor"
+          stroke-width="1.2"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+  <pre {...attributes}><slot /></pre>
+</div>
+
+<script>
+  const resetTimers = new WeakMap<HTMLButtonElement, number>();
+
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-code-copy]")
+    .forEach((button) => {
+      button.addEventListener("click", async () => {
+        const text = button
+          .closest(".code-block")
+          ?.querySelector("pre")?.textContent;
+        if (!text) return;
+
+        try {
+          await navigator.clipboard.writeText(text.trimEnd());
+        } catch {
+          return;
+        }
+
+        button.dataset.copied = "";
+        button.setAttribute(
+          "aria-label",
+          button.dataset.copiedLabel ?? "Copied",
+        );
+        const previousTimer = resetTimers.get(button);
+        if (previousTimer) window.clearTimeout(previousTimer);
+        resetTimers.set(
+          button,
+          window.setTimeout(() => {
+            delete button.dataset.copied;
+            button.setAttribute(
+              "aria-label",
+              button.dataset.copyLabel ?? "Copy code",
+            );
+          }, 1600),
+        );
+      });
+    });
+</script>

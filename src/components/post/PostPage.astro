@@ -1,0 +1,161 @@
+---
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { render } from "astro:content";
+
+import type { Locale } from "../../i18n/locales";
+import { localePath } from "../../i18n/routing";
+import { messages } from "../../i18n/messages";
+import { formatDate, type Post } from "../../lib/content/posts";
+import { buildPostJsonLd } from "../../lib/seo/json-ld";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import CodeBlock from "../mdx/CodeBlock.astro";
+import PostImage from "../mdx/PostImage.astro";
+import Table from "../mdx/Table.astro";
+import { PostActions } from "./PostActions";
+import { PostComments } from "./PostComments";
+import ReadingProgressBar from "./ReadingProgressBar.astro";
+import TableOfContents from "./TableOfContents.astro";
+
+interface Props {
+  alternatePaths: Partial<Record<Locale, string>>;
+  locale: Locale;
+  next?: Post;
+  post: Post;
+  prev?: Post;
+}
+
+const { alternatePaths, locale, next, post, prev } = Astro.props;
+const { Content, headings } = await render(post);
+const t = messages[locale];
+const canonicalPath = localePath(locale, `/${post.slug}`);
+const audioPath =
+  locale === "ko"
+    ? `/posts/${post.slug}/audio.mp3`
+    : `/posts/${post.slug}/en/audio.mp3`;
+const audioFile = path.join(process.cwd(), "public", audioPath);
+const timingFile = audioFile.replace(/\.mp3$/, ".json");
+const hasAudio = existsSync(audioFile) && existsSync(timingFile);
+const jsonLd = JSON.stringify(buildPostJsonLd(post, locale)).replaceAll(
+  "<",
+  "\\u003c",
+);
+---
+
+<SiteLayout
+  locale={locale}
+  title={post.data.title}
+  description={post.data.summary}
+  canonicalPath={canonicalPath}
+  alternatePaths={alternatePaths}
+  imagePath={`${canonicalPath}/opengraph-image`}
+  articlePublishedTime={post.data.date}
+  articleTags={post.data.tags}
+  type="article"
+>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <article>
+    <ReadingProgressBar />
+    <TableOfContents {locale} {headings} />
+    <nav aria-label={t.pageNavAria}>
+      <a
+        href={localePath(locale)}
+        class="inline-block text-[14px] text-[var(--muted)] transition-colors duration-300 hover:text-[var(--fg)]"
+      >
+        {t.backToPosts}
+      </a>
+    </nav>
+
+    <header class="mt-8 mb-10 sm:mt-10 sm:mb-12">
+      <h1
+        class="text-[30px] leading-[1.2] font-semibold tracking-[-0.018em] sm:text-[36px]"
+      >
+        {post.data.title}
+      </h1>
+      <div
+        class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] tracking-wide text-[var(--muted)] tabular-nums sm:mt-4"
+      >
+        <time datetime={post.data.date}>
+          {formatDate(post.data.date, locale)}
+        </time>
+        <span aria-hidden="true" class="opacity-60">·</span>
+        <span>{t.minRead(post.readingTime)}</span>
+        {
+          post.data.tags.length > 0 && (
+            <>
+              <span aria-hidden="true" class="opacity-60">
+                ·
+              </span>
+              <ul
+                aria-label={t.tagsAria}
+                class="m-0 flex list-none gap-2.5 p-0"
+              >
+                {post.data.tags.map((tag) => (
+                  <li>#{tag}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+      </div>
+    </header>
+
+    <PostActions
+      client:load
+      locale={locale}
+      audioSrc={hasAudio ? audioPath : undefined}
+      timingSrc={hasAudio ? audioPath.replace(/\.mp3$/, ".json") : undefined}
+    />
+
+    <div class="prose-blog">
+      <Content components={{ img: PostImage, pre: CodeBlock, table: Table }} />
+    </div>
+
+    <hr class="mt-16 mb-8 sm:mt-20 sm:mb-10" />
+
+    <nav
+      aria-label={t.adjacentAria}
+      class="flex flex-col gap-6 text-[14px] sm:flex-row sm:justify-between"
+    >
+      {
+        next ? (
+          <a
+            href={localePath(locale, `/${next.slug}`)}
+            class="group block min-w-0 sm:flex-1"
+          >
+            <span class="mb-1 block text-[13px] tracking-[0.15em] text-[var(--muted)] uppercase">
+              {t.prevPost}
+            </span>
+            <span class="block truncate transition-colors duration-300 group-hover:text-[var(--muted)]">
+              {next.data.title}
+            </span>
+          </a>
+        ) : (
+          <div class="hidden sm:block sm:flex-1" />
+        )
+      }
+      {
+        prev ? (
+          <a
+            href={localePath(locale, `/${prev.slug}`)}
+            class="group block min-w-0 sm:flex-1 sm:text-right"
+          >
+            <span class="mb-1 block text-[13px] tracking-[0.15em] text-[var(--muted)] uppercase">
+              {t.nextPost}
+            </span>
+            <span class="block truncate transition-colors duration-300 group-hover:text-[var(--muted)]">
+              {prev.data.title}
+            </span>
+          </a>
+        ) : (
+          <div class="hidden sm:block sm:flex-1" />
+        )
+      }
+    </nav>
+
+    <section class="mt-16 sm:mt-20" aria-label={t.commentsAria}>
+      <PostComments client:visible={{ rootMargin: "200px" }} {locale} />
+    </section>
+  </article>
+</SiteLayout>

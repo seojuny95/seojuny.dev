@@ -1,0 +1,10 @@
+---
+import { getEntry } from "astro:content";
+
+import AboutPage from "../../components/about/AboutPage.astro";
+
+const entry = await getEntry("about", "en");
+if (!entry) throw new Error("English About page not found");
+---
+
+<AboutPage locale="en" entry={entry} />

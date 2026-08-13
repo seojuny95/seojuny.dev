@@ -1,0 +1,10 @@
+---
+import { getEntry } from "astro:content";
+
+import AboutPage from "../components/about/AboutPage.astro";
+
+const entry = await getEntry("about", "ko");
+if (!entry) throw new Error("Korean About page not found");
+---
+
+<AboutPage locale="ko" entry={entry} />
