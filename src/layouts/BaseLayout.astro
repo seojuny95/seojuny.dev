@@ -1,0 +1,127 @@
+---
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+import "../styles/global.css";
+
+import type { Locale } from "../i18n/locales";
+import { localePath } from "../i18n/routing";
+import { messages } from "../i18n/messages";
+import { site } from "../config";
+
+interface Props {
+  alternatePaths?: Partial<Record<Locale, string>>;
+  articlePublishedTime?: string;
+  articleTags?: string[];
+  canonicalPath?: string;
+  description?: string;
+  imagePath?: string;
+  lang: Locale;
+  noindex?: boolean;
+  title?: string;
+  type?: "article" | "website";
+}
+
+const {
+  alternatePaths = {},
+  articlePublishedTime,
+  articleTags = [],
+  canonicalPath,
+  description = messages[Astro.props.lang].siteDescription,
+  imagePath = localePath(Astro.props.lang, "/opengraph-image"),
+  lang,
+  noindex = false,
+  title = "seojuny.dev",
+  type = "website",
+} = Astro.props;
+const documentTitle =
+  title === "seojuny.dev" ? title : `${title} — seojuny.dev`;
+const canonicalUrl = canonicalPath
+  ? new URL(canonicalPath, site.url)
+  : undefined;
+const koreanAlternate = alternatePaths.ko;
+const imageUrl = new URL(imagePath, site.url);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fafaf9" />
+    {
+      lang === "ko" && (
+        <meta
+          name="naver-site-verification"
+          content="517ef8cf614d57620560dff23bd5fa37dcab4ba7"
+        />
+      )
+    }
+    {noindex && <meta name="robots" content="noindex" />}
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    {
+      Object.entries(alternatePaths).map(([locale, path]) => (
+        <link
+          rel="alternate"
+          hreflang={locale}
+          href={new URL(path, site.url)}
+        />
+      ))
+    }
+    {
+      koreanAlternate && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(koreanAlternate, site.url)}
+        />
+      )
+    }
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      href={localePath(lang, "/feed.xml")}
+    />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="seojuny.dev" />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={lang === "ko" ? "ko_KR" : "en_US"} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    {
+      type === "article" && articlePublishedTime && (
+        <meta
+          property="article:published_time"
+          content={articlePublishedTime}
+        />
+      )
+    }
+    {
+      type === "article" &&
+        articleTags.map((tag) => <meta property="article:tag" content={tag} />)
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <style is:inline>
+      ::highlight(reading) {
+        background-color: color-mix(in srgb, #f26522 20%, transparent);
+        color: inherit;
+      }
+    </style>
+    <title>{documentTitle}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,82 @@
+---
+import type { MarkdownHeading } from "astro";
+
+import type { Locale } from "../../i18n/locales";
+import { messages } from "../../i18n/messages";
+
+interface Props {
+  headings: MarkdownHeading[];
+  locale: Locale;
+}
+
+const { headings, locale } = Astro.props;
+const items = headings.filter(
+  (heading) => heading.depth === 2 || heading.depth === 3,
+);
+---
+
+{
+  items.length >= 2 && (
+    <nav
+      aria-label={messages[locale].toc}
+      class="toc fixed top-[130px] left-[calc(50%_+_372px)] hidden max-h-[calc(100vh_-_190px)] w-[200px] overflow-y-auto xl:block"
+    >
+      <p class="mb-3 text-[11px] tracking-[0.18em] text-[var(--muted)] uppercase">
+        {messages[locale].toc}
+      </p>
+      <ul class="m-0 flex list-none flex-col border-l border-[var(--rule)] p-0 text-[12.5px] leading-snug">
+        {items.map((heading) => (
+          <li>
+            <a
+              href={`#${heading.slug}`}
+              data-toc-link={heading.slug}
+              class:list={[
+                "-ml-px block border-l border-transparent py-[5px] text-[var(--muted)] transition-colors duration-200 hover:text-[var(--fg)]",
+                heading.depth === 3 ? "pl-6" : "pl-3",
+              ]}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<script>
+  const links = [
+    ...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"),
+  ];
+  let frame = 0;
+
+  const updateCurrentHeading = () => {
+    frame = 0;
+    let current = "";
+
+    for (const link of links) {
+      const id = link.dataset.tocLink;
+      const heading = id ? document.getElementById(id) : undefined;
+      if (id && heading && heading.getBoundingClientRect().top <= 100) {
+        current = id;
+      }
+    }
+
+    for (const link of links) {
+      const active = link.dataset.tocLink === current;
+      link.setAttribute("aria-current", active ? "location" : "false");
+      link.classList.toggle("border-[var(--fg)]", active);
+      link.classList.toggle("text-[var(--fg)]", active);
+      link.classList.toggle("border-transparent", !active);
+      link.classList.toggle("text-[var(--muted)]", !active);
+    }
+  };
+
+  const scheduleUpdate = () => {
+    if (!frame) frame = window.requestAnimationFrame(updateCurrentHeading);
+  };
+
+  updateCurrentHeading();
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate);
+</script>

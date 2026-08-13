@@ -1,0 +1,39 @@
+---
+import type { Locale } from "../../i18n/locales";
+import { localePath } from "../../i18n/routing";
+import { messages } from "../../i18n/messages";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+---
+
+<BaseLayout lang={locale} title="404" noindex>
+  <main class="mx-auto w-full max-w-[680px] px-4 pt-10 sm:px-5 sm:pt-14">
+    <section class="py-24">
+      <p
+        class="mb-4 text-[13px] tracking-[0.2em] text-[var(--muted)] uppercase"
+      >
+        404
+      </p>
+      <h1
+        class="mb-3 text-[28px] leading-[1.25] font-semibold tracking-[-0.015em]"
+      >
+        {t.notFoundTitle}
+      </h1>
+      <p class="mb-8 text-[14px] text-[var(--muted)]">
+        {t.notFoundDesc}
+      </p>
+      <a
+        href={localePath(locale)}
+        class="link text-[15px] transition-colors duration-300 hover:text-[var(--muted)]"
+      >
+        {t.notFoundBack}
+      </a>
+    </section>
+  </main>
+</BaseLayout>

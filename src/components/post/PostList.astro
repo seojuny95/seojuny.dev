@@ -1,0 +1,75 @@
+---
+import type { Locale } from "../../i18n/locales";
+import { localePath } from "../../i18n/routing";
+import { messages } from "../../i18n/messages";
+import { formatDate, type Post } from "../../lib/content/posts";
+
+interface Props {
+  locale: Locale;
+  posts: Post[];
+}
+
+const { locale, posts } = Astro.props;
+const byYear = new Map<string, Post[]>();
+
+for (const post of posts) {
+  const year = post.data.date.slice(0, 4);
+  byYear.set(year, [...(byYear.get(year) ?? []), post]);
+}
+
+const years = [...byYear.keys()].sort((a, b) => b.localeCompare(a));
+---
+
+<section>
+  <h1 class="sr-only">Posts</h1>
+  {
+    years.length === 0 ? (
+      <p class="text-sm text-[var(--muted)]">{messages[locale].noPosts}</p>
+    ) : (
+      <div class="stagger flex flex-col gap-10">
+        {years.map((year, index) => (
+          <section
+            style={`--i: ${index}`}
+            class="flex flex-col sm:flex-row sm:gap-8"
+          >
+            <h2 class="mb-3 shrink-0 text-[22px] font-semibold tracking-[-0.01em] tabular-nums sm:mb-0 sm:w-[96px] sm:pt-[3px] sm:text-[26px]">
+              {year}
+            </h2>
+            <ul class="m-0 flex flex-1 list-none flex-col p-0">
+              {byYear.get(year)?.map((post) => (
+                <li class="group border-t border-[var(--rule)] first:border-t-0">
+                  <article>
+                    <a
+                      href={localePath(locale, `/${post.slug}`)}
+                      class="row-nudge block py-4"
+                    >
+                      <h3 class="m-0 text-[18px] leading-snug font-medium">
+                        <span class="link">{post.data.title}</span>
+                      </h3>
+                      <div class="mt-1 flex items-baseline gap-2 text-[13px] tracking-wide text-[var(--muted)] tabular-nums transition-colors duration-300 group-hover:text-[var(--fg)]">
+                        <time datetime={post.data.date}>
+                          {formatDate(post.data.date, locale)}
+                        </time>
+                        <span aria-hidden="true" class="opacity-60">
+                          ·
+                        </span>
+                        <span>
+                          {messages[locale].minRead(post.readingTime)}
+                        </span>
+                      </div>
+                      {post.data.summary && (
+                        <p class="mt-1.5 text-[14px] leading-relaxed text-[var(--muted)]">
+                          {post.data.summary}
+                        </p>
+                      )}
+                    </a>
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    )
+  }
+</section>

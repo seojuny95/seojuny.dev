@@ -1,0 +1,54 @@
+---
+import path from "node:path";
+import type { HTMLAttributes } from "astro/types";
+import sharp from "sharp";
+
+type Props = HTMLAttributes<"img">;
+
+const { alt = "", src, title, ...attributes } = Astro.props;
+let dimensions: { height: number; width: number } | undefined;
+
+if (typeof src === "string" && src.startsWith("/")) {
+  const publicDirectory = path.resolve("public");
+  const filePath = path.resolve(publicDirectory, src.slice(1));
+
+  if (filePath.startsWith(`${publicDirectory}${path.sep}`)) {
+    try {
+      const result = await sharp(filePath).metadata();
+      if (result.width && result.height) {
+        dimensions = { width: result.width, height: result.height };
+      }
+    } catch {
+      dimensions = undefined;
+    }
+  }
+}
+---
+
+{
+  title ? (
+    <figure>
+      <img
+        src={src}
+        alt={alt}
+        title={title}
+        width={dimensions?.width}
+        height={dimensions?.height}
+        loading="lazy"
+        decoding="async"
+        {...attributes}
+      />
+      <figcaption>{title}</figcaption>
+    </figure>
+  ) : (
+    <img
+      src={src}
+      alt={alt}
+      width={dimensions?.width}
+      height={dimensions?.height}
+      loading="lazy"
+      decoding="async"
+      {...attributes}
+    />
+  )
+}

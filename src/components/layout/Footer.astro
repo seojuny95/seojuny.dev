@@ -1,0 +1,111 @@
+---
+import { otherLocale, type Locale } from "../../i18n/locales";
+import { localePath, switchLocalePath } from "../../i18n/routing";
+import { messages } from "../../i18n/messages";
+
+interface Props {
+  locale: Locale;
+  otherSlugs: string[];
+  pathname: string;
+}
+
+const { locale, otherSlugs, pathname } = Astro.props;
+const targetLocale = otherLocale(locale);
+const targetPath = switchLocalePath(pathname, targetLocale, otherSlugs);
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-20 border-t border-[var(--rule)] sm:mt-28">
+  <div
+    class="mx-auto flex w-full max-w-[680px] flex-col gap-4 px-4 py-7 text-[13px] text-[var(--muted)] sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-9"
+  >
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <a
+        href={localePath(locale)}
+        class="text-[15px] font-semibold tracking-[-0.012em] text-[var(--fg)]"
+      >
+        seojuny<span class="font-normal text-[var(--muted)]">.dev</span>
+      </a>
+      <span>© {year}</span>
+      <span aria-hidden="true" class="mx-1 h-3.5 w-px bg-[var(--rule)]"></span>
+      <div
+        role="group"
+        aria-label={messages[locale].switchToOther}
+        class="flex items-center gap-2.5 text-[13px] tracking-[0.04em] tabular-nums uppercase"
+      >
+        {
+          locale === "ko" ? (
+            <span
+              aria-current="true"
+              class="relative font-semibold text-[var(--fg)]"
+            >
+              KO
+              <span
+                aria-hidden="true"
+                class="absolute right-0 -bottom-1 left-0 h-px bg-[var(--fg)]"
+              />
+            </span>
+          ) : (
+            <a
+              href={targetPath}
+              hreflang="ko"
+              data-locale="ko"
+              class="transition-colors duration-200 hover:text-[var(--fg)]"
+            >
+              KO
+            </a>
+          )
+        }
+        <span aria-hidden="true" class="text-[var(--rule)]">·</span>
+        {
+          locale === "en" ? (
+            <span
+              aria-current="true"
+              class="relative font-semibold text-[var(--fg)]"
+            >
+              EN
+              <span
+                aria-hidden="true"
+                class="absolute right-0 -bottom-1 left-0 h-px bg-[var(--fg)]"
+              />
+            </span>
+          ) : (
+            <a
+              href={targetPath}
+              hreflang="en"
+              data-locale="en"
+              class="transition-colors duration-200 hover:text-[var(--fg)]"
+            >
+              EN
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <nav aria-label="Footer" class="flex items-center gap-5 text-[14px]">
+      <a
+        href={localePath(locale)}
+        class="transition-colors duration-200 hover:text-[var(--fg)]">Posts</a
+      >
+      <a
+        href={localePath(locale, "/about")}
+        class="transition-colors duration-200 hover:text-[var(--fg)]">About</a
+      >
+      <a
+        href={localePath(locale, "/feed.xml")}
+        class="transition-colors duration-200 hover:text-[var(--fg)]">RSS</a
+      >
+    </nav>
+  </div>
+</footer>
+
+<script>
+  document
+    .querySelectorAll<HTMLAnchorElement>("a[data-locale]")
+    .forEach((link) => {
+      link.addEventListener("click", () => {
+        document.cookie = `locale=${link.dataset.locale}; path=/; max-age=31536000; samesite=lax`;
+      });
+    });
+</script>

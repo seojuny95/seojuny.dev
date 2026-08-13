@@ -1,0 +1,310 @@
+---
+import type { Locale } from "../../i18n/locales";
+import { localePath } from "../../i18n/routing";
+import { messages } from "../../i18n/messages";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const inputId = `search-input-${locale}`;
+const titleId = `search-title-${locale}`;
+const indexUrl = localePath(locale, "/search-index.json");
+---
+
+<dialog
+  data-search-dialog
+  data-index-url={indexUrl}
+  data-no-results={t.searchNoResults}
+  aria-labelledby={titleId}
+  class="fixed inset-0 z-50 m-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0"
+>
+  <div
+    data-search-surface
+    class="flex h-full w-full items-start justify-center bg-black/40 px-4 pt-[10vh] backdrop-blur-[2px] sm:pt-[15vh]"
+  >
+    <section
+      class="search-panel relative flex w-full max-w-[540px] flex-col overflow-hidden rounded-md border border-[var(--rule)] bg-[var(--bg)]"
+    >
+      <h2 id={titleId} class="sr-only">{t.searchLabel}</h2>
+      <div class="relative border-b border-[var(--rule)] px-4 py-3">
+        <label for={inputId} class="sr-only">{t.searchLabel}</label>
+        <input
+          id={inputId}
+          data-search-input
+          type="text"
+          placeholder={t.searchPlaceholder}
+          autocomplete="off"
+          spellcheck="false"
+          class="w-full border-0 bg-transparent pr-7 text-[16px] outline-none placeholder:text-[var(--muted)]"
+        />
+        <button
+          data-search-clear
+          type="button"
+          aria-label={t.searchClear}
+          hidden
+          class="absolute top-1/2 right-4 inline-flex h-[18px] w-[18px] -translate-y-1/2 items-center justify-center rounded-sm text-[var(--muted)] transition-colors duration-200 hover:bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] hover:text-[var(--fg)]"
+        >
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M1.5 1.5L8.5 8.5M8.5 1.5L1.5 8.5"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+
+      <p
+        data-search-status
+        aria-live="polite"
+        class="hidden px-4 pt-2.5 text-[12px] text-[var(--muted)] tabular-nums"
+      >
+      </p>
+
+      <ul
+        data-search-results
+        class="m-0 max-h-[50vh] list-none overflow-y-auto p-1.5"
+      >
+        <li class="py-10 text-center text-[14px] text-[var(--muted)]">
+          {t.searchPlaceholder}
+        </li>
+      </ul>
+
+      <div
+        class="flex items-center justify-between border-t border-[var(--rule)] px-4 py-2.5 text-[12px] text-[var(--muted)]"
+      >
+        <div class="flex items-center gap-3">
+          <span class="flex items-center gap-1">
+            <kbd class="kbd">↑</kbd>
+            <kbd class="kbd">↓</kbd>
+            <span class="ml-1">{t.searchMove}</span>
+          </span>
+          <span class="flex items-center gap-1">
+            <kbd class="kbd">↵</kbd>
+            <span class="ml-1">{t.searchOpen}</span>
+          </span>
+        </div>
+        <span class="flex items-center gap-1">
+          <kbd class="kbd">ESC</kbd>
+          <span class="ml-1">{t.searchClose}</span>
+        </span>
+      </div>
+    </section>
+  </div>
+</dialog>
+
+<script>
+  import type Fuse from "fuse.js";
+
+  import type { SearchEntry } from "../../lib/content/posts";
+
+  const dialog = document.querySelector<HTMLDialogElement>(
+    "[data-search-dialog]",
+  );
+
+  if (dialog) {
+    const input = dialog.querySelector<HTMLInputElement>("[data-search-input]");
+    const clearButton = dialog.querySelector<HTMLButtonElement>(
+      "[data-search-clear]",
+    );
+    const results = dialog.querySelector<HTMLUListElement>(
+      "[data-search-results]",
+    );
+    const status = dialog.querySelector<HTMLElement>("[data-search-status]");
+    const surface = dialog.querySelector<HTMLElement>("[data-search-surface]");
+    let fusePromise: Promise<Fuse<SearchEntry>> | undefined;
+    let previousFocus: HTMLElement | null = null;
+    let searchVersion = 0;
+
+    const getFuse = () => {
+      if (!fusePromise) {
+        fusePromise = Promise.all([
+          import("fuse.js"),
+          fetch(dialog.dataset.indexUrl ?? "").then((response) => {
+            if (!response.ok) throw new Error("Search index request failed");
+            return response.json() as Promise<SearchEntry[]>;
+          }),
+        ]).then(
+          ([{ default: Fuse }, index]) =>
+            new Fuse(index, {
+              keys: ["title", "summary", "tags"],
+              threshold: 0.4,
+              ignoreLocation: true,
+            }),
+        );
+      }
+
+      return fusePromise;
+    };
+
+    const resultLinks = () => [
+      ...dialog.querySelectorAll<HTMLAnchorElement>("[data-search-result]"),
+    ];
+
+    const renderMessage = (message: string) => {
+      if (!results) return;
+      const item = document.createElement("li");
+      item.className = "py-10 text-center text-[14px] text-[var(--muted)]";
+      item.textContent = message;
+      results.replaceChildren(item);
+    };
+
+    const renderResults = (entries: SearchEntry[], query: string) => {
+      if (!results || !status) return;
+
+      status.hidden = false;
+      status.textContent = `${entries.length} · “${query}”`;
+
+      if (entries.length === 0) {
+        renderMessage(dialog.dataset.noResults ?? "");
+        return;
+      }
+
+      const items = entries.map((entry) => {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = `${dialog.dataset.indexUrl?.startsWith("/en/") ? "/en" : ""}/${entry.slug}`;
+        link.dataset.searchResult = "";
+        link.className =
+          "block w-full rounded-sm px-3 py-2.5 text-left transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] focus-visible:bg-[color-mix(in_srgb,var(--fg)_6%,transparent)]";
+
+        const title = document.createElement("div");
+        title.className = "text-[15px] font-medium leading-snug";
+        title.textContent = entry.title;
+        link.append(title);
+
+        if (entry.summary) {
+          const summary = document.createElement("div");
+          summary.className = "mt-1 truncate text-[13px] text-[var(--muted)]";
+          summary.textContent = entry.summary;
+          link.append(summary);
+        }
+
+        if (entry.tags.length > 0) {
+          const tags = document.createElement("div");
+          tags.className =
+            "mt-1.5 flex flex-wrap gap-1.5 text-[11px] text-[var(--muted)]";
+          for (const value of entry.tags) {
+            const tag = document.createElement("span");
+            tag.className =
+              "rounded-sm bg-[color-mix(in_srgb,var(--fg)_5%,transparent)] px-1.5 py-0.5";
+            tag.textContent = `#${value}`;
+            tags.append(tag);
+          }
+          link.append(tags);
+        }
+
+        link.addEventListener("keydown", (event) => {
+          if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+          event.preventDefault();
+          const links = resultLinks();
+          const current = links.indexOf(link);
+          const next = event.key === "ArrowDown" ? current + 1 : current - 1;
+          if (next < 0) input?.focus();
+          else links[Math.min(next, links.length - 1)]?.focus();
+        });
+
+        item.append(link);
+        return item;
+      });
+
+      results.replaceChildren(...items);
+    };
+
+    const runSearch = async () => {
+      if (!input || !clearButton || !status) return;
+      const query = input.value.trim();
+      const version = ++searchVersion;
+      clearButton.hidden = query.length === 0;
+
+      if (!query) {
+        status.hidden = true;
+        status.textContent = "";
+        renderMessage(input.placeholder);
+        return;
+      }
+
+      try {
+        const fuse = await getFuse();
+        if (version !== searchVersion) return;
+        renderResults(
+          fuse.search(query).map((result) => result.item),
+          query,
+        );
+      } catch (error) {
+        console.error("Search failed", error);
+        if (version === searchVersion) renderResults([], query);
+      }
+    };
+
+    const openSearch = () => {
+      if (dialog.open) return;
+      previousFocus = document.activeElement as HTMLElement | null;
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
+      window.setTimeout(() => input?.focus(), 0);
+    };
+
+    const closeSearch = () => {
+      if (dialog.open) dialog.close();
+    };
+
+    window.addEventListener("open-search", openSearch);
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && dialog.open) {
+        event.preventDefault();
+        closeSearch();
+      } else if (
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLowerCase() === "k"
+      ) {
+        event.preventDefault();
+        if (dialog.open) closeSearch();
+        else openSearch();
+      }
+    });
+    dialog.addEventListener("close", () => {
+      document.body.style.overflow = "";
+      if (input) input.value = "";
+      if (clearButton) clearButton.hidden = true;
+      if (status) {
+        status.hidden = true;
+        status.textContent = "";
+      }
+      renderMessage(input?.placeholder ?? "");
+      previousFocus?.focus();
+      previousFocus = null;
+    });
+    surface?.addEventListener("click", (event) => {
+      if (event.target === surface) closeSearch();
+    });
+    input?.addEventListener("input", () => void runSearch());
+    input?.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        resultLinks()[0]?.focus();
+      } else if (event.key === "Enter") {
+        const first = resultLinks()[0];
+        if (first) {
+          event.preventDefault();
+          first.click();
+        }
+      }
+    });
+    clearButton?.addEventListener("click", () => {
+      if (!input) return;
+      input.value = "";
+      void runSearch();
+      input.focus();
+    });
+  }
+</script>

@@ -1,47 +1,102 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# seojuny.dev
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+Personal file-based MDX blog, published in Korean and English. It uses **Astro 7.2**, **React 19.2**, **TypeScript 5.9**, **Tailwind CSS 4.3**, and **Vitest 4.1**, and is deployed to Vercel.
 
-Personal blog (seojuny.dev): a file-based MDX blog, statically generated (SSG) on Vercel, bilingual Korean/English. Stack is ahead of training data — **Next.js 16.2**, **React 19.2**, **Tailwind v4** (CSS-first, no config file), **Vitest 4**.
+The stack may be newer than your training data. Before changing Astro APIs, integrations, Content Collections, routing, or client directives, check the installed package types and current official Astro documentation. Follow deprecation notices.
 
-## Development Commands
+## Development commands
 
-`pnpm` only.
+Use pnpm through Corepack. Do not use npm or Yarn.
 
-- `pnpm dev` — dev server at http://localhost:3000
-- `pnpm build` / `pnpm start` — production build + preview
-- `pnpm lint` — ESLint (`eslint-config-next`, core-web-vitals + typescript)
-- `pnpm test` / `pnpm test:watch` — Vitest
-- `pnpm generate:audio [<slug>]` — TTS + sentence timings for post bodies. No arg = only posts missing audio (incremental), `<slug>` = that post, `--all` = everything. Local only (`ffmpeg` required).
+- `corepack pnpm install` — install dependencies
+- `corepack pnpm dev` — development server at `http://localhost:4321`
+- `corepack pnpm build` — build the Vercel production output
+- `corepack pnpm lint` — ESLint
+- `corepack pnpm typecheck` — Astro and TypeScript diagnostics
+- `corepack pnpm test` / `corepack pnpm test:watch` — Vitest
+- `corepack pnpm format` / `corepack pnpm format:check` — write or check Prettier formatting
+- `corepack pnpm verify` — formatting, lint, types, tests, and production build
+- `corepack pnpm generate:audio [<slug>]` — Korean audio; no slug generates only missing audio
+- `corepack pnpm generate:audio --en [<slug>]` — English audio
+- `corepack pnpm generate:audio [--en] --all` — regenerate every post for a locale
 
-## Project Structure
+Audio generation is local-only, requires `ffmpeg`/`ffprobe`, and writes `audio.mp3` and `audio.json` files that must be committed.
 
-- `app/` — App Router. Route groups `(ko)` / `(en)` each own their `<html lang>`: Korean at root (`/`, `/<slug>`), English under `/en`. Route files are thin delegators; shared page bodies live in `components/pages/*`.
-- `lib/` — logic. `posts.ts` is the single source of truth for content (all reads go through it); also `i18n.ts`, `metadata.ts`, `feed.ts`, `og-image.tsx`.
-- `components/` — UI. `layout/SiteShell.tsx` is the shared shell.
-- `content/` — MDX. `content/posts/` (KO) + `content/en/posts/` (EN); `about.mdx` + `en/about.mdx`.
-- `public/posts/<slug>/` — per-post assets (images, `audio.mp3`, `audio.json`); English variants under `.../en/`.
-- `proxy.ts` — home-only (`/`) Accept-Language redirect; everything else is static.
+Do not rely on `astro preview` for production verification; the Vercel adapter output is verified with `corepack pnpm verify` and a Vercel Preview deployment.
 
-## Coding Style & Naming Conventions
+## Rendering and routing
 
-- TypeScript, React Server Components by default. `await params` in dynamic routes (Next 16).
-- Components: `PascalCase.tsx`. Lib modules: `kebab-case.ts`. Image files: kebab-case.
-- Posts: `content/posts/YYYY-MM-DD-slug.mdx`; slug = filename minus the `YYYY-MM-DD-` prefix. Frontmatter: `title` + `date` required, `summary`/`tags`/`draft` optional.
-- MDX bodies **start at `##` (h2)** — the page `h1` comes from the frontmatter `title`.
-- Post headings are short and concise; prose should follow the natural, plainspoken tone of recent posts.
-- Light mode only. Theme = CSS custom props on `:root` in `globals.css`; post bodies use `.prose-blog` (not `@tailwindcss/typography`).
-- No explanatory comments; match the surrounding comment density.
+- Astro components are the default for static UI. Use React only for stateful browser interactions and hydrate with the least eager `client:*` directive that satisfies the behavior.
+- `src/pages` uses Astro file-based routing. Route files stay thin and delegate shared rendering to feature components.
+- Korean routes are `/`, `/about`, and `/<slug>`. English routes are `/en`, `/en/about`, and `/en/<slug>`.
+- Posts, About pages, feeds, LLM indexes, OG images, and supporting endpoints are prerendered.
+- `src/pages/index.astro` is the intentional exception: it runs on demand so only `/` can redirect to `/en` using the `locale` cookie and `Accept-Language`. Direct post and About URLs must not be language-redirected.
+- `src/pages/[...path].astro` renders unknown routes on demand so 404 responses have the correct Korean or English document language. `404.astro` remains the static fallback.
+- `trailingSlash` is `never`; preserve the existing public URL shape.
 
-## Testing Guidelines
+## Project structure
 
-- Vitest 4, Node env. Tests colocated in `lib/` as `*.test.ts`.
-- Single test: `pnpm vitest run lib/posts.test.ts -t "excludes drafts"`.
-- `posts.ts` tests spy on `process.cwd()` to point at a temp content dir — keep that seam intact.
+- `src/config.ts` — site identity, supported locales, default locale, and language tags
+- `src/content.config.ts` — Astro Content Collections loaders and frontmatter schemas; this is an Astro entry point and must remain at this path
+- `src/content/posts/{ko,en}` — localized post MDX files
+- `src/content/about/{ko,en}.mdx` — localized About content
+- `src/pages` — route entry points and static endpoints
+- `src/layouts` — document metadata and shared site shell
+- `src/components/about` — About page UI
+- `src/components/layout` — header, footer, and mobile navigation
+- `src/components/mdx` — custom MDX element renderers
+- `src/components/post` — post list/page, navigation, actions, comments, and table of contents
+- `src/components/post/audio` — audio UI, playback state, timings, and reading highlights
+- `src/components/search` — search trigger and dialog
+- `src/i18n/locales.ts` — locale types and validation
+- `src/i18n/routing.ts` — locale-aware URL construction and switching
+- `src/i18n/messages.ts` — localized interface text
+- `src/i18n/accept-language.ts` — `Accept-Language` parsing
+- `src/lib/content` — Content Collections reads, IDs, dates, and reading time
+- `src/lib/routes` — static route data construction
+- `src/lib/seo` — JSON-LD and OG image generation
+- `scripts/generate-audio` — audio generator entry point and colocated text-processing logic
+- `public/posts/<slug>` — post images and Korean audio; English variants live under `en/`
 
-## Commit & Pull Request Guidelines
+## Content conventions
 
-- Conventional commits: `type(scope): subject` (e.g. `feat(i18n): …`, `fix(build): …`). English, imperative.
-- Land changes via PR to `main`; PR title/body in English. Keep content and its assets (`audio.*`, diagrams) in the same commit.
+- Post filenames use `YYYY-MM-DD-slug.mdx`; the slug is the filename without the date prefix.
+- `title` and `date` are required frontmatter. `summary`, `tags`, and `draft` are optional.
+- All post reads go through `src/lib/content/posts.ts`. Keep draft filtering, locale parsing, sorting, reading time, and search-index construction centralized there.
+- MDX bodies start at `##`; the page title supplies the only `h1`.
+- Keep headings short and prose natural and plainspoken, matching recent posts.
+- Put post assets in `public/posts/<slug>`. Put English variants in `public/posts/<slug>/en` only when they differ by locale.
+- Keep content changes and their generated audio or diagrams in the same commit.
+
+## Coding conventions
+
+- Use TypeScript strict mode. Components use `PascalCase`; utilities and hooks use `kebab-case` or established hook naming; image files use `kebab-case`.
+- Organize components by product feature, not by `.astro` versus `.tsx`. Do not recreate generic `site` or `islands` folders.
+- Keep one primary component per component file. Colocate hooks, types, pure helpers, and tests with the feature when they are not shared elsewhere.
+- Keep route files declarative. Put reusable content, routing, SEO, and UI logic in the corresponding feature or `lib` module.
+- Do not duplicate site URLs, locale lists, or language tags; use `src/config.ts`.
+- Do not move `src/content.config.ts` into `src/config` or `src/content`; Astro expects the current special path.
+- Light mode only. Theme values are CSS custom properties in `src/styles/global.css`; post styling uses `.prose-blog` rather than `@tailwindcss/typography`.
+- Avoid explanatory comments. Match the surrounding comment density and document only non-obvious constraints.
+
+## Internationalization and metadata
+
+- `ko` is the default locale and has no path prefix; `en` uses `/en`.
+- UI text belongs in `src/i18n/messages.ts`. Locale types belong in `locales.ts`; path behavior belongs in `routing.ts`.
+- When a translated post exists, locale switching preserves its slug. Otherwise it falls back to the target locale home.
+- Preserve each page's `<html lang>`, locale cookie behavior, canonical URL, Korean/English `hreflang`, Korean `x-default`, localized RSS link, Open Graph metadata, and JSON-LD.
+- Preserve `/feed.xml`, `/en/feed.xml`, `/llms.txt`, `/en/llms.txt`, `/robots.txt`, `/manifest.webmanifest`, `/sitemap.xml`, and localized OG image routes.
+
+## Testing guidelines
+
+- Vitest runs in the Node environment. Tests are colocated as `*.test.ts` beside the behavior they cover.
+- Prefer tests for parsing, routing, content transformation, and user-visible behavior. Do not test constants by repeating their literal values; use TypeScript constraints for static configuration relationships.
+- Run one test with `corepack pnpm exec vitest run <path> -t "<name>"`.
+- When changing routes, content loading, hydration, metadata, or build configuration, run `corepack pnpm verify` and exercise the affected page in a browser.
+
+## Commit and pull request guidelines
+
+- Use Conventional Commits: `type(scope): subject`, in English and imperative form.
+- The pre-commit hook runs lint-staged, commitlint checks the message, and pre-push runs `corepack pnpm verify`.
+- Land changes through a pull request to `main`. Write the PR title and body in English.
+- Do not commit `.env`, `.vercel`, `dist`, `.astro`, or `node_modules`.

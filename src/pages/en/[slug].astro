@@ -1,0 +1,16 @@
+---
+import PostPage from "../../components/post/PostPage.astro";
+import { createPostStaticPaths } from "../../lib/routes/posts";
+
+export const getStaticPaths = createPostStaticPaths("en");
+
+const { alternatePaths, next, post, prev } = Astro.props;
+---
+
+<PostPage
+  locale="en"
+  post={post}
+  prev={prev}
+  next={next}
+  alternatePaths={alternatePaths}
+/>

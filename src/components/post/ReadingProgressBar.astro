@@ -1,0 +1,24 @@
+<script>
+  const progressBar = document.getElementById("reading-progress");
+  let frame = 0;
+
+  const updateProgress = () => {
+    frame = 0;
+    const maximum = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maximum > 0 ? Math.min(1, window.scrollY / maximum) : 0;
+
+    if (progressBar) {
+      progressBar.style.transformOrigin = "left";
+      progressBar.style.background = "var(--fg)";
+      progressBar.style.transform = `scaleX(${progress})`;
+    }
+  };
+
+  const scheduleUpdate = () => {
+    if (!frame) frame = window.requestAnimationFrame(updateProgress);
+  };
+
+  updateProgress();
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate);
+</script>

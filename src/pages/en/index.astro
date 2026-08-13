@@ -1,0 +1,15 @@
+---
+import PostList from "../../components/post/PostList.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getAllPosts } from "../../lib/content/posts";
+
+const posts = await getAllPosts("en");
+---
+
+<SiteLayout
+  locale="en"
+  canonicalPath="/en"
+  alternatePaths={{ ko: "/", en: "/en" }}
+>
+  <PostList locale="en" posts={posts} />
+</SiteLayout>

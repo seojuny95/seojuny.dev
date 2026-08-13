@@ -1,38 +1,23 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
-import prettier from "eslint-config-prettier";
+import eslint from "@eslint/js";
+import astro from "eslint-plugin-astro";
+import reactHooks from "eslint-plugin-react-hooks";
+import tseslint from "typescript-eslint";
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  prettier,
-  // Allow `_`-prefixed identifiers to mark intentionally unused bindings
-  // (e.g. dropping a field via destructuring rename).
+export default [
   {
-    rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          destructuredArrayIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-    },
+    ignores: [
+      ".astro/**",
+      ".vercel/**",
+      "dist/**",
+      "node_modules/**",
+      "public/**",
+    ],
   },
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-    // Nested build output in Claude worktrees is not source.
-    ".claude/**",
-    "**/.next/**",
-  ]),
-]);
-
-export default eslintConfig;
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...astro.configs["flat/recommended"],
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ...reactHooks.configs.flat["recommended-latest"],
+  },
+];

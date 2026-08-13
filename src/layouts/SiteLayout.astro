@@ -1,0 +1,53 @@
+---
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import SearchDialog from "../components/search/SearchDialog.astro";
+import { getAllPosts } from "../lib/content/posts";
+import { otherLocale, type Locale } from "../i18n/locales";
+import { messages } from "../i18n/messages";
+import { buildSiteJsonLd } from "../lib/seo/json-ld";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  alternatePaths?: Partial<Record<Locale, string>>;
+  articlePublishedTime?: string;
+  articleTags?: string[];
+  canonicalPath: string;
+  description?: string;
+  imagePath?: string;
+  locale: Locale;
+  title?: string;
+  type?: "article" | "website";
+}
+
+const { locale } = Astro.props;
+const otherSlugs = (await getAllPosts(otherLocale(locale))).map(
+  (post) => post.slug,
+);
+const jsonLd = JSON.stringify(buildSiteJsonLd(locale)).replaceAll(
+  "<",
+  "\\u003c",
+);
+---
+
+<BaseLayout lang={locale} {...Astro.props}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+  <slot name="head" slot="head" />
+  <a href="#main" class="skip-link">{messages[locale].skipLink}</a>
+  <div class="flex min-h-screen flex-col">
+    <Header locale={locale} pathname={Astro.url.pathname} />
+    <main
+      id="main"
+      tabindex="-1"
+      class="mx-auto w-full max-w-[680px] flex-1 px-4 pt-10 outline-none sm:px-5 sm:pt-14"
+    >
+      <div class="page-enter"><slot /></div>
+    </main>
+    <Footer
+      locale={locale}
+      pathname={Astro.url.pathname}
+      otherSlugs={otherSlugs}
+    />
+  </div>
+  <SearchDialog {locale} />
+</BaseLayout>

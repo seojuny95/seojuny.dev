@@ -1,22 +1,7 @@
-# build output
-.next/
-out/
-build/
-next-env.d.ts
-
-# dependencies & lockfile
-node_modules/
-pnpm-lock.yaml
-
-# content authored by hand (frontmatter, math, MDX) — never auto-format
-content/
-*.md
-*.mdx
-
-# generated / binary post assets
-public/posts/
-
-# local tooling
-.claude/
-docs/superpowers/
-*.tsbuildinfo
+.astro
+.vercel
+dist
+node_modules
+public/posts
+src/content/about
+src/content/posts
