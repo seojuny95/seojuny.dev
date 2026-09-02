@@ -66,7 +66,7 @@ export default defineConfig({
               ariaHidden: "true",
               tabIndex: -1,
             },
-            content: { type: "text", value: "#" },
+            content: [],
           },
         ],
         [
