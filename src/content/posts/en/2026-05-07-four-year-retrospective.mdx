@@ -5,67 +5,60 @@ summary: "Four years as a developer, and the age of AI."
 tags: ["Retrospective", "Developer", "AI"]
 ---
 
-I've wanted to write a blog ever since I started working as a developer. Honestly, I kept putting it off — and whenever I actually sat down to try, I had no idea what to write.
+I've wanted to write a blog ever since I started working as a developer. But honestly, I kept putting it off, and whenever I sat down to write, I had no idea what to say.
 
-This time I'm committing to it. As my first post, I want to look back on the past four years.
+This time, I want to give it a proper try. For my first post, I'm looking back on the past four years.
 
 ## How I Became a Developer
 
-I studied hotel management abroad. My plan after graduation was to land a job in hospitality overseas, but COVID shut that door. I ended up coming back to Korea, and looking back now, I think I was pretty lost for a while.
+I studied hotel management abroad. My plan after graduation was to find a job in hospitality overseas, but COVID made that difficult. I ended up returning to Korea without much of a plan for what to do next, and I spent quite a while feeling lost.
 
-Then in the spring of 2021, I took my first coding course — a government-subsidized program that was hugely popular at the time. I figured I'd try it lightly, but it turned out to be a lot more interesting than I expected. As anyone who's been through that kind of program knows, though, it left me wanting more. So I went looking for a bootcamp and in June of that year I enrolled at Vanilla Coding, a frontend developer training program. I spent about six months there.
+Then, in the spring of 2021, I signed up for a government-funded coding course out of curiosity. Coding was becoming popular at the time, and I went into it casually. But once I started, I found it much more interesting than I expected and wanted to learn it in greater depth. After the course ended, I looked for a coding bootcamp. That June, I joined Vanilla Coding, a six-month frontend developer training program.
 
 Vanilla Coding doesn't spoon-feed you. Every week brings a new assignment, and you're expected to sit with it, struggle through it, and find the answer yourself — the instructors show you the path, not the destination. Because I was brand new to both coding and development in general, every single week's assignment felt impossibly hard. I'd hit a wall and think there was no way through… but then I'd tell myself: if I can't even do this, I'm hopeless. And I'd keep at it until it clicked. Watching problems unravel one by one like that gave me a tremendous sense of accomplishment. **Even if something feels out of reach, starting and refusing to let go will get you there somehow** — that experience is still the biggest thing driving me forward today.
 
-After finishing the program, I stayed at Vanilla Coding for another three months as a mentor. I wanted to keep studying, and I thought mentoring would be a good experience as I kicked off a new career. It turned out that the things I'd been fuzzy on became clearer through mentoring than they had in my own study, and more than anything, I genuinely enjoyed it.
+After finishing the program, I stayed at Vanilla Coding for another three months as a mentor. I wanted to keep studying, and I thought mentoring would be a valuable experience as I started a new career. The concepts I had been unsure about actually became clearer while I was mentoring. More than anything, helping other students felt rewarding, and I enjoyed it.
 
 After those three months of mentoring, I joined a startup in Yeouido and started my career as a developer.
 
-## What I've Built These Past Four Years
+## What I've Worked On
 
-The biggest things I worked on over four years, in brief:
+The main things I've worked on over the past four years are:
 
-- **Admin panel rebuild** — rewrote the back-office UI from the ground up in React. Restructured operational domains like permissions, terms of service, and notices into modules, and consolidated shared data table and form patterns.
-- **Common UI migration** — moved shared components like buttons and inputs, used across multiple services, from Vue to React + TypeScript. Set up a component-level testing environment with Storybook and Jest.
-- **New service development** — owned the user-facing side of a new product from start to finish. Modeled each step of the user flow as a state machine to separate screen transitions from validation logic.
-- **Internal developer tooling** — built a VSCode extension that lets teammates preview and test screens inside the editor, to make our newly adopted server-driven UI approach more ergonomic.
+- **Admin app modernization** — migrated a Vue-based admin app to Next.js. Many screens were slow to appear because they waited for all their data to load. To improve this, I split the UI and loading states by feature and implemented streaming SSR. I also moved responsibility for composing page-specific data to a GraphQL BFF, reducing the amount of data-handling logic on the client.
+- **New service development** — built both the user-facing interface and the admin app for a new service from the ground up. Because it was a financial service, its consent flow had many branches based on the type of agreement and each user's circumstances. I modeled this complex flow as a state machine with XState, making screen transitions and validation logic easier to manage.
+- **Internal developer tooling** — developed a VS Code extension to help other developers work with a new Server-Driven UI framework the company built for internal use. It lets developers write code, preview the actual rendered output, and test different conditions directly in the editor, reducing repetitive checks during development.
 
-Writing it out like this, four years doesn't look like much. I felt busy the whole time, but when I try to pin down the big, memorable things, I end up with just four bullet points.
-
-Is that just me...? I'm curious how other developers would feel looking back like this.
-
-Still, when I count everything else that didn't make the list, I think I filled those four years well enough.
+Looking back, I spent just as much time finding and fixing problems in existing structures as I did building new screens. Along the way, I learned that clearly defining a problem and choosing the right structure for the situation matter just as much as writing code.
 
 ## The Age of AI
 
-The developer ecosystem changed fast and dramatically over these four years. The biggest shift of all is AI. When ChatGPT first appeared, I used it mainly to ask quick questions on the side. Now I'm using AI in almost every moment of work.
+The development landscape has changed incredibly quickly over the past four years. The biggest change has been AI. When ChatGPT first appeared, I mainly used it for quick, minor questions. Now I use AI throughout almost every part of my work.
 
 I search Google far less than I used to. The habit I once had of keeping up with React release notes has faded. When I don't know something, I ask AI first and then verify the answer. The way I work is completely different from when I first started four years ago.
 
-Writing code from scratch has dropped off sharply; most of what I do now is review the output I receive and loop back to refine it. Honestly, I still feel a bit uneasy about working this way. But looking around, other developers seem to be settling into the same rhythm.
+I write far less code from scratch now. Most of the time, I review and revise what AI produces over and over. I still feel uneasy about working this way. But looking around, other developers seem to be working in much the same way.
 
-## How Do You Survive This?
+## How Can I Survive This?
 
-Every week there's new AI news. A new model, a new feature... It keeps getting more convenient, and yet it also makes me pause. What is all this...?
+Every week brings a wave of new AI models and features. Work keeps getting easier, but sometimes I still pause and think, "What is all of this?"
 
-I worry a lot. That's just who I am. It's why, when I came back to Korea after graduation, with COVID showing no sign of ending, I scrambled to find a new path forward quickly. That scramble is what led me to become a developer — and I genuinely think I got lucky.
+At this pace, will developers really be replaced by AI? Even if we aren't replaced completely, I can't shake the feeling that we could be pushed aside in some way.
 
-But now… AI… at this pace… could I actually be replaced? Even if it's not full replacement, I get the feeling I'll be squeezed out in some way.
+You can see it in job postings. AI-related skills now appear in both the requirements and preferred qualifications for frontend roles. More and more positions expect something beyond using AI as a tool.
 
-You can see it just from job postings. Even on frontend listings, AI-related items are appearing in the required and preferred qualifications. More and more roles expect something beyond using AI as a tool.
-
-I use AI every single day, but honestly, I only have a vague sense of how it works. I don't really know how it was built or what's happening under the hood. If that's the case, can I really use it well? Can I keep pace with this rate of change? Maybe I need to move beyond just being someone who uses AI, and become someone who actually knows how to work with it — maybe even someone who builds things with it.
+I use AI every day, but honestly, I only have a rough understanding of the principles behind it and don't really know how it is built. Can I use it well without that knowledge? Can I keep up with this pace of change? Maybe I need to become more than someone who simply uses AI. Maybe I need to understand it and learn how to work with it properly.
 
 ## What's Next
 
-So as a frontend developer, where do I go from here? Picking up a new technology, diving deeper into concepts, getting better at coding in the traditional sense — that path doesn't feel right anymore.
+Lately, I've been thinking a lot about how I want to grow as a frontend developer. Simply learning one more technology and getting better at writing code doesn't feel like enough to set myself apart.
 
-Understanding how the AI I use every day is actually built and how it works internally — that feels like the next step forward for a developer who wants to do more than just use AI.
+AI can now handle a significant share of the coding. That gives developers more time to decide what should be built, define problems clearly, and verify whether the result is right. Rather than remaining a developer who simply writes code quickly, I want to use AI to make better decisions and raise the quality of what I build.
 
-So I've decided to study AI in earnest — not just to keep using it, but to understand how it works from the inside.
+AI has also greatly reduced the time it takes to research something or learn a new technology. I want to use that advantage to learn and experiment more quickly while deepening my understanding of web development. Rather than stopping at implementing a screen, I want to become a developer who thinks carefully about performance, accessibility, user experience, and maintainable architecture.
 
-I haven't set a firm goal this time, like a career change. I just want to build up the fundamentals before this AI era moves any further out from under me. Where it goes from there — I honestly don't know. I'm going to start and see.
+At the same time, I want to study in depth how the AI I use every day is built and the principles behind how it works. My goal is to move beyond simply using what AI produces and become a developer who understands AI and can use it effectively for the task at hand.
 
-I built this blog to document the process properly. I'll keep posting about it going forward.
+I created this blog to document that process. I plan to keep writing about what I learn and wrestle with along the way.
 
-I have no idea where this leads, but they say the first step is half the battle... let's go!
+I still don't know where it will lead... but let's go!
