@@ -1,14 +1,24 @@
 ---
 import path from "node:path";
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 import type { HTMLAttributes } from "astro/types";
 import sharp from "sharp";
 
 type Props = HTMLAttributes<"img">;
 
-const { alt = "", src, title, ...attributes } = Astro.props;
+const { alt = "", height, src, title, width, ...attributes } = Astro.props;
+const postImages = import.meta.glob<ImageMetadata>(
+  "/src/assets/posts/**/*.{avif,jpeg,jpg,png,webp}",
+  { eager: true, import: "default" },
+);
+const localImage =
+  typeof src === "string" && src.startsWith("/posts/")
+    ? postImages[`/src/assets${src}`]
+    : undefined;
 let dimensions: { height: number; width: number } | undefined;
 
-if (typeof src === "string" && src.startsWith("/")) {
+if (!localImage && typeof src === "string" && src.startsWith("/")) {
   const publicDirectory = path.resolve("public");
   const filePath = path.resolve(publicDirectory, src.slice(1));
 
@@ -23,29 +33,60 @@ if (typeof src === "string" && src.startsWith("/")) {
     }
   }
 }
+
+const optimizedWidth = localImage ? Math.min(localImage.width, 680) : undefined;
 ---
 
 {
   title ? (
     <figure>
-      <img
-        src={src}
-        alt={alt}
-        title={title}
-        width={dimensions?.width}
-        height={dimensions?.height}
-        loading="lazy"
-        decoding="async"
-        {...attributes}
-      />
+      {localImage ? (
+        <Image
+          src={localImage}
+          alt={alt}
+          title={title}
+          width={optimizedWidth}
+          layout="constrained"
+          sizes="(min-width: 680px) 680px, calc(100vw - 32px)"
+          format="webp"
+          quality={90}
+          loading="lazy"
+          decoding="async"
+          {...attributes}
+        />
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          title={title}
+          width={dimensions?.width ?? width ?? undefined}
+          height={dimensions?.height ?? height ?? undefined}
+          loading="lazy"
+          decoding="async"
+          {...attributes}
+        />
+      )}
       <figcaption>{title}</figcaption>
     </figure>
+  ) : localImage ? (
+    <Image
+      src={localImage}
+      alt={alt}
+      width={optimizedWidth}
+      layout="constrained"
+      sizes="(min-width: 680px) 680px, calc(100vw - 32px)"
+      format="webp"
+      quality={90}
+      loading="lazy"
+      decoding="async"
+      {...attributes}
+    />
   ) : (
     <img
       src={src}
       alt={alt}
-      width={dimensions?.width}
-      height={dimensions?.height}
+      width={dimensions?.width ?? width ?? undefined}
+      height={dimensions?.height ?? height ?? undefined}
       loading="lazy"
       decoding="async"
       {...attributes}
