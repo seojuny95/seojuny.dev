@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@andresaya/edge-tts": "^1.8.0",
-    "@astrojs/markdown-remark": "^7.2.2",
+    "@astrojs/markdown-remark": "7.3.0",
     "@astrojs/mdx": "^7.0.5",
     "@astrojs/react": "^6.0.2",
     "@astrojs/rss": "^4.0.19",
@@ -42,7 +42,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vercel/og": "^1.0.1",
-    "astro": "^7.2.1",
+    "astro": "7.4.2",
     "fuse.js": "^7.5.0",
     "gray-matter": "^4.0.3",
     "katex": "^0.18.4",
@@ -56,7 +56,7 @@
     "rehype-unwrap-images": "^1.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
-    "sharp": "^0.35.3",
+    "sharp": "0.35.5",
     "shiki": "^4.4.3",
     "tailwindcss": "^4.3.3"
   },
